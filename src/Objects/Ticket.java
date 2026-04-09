@@ -6,14 +6,12 @@ public class Ticket {
     int id;
     String event;
     double price;
-    String TicketType;
     YearMonth EventDate;
     
     public Ticket(String event, double price, String ticketType, YearMonth eventDate) {
         this.id = nextId++;
         this.event = event;
         this.price = price;
-        this.TicketType = ticketType;
         this.EventDate = eventDate;
     }
 
