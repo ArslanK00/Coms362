@@ -1,0 +1,6 @@
+{
+  "event" : "EventTest",
+  "price" : 20.0,
+  "ticketType" : "PayPerView",
+  "eventDate" : "2024-10"
+}
