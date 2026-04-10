@@ -17,15 +17,25 @@ public class CustomSystem {
         events.add(event);
     };
 
-    //gets an event from the 
+    //gets an event based on its index within the events ArrayList
     public Event getEvent(int index){
-        return events.get(index);
+        return events.get(index-1);
+    }
+
+    public void addRecordToEvent(int index, Record record){
+        events.get(index-1).addRecord(record);
+    }
+
+    public String listEventRecords(int index){
+        Event event = getEvent(index);
+        return event.listRecords();
     }
 
     public String listEvents(){
         String eventsList = "";
         for (int i = 0; i < events.size(); i++){
-            eventsList += i + events.get(i).getName();
+            int index = i + 1;
+            eventsList += index + "-" + events.get(i).getName() + "\n";
         }
 
         return eventsList;

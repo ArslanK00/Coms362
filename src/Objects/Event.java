@@ -35,6 +35,15 @@ public class Event {
         return venue;
     }
 
+    public String listRecords(){
+        String recordsList = "";
+        for (int i = 0; i < records.size(); i++){
+            int index = i + 1;
+            recordsList += index + "-" + records.get(i);
+        }
+        return recordsList;
+    }
+
     /**
      * @author Eleena Rath
      */
