@@ -41,4 +41,28 @@ public class CustomSystem {
         return eventsList;
     }
 
+    /**
+     * @author Matayas Durr
+     * Calculates revenue for a specific event
+     * @param index index of the event (1-based)
+     * @return total revenue for that event
+     */
+    public float calculateEventRevenue(int index) {
+        Event event = getEvent(index);
+        return event.calculateRevenue();
+    }
+
+    /**
+     * @author Matayas Durr
+     * Calculates total revenue across all events
+     * @return total revenue of all events
+     */
+    public float calculateAllRevenue() {
+        float total = 0;
+        for (Event event : events) {
+            total += event.calculateRevenue();
+        }
+        return total;
+    }
+
 }

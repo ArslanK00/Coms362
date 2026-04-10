@@ -36,5 +36,21 @@ public abstract class AbstractRecord implements Record{
         this.description = description;
     }
 
+        /**
+     * @author Matayas Durr
+     * @param cost cost value to set
+     */
+    public void setCost(float cost){
+        this.cost = cost;
+    }
+
+    /**
+     * @author Matayas Durr
+     * @param date date value to set
+     */
+    public void setDate(YearMonth date){
+        this.date = date;
+    }
+
 
 }
