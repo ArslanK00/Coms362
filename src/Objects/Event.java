@@ -19,12 +19,24 @@ public class Event {
         records.add(record);
     }
 
+    public Record getRecord(int index){
+        return records.get(index-1);
+    }
+
     /**
      * @author Eleena Rath
      * @param record
      */
-    public void deleteRecord(Record record) {
-        records.remove(record);
+    public void deleteRecord(int index) {
+        records.remove(index-1);
+    }
+
+    /**
+     * @author EleenaRath
+     * @return
+     */
+    public int numberOfRecords(){
+        return records.size();
     }
 
     public String getName() {
@@ -35,6 +47,10 @@ public class Event {
         return venue;
     }
 
+    /**
+     * @author Eleena Rath
+     * @return
+     */
     public String listRecords(){
         String recordsList = "";
         for (int i = 0; i < records.size(); i++){
@@ -42,6 +58,19 @@ public class Event {
             recordsList += index + "-" + records.get(i);
         }
         return recordsList;
+    }
+
+    /**
+     * @author Matayas Durr
+     * Calculates total revenue for this event
+     * @return total revenue from all records in this event
+     */
+    public float calculateRevenue() {
+        float total = 0;
+        for (Record record : records) {
+            total += record.getCost();
+        }
+        return total;
     }
 
     /**

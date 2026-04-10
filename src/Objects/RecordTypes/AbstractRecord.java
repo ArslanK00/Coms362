@@ -18,10 +18,17 @@ public abstract class AbstractRecord implements Record{
         return name;
     }
 
+    public void setName(String name){
+        this.name = name;
+    }
 
 
     public float getCost(){
         return cost;
+    }
+
+    public void setCost(float cost){
+        this.cost = cost;
     }
 
     public YearMonth getDate(){

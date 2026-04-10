@@ -26,11 +26,30 @@ public class CustomSystem {
         events.get(index-1).addRecord(record);
     }
 
+    /**
+     * @author Eleena Rath
+     * @param eventIndex
+     * @param recordIndex
+     */
+    public void deleteRecordFromEvent(int eventIndex, int recordIndex){
+        getEvent(eventIndex).deleteRecord(recordIndex);
+    }
+
+ 
+    /**
+     * @author Eleena Rath
+     * @param index
+     * @return
+     */
     public String listEventRecords(int index){
         Event event = getEvent(index);
         return event.listRecords();
     }
 
+    /**
+     * @author Eleena Rath
+     * @return
+     */
     public String listEvents(){
         String eventsList = "";
         for (int i = 0; i < events.size(); i++){
@@ -39,6 +58,19 @@ public class CustomSystem {
         }
 
         return eventsList;
+    }
+
+        /**
+     * @author Matayas Durr
+     * Calculates total revenue across all events
+     * @return total revenue of all events
+     */
+    public float calculateAllRevenue() {
+        float total = 0;
+        for (Event event : events) {
+            total += event.calculateRevenue();
+        }
+        return total;
     }
 
 }
