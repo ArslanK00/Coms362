@@ -7,7 +7,6 @@ import src.Objects.AbstractRecord;
 public class PayPerViewTicket extends AbstractRecord
 {
 
-    
     private static String eventdateStr;
     private static float cost;
     private static String EventName;
@@ -16,7 +15,7 @@ public class PayPerViewTicket extends AbstractRecord
 
     public PayPerViewTicket() 
     {
-        uploadPayPerViewTicket();
+        
     }
 
 
