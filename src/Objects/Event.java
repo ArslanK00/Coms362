@@ -1,10 +1,14 @@
 package src.Objects;
+
 import java.util.ArrayList;
 
+/*
+* @author Jamey Nguyen
+*/
 public class Event {
     String name;
     String venue;
-    
+
     ArrayList<Record> records;
 
     public Event(String name, String venue) {

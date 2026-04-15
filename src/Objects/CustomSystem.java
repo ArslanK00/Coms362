@@ -1,6 +1,10 @@
 package src.Objects;
+
 import java.util.ArrayList;
 
+/*
+* @author Jamey Nguyen
+*/
 public class CustomSystem {
     ArrayList<Event> events;
     ArrayList<Record> records;

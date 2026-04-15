@@ -6,24 +6,24 @@ import java.io.IOException;
 import java.util.ArrayList;
 import src.Objects.*;
 
+/*
+* @author Jamey Nguyen
+*/
+
 public class AddEventToSystem {
     private static String endUpload = "Y";
     static ArrayList<Event> events = new ArrayList<Event>();
 
-    public static void main(String[] args) 
-    {
-        while(endUpload.equalsIgnoreCase("Y"))
-        {
+    public static void main(String[] args) {
+        while (endUpload.equalsIgnoreCase("Y")) {
             System.out.println("Would you like to add an event to the system? (Y/N)");
             String endUpload = System.console().readLine();
-            if(endUpload.equalsIgnoreCase("N"))
-            {
+            if (endUpload.equalsIgnoreCase("N")) {
                 break;
             }
 
             System.out.println("Enter the event name:");
             String eventName = System.console().readLine();
-
 
             System.out.println("Enter the event venue:");
             String eventVenue = System.console().readLine();
@@ -35,24 +35,11 @@ public class AddEventToSystem {
             System.out.println("Event added to the system: " + eventName + " at " + eventVenue);
         }
 
-        try 
-        {
+        try {
             File file = new File("TicketSystemDatabases/AddedEventsToSystem.txt");
             file.getParentFile().mkdirs();
 
             FileWriter writer = new FileWriter(file);
-            // writer.write("[");
-            // for (int i = 0; i < events.size(); i++) {
-            //     Event event = events.get(i);
-            //     writer.write("{");
-            //     writer.write("\"name\": \"" + event.getName() + "\", \"venue\": \"" + event.getVenue() + "\"");
-            //     writer.write("}");
-            //     if (i < events.size() - 1) {
-            //         writer.write(",");
-            //     }
-            // }
-            // writer.write("]");
-            // writer.close();
 
             for (Event event : events) {
                 writer.write(event.getName() + " - " + event.getVenue() + "\n");
@@ -60,8 +47,7 @@ public class AddEventToSystem {
             writer.close();
             System.out.println("Events are written to AddedEventsToSystem.txt");
 
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
