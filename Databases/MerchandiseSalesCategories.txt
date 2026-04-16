@@ -1,0 +1,4 @@
+1 : Hats
+2 : Shirts
+3 : Pants
+4 : Socks
