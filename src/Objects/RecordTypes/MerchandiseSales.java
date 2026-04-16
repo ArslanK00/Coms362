@@ -27,7 +27,7 @@ public class MerchandiseSales
     {
         while(choice != -1)
         {
-            System.out.println("Choose an option: \n 1.Add Units Sold \n 2. Delete unit details by ID \n 3. add category \n 4. get categories \n 5. Find unit by name \n 6. Find unit by category \n 7. Get units sold by year \n 8. Get units sold by month \n 9. Get units sold by name \n -1. Exit");
+            System.out.println("Choose an option: \n 1.Add Units Sold \n 2. Delete unit details by ID \n 3. add category \n 4. get categories \n 5. Find unit by name \n 6. Find unit by category \n 7. Get units sold by year \n 8. Get units sold by month \n 9. Get units sold by name \n 10. Get units sold by category \n 11. get units sold b year \n 12. get units by month -1. \n   13edit Exit");
 
             choice = Integer.parseInt(System.console().readLine());
             switch(choice)
@@ -73,6 +73,26 @@ public class MerchandiseSales
                     String name = System.console().readLine();
                     getUnitsSoldByName(name);
                     break;
+                case 10:
+                    System.out.println("Enter the category ID for which you want to get sales data:");
+                    int ID = Integer.parseInt(System.console().readLine());
+                    calculateRevenuebyCategory(ID);
+                    break;
+                case 11:
+                    System.out.println("Enter the year for which you want to get sales data:");
+                    String yearString = System.console().readLine();
+                    calculateRevenuebyYear(yearString);
+                    break;
+                case 12:
+                    System.out.println("Enter the month for which you want to get sales data:");
+                    String monthString = System.console().readLine();
+                    calculateRevenuebyMonth(monthString);
+                    break;
+                case 13:
+                    System.out.println("Enter the ID of the unit you want to edit:");
+                    int idToEdit = Integer.parseInt(System.console().readLine());
+                    editUnitDetailsbyID(idToEdit);
+                    break;
                 case -1:
                     System.out.println("Exiting...");
                     break;
@@ -109,7 +129,7 @@ public class MerchandiseSales
                 if(Integer.parseInt(data[1].trim()) == categoryID)
                 {
                     merchData.add(data);
-                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5] + " Date: " + data[6]);
+                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5]  + " Cost to Make: " + data[4] + " Date: " + data[6]);
                 }
             }
             return;
@@ -145,7 +165,7 @@ public class MerchandiseSales
                 if(CurrMonth == month)
                 {
                     merchData.add(data);
-                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5] + " Date: " + data[6]);
+                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5]  + " Cost to Make: " + data[4] + " Date: " + data[6]);
                 }
             }
             if(merchData.size() > 0)
@@ -184,7 +204,7 @@ public class MerchandiseSales
                 if(CurrYear == year)
                 {
                     merchData.add(data);
-                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5] + " Date: " + data[6]);
+                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5]  + " Cost to Make: " + data[4] + " Date: " + data[6]);
                 }
             }
             if(merchData.size() > 0)
@@ -213,7 +233,7 @@ public class MerchandiseSales
                 if(data[2].replaceAll("\\s+", "").toLowerCase().equals(name.toLowerCase().replaceAll("\\s+", "")))
                 {
                     merchData.add(data);
-                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5] + " Date: " + data[6]);
+                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5]  + " Cost to Make: " + data[4] + " Date: " + data[6]);
                 }
             }
             if (merchData.size()> 0) 
@@ -265,24 +285,19 @@ public class MerchandiseSales
             String name = System.console().readLine();
 
             System.out.println("Enter the Units Sold:");
-            int unitsSold = Integer.parseInt(System.console().readLine());
-
-            System.out.println("Enter the price:");
-            float price = 0;
-            while(!priceValid)//Checks for valid price input
+            String unitsSoldString = System.console().readLine();
+            while(!unitsSoldString.matches("\\d+"))
             {
-                String priceInput = System.console().readLine();
-                if(priceInput.matches("\\d+(\\.\\d{1,2})?"))
-                {
-                    price = Float.parseFloat(priceInput);
-                    cost = price;
-                    priceValid = true;
-                }
-                else
-                {
-                    System.out.println("Invalid price format. Please enter a valid price (ex: 19.99):");
-                }
-           }                                                                                                                                                    
+                System.out.println("Invalid input. Please enter a valid number of units sold:");
+                unitsSoldString = System.console().readLine();
+            }
+            int unitsSold = Integer.parseInt(unitsSoldString);
+            
+            System.out.println("Enter the price:");
+            float price = CheckPriceFormat(System.console().readLine());
+            System.out.println("Enter the cost to make:");
+            float CostToMake = CheckPriceFormat(System.console().readLine());
+                                                                                                                                            
 
             System.out.println("Enter the event date (YYYY-MM):");
             String MerchDateStr = System.console().readLine();
@@ -300,7 +315,7 @@ public class MerchandiseSales
 
             try (FileWriter writer = new FileWriter(FilePathMerch, true))
             {
-                writer.write(getNextMerchID() + ", " + CategoryID + ", " + name + ", " + unitsSold + ", " + ", " + price + ", " + MerchdateStr + "\n");
+                writer.write(getNextMerchID() + ", " + CategoryID + ", " + name + ", " + unitsSold + ", " + price + ", " + CostToMake + ", " + MerchdateStr + "\n");
                 System.out.println("Item added successfully.");
             }
             catch (IOException e)
@@ -309,6 +324,8 @@ public class MerchandiseSales
             }
 
     }
+
+    
 
     public int addCategory(String categoryName)
     {
@@ -356,29 +373,144 @@ public class MerchandiseSales
         return categories;
     }
 
-    public int calculateRevenuebyCategory()
+    public float calculateRevenuebyCategory(int categoryID)
     {
-        return 0;
+        String[][] merchData = getMerch();
+        float totalRevenue = 0;
+        for(int i = 0; i < merchData.length; i++)        
+            {
+            if(Integer.parseInt(merchData[i][1].trim()) == categoryID)
+            {
+                totalRevenue += Float.parseFloat(merchData[i][4].trim()) * Integer.parseInt(merchData[i][3].trim());
+            }
+        }
+        System.out.println(totalRevenue);
+        return (float) totalRevenue;
     }
 
-    public int calculateRevenuebyMonth()
+    public float calculateRevenuebyMonth(String month)
     {
-        return 0;
+        String[][] merchData = getMerch();
+        float totalRevenue = 0;
+        if(!(month != null && month.matches("\\d{2}") && Integer.parseInt(month) >= 1 && Integer.parseInt(month) <= 12))
+        {
+            System.out.println("Incorrect Year format. Please enter a valid year 00.");
+            String MonthStringCheck = System.console().readLine();
+            calculateRevenuebyYear(MonthStringCheck);
+        }
+        for(int i = 0; i < merchData.length; i++)        {
+            if(merchData[i][6].trim().split("-")[1].equals(month))
+            {
+                totalRevenue += Float.parseFloat(merchData[i][4].trim()) * Integer.parseInt(merchData[i][3].trim());
+            }
+        }
+                System.out.println(totalRevenue);
+
+        return (float) totalRevenue;
     }
 
-    public int calculateRevenuebyYear()
+    public float calculateRevenuebyYear(String year)
     {
-        return 0;
+        String[][] merchData = getMerch();
+        float totalRevenue = 0;
+        if(!(year != null && year.matches("\\d{4}") && Integer.parseInt(year) >= 1000 && Integer.parseInt(year) <= 9999))
+        {
+            System.out.println("Incorrect Year format. Please enter a valid year (YYYY).");
+            String yearStringCheck = System.console().readLine();
+            calculateRevenuebyYear(yearStringCheck);
+        }
+
+        for(int i = 0; i < merchData.length; i++)        {
+            if(merchData[i][6].trim().split("-")[0].equals(year))
+            {
+                totalRevenue += Float.parseFloat(merchData[i][4].trim()) * Integer.parseInt(merchData[i][3].trim());
+            }
+        }
+                System.out.println(totalRevenue);
+
+        return (float) totalRevenue;
     }
 
-    public void sendRevenueToSystem()
+    public void sendProfitToSystem()
     {
 
     }
 
-    public int editUnitDetailsbyID(int id)
+    public void editUnitDetailsbyID(int id)
     {
-        return 0;
+        String[][] merchData = getMerch();
+        System.out.println("Type in the Unit ID the of the item you want to edit:");
+        boolean idExists = false;
+        for(int i = 0; i< merchData.length; i++)
+        {
+            if(Integer.parseInt(merchData[i][0].trim()) == id)
+            {
+                idExists = true;
+                deleteUnitDetailsByID(id);
+                
+                System.out.println("What would you like to edit? \n 1. Category \n 2. Name \n 3. Units Sold \n 4. Price \n 5. Cost to Make \n 6. Date");
+                int choice = Integer.parseInt(System.console().readLine());
+                switch(choice)
+                {
+                    case 1:
+                        System.out.println("Enter the new category:");
+                        int newCategoryID = Integer.parseInt(System.console().readLine());
+                        merchData[i][1] = String.valueOf(newCategoryID);
+                        break;
+                    case 2:
+                        System.out.println("Enter the new name:");
+                        String newName = System.console().readLine();
+                        merchData[i][2] = newName;
+                        break;
+                    case 3:
+                        System.out.println("Enter the new units sold:");
+                        int newUnitsSold = Integer.parseInt(System.console().readLine());
+                        merchData[i][3] = String.valueOf(newUnitsSold);
+                        break;
+                    case 4:
+                        System.out.println("Enter the new price:");
+                        float newPrice = CheckPriceFormat(System.console().readLine());
+                        merchData[i][4] = String.valueOf(newPrice);
+                        break;
+                    case 5:
+                        System.out.println("Enter the new cost to make:");
+                        float newCostToMake = CheckPriceFormat(System.console().readLine());
+                        merchData[i][5] = String.valueOf(newCostToMake);
+                        break;
+                    case 6:
+                        System.out.println("Enter the new date (YYYY-MM):");
+                        String MerchDateStr = System.console().readLine();
+                        String[] dateParts = MerchDateStr.split("-");
+                        while (!isDateValid(dateParts))
+                        {
+                            System.out.println("Invalid Year or month. Please enter as YYYY-MM:");
+                            MerchDateStr = System.console().readLine();
+                            dateParts = MerchDateStr.split("-");
+                        }
+                       
+                        MerchdateStr = YearMonth.parse(MerchDateStr).toString();
+                        merchData[i][6] = MerchdateStr;
+                        break;
+                    default:
+                        System.out.println("Invalid choice. No changes made.");
+                }
+
+                try (FileWriter writer = new FileWriter(FilePathMerch, true))
+            {
+                writer.write("\n");
+                writer.write(merchData[i][0] + ", " + merchData[i][1] + ", " + merchData[i][2] + ", " + merchData[i][3] + ", " + merchData[i][4] + ", " + merchData[i][5] + ", " + merchData[i][6] + "\n");
+                System.out.println("Item added successfully.");
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+
+                
+            }
+        }
+        
+        
     }
 
     public void deleteUnitDetailsByID(int id)
@@ -433,7 +565,7 @@ public class MerchandiseSales
                 if(data[2].toLowerCase().replaceAll("\\s+", "").equals(name.toLowerCase().replaceAll("\\s+", "")))
                 {
                     results.add(data);
-                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5] + " Date: " + data[6]);
+                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5]  + " Cost to Make: " + data[4] + " Date: " + data[6]);
                 }
             }
             if(results.size() > 0)
@@ -516,10 +648,36 @@ public class MerchandiseSales
                 if(Integer.parseInt(data[1].trim()) == categoryID)
                 {
                     results.add(data);
-                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5] + " Date: " + data[6]);
+                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5]  + " Cost to Make: " + data[4] + " Date: " + data[6]);
                 }
             }
             return results;
+        }
+        catch(FileNotFoundException e){
+            System.out.println("An error occurred while reading the categories: " + e.getMessage());
+        }
+    
+        System.out.println("No unit found with the given category ID.");
+        return null;
+    }
+
+    public String[] findUnitByID(int unitID)
+    {
+        File myFile = new File(FilePathMerch);
+        ArrayList<String[]> results = new ArrayList<>();
+
+        try(Scanner myReader = new Scanner(myFile))
+        {
+            while(myReader.hasNextLine())
+                {
+                String[] data = myReader.nextLine().split(",");
+                if(Integer.parseInt(data[0].trim()) == unitID)
+                {
+                    results.add(data);
+                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5]  + " Cost to Make: " + data[4] + " Date: " + data[6]);
+                }
+            }
+            return results.get(0);
         }
         catch(FileNotFoundException e){
             System.out.println("An error occurred while reading the categories: " + e.getMessage());
@@ -542,6 +700,28 @@ public class MerchandiseSales
         int m = Integer.parseInt(month);
         if(m < 1 || m > 12) return false;
         return true;
+    }
+
+    private float CheckPriceFormat(String priceInput)
+    {
+            while(!priceValid)//Checks for valid price input
+            {
+                
+                if(priceInput.matches("\\d+(\\.\\d{1,2})?"))
+                {
+                    
+                    priceValid = false;
+                    
+                    return Float.parseFloat(priceInput);
+                }
+                else
+                {
+                    System.out.println("Invalid price format. Please enter a valid price (e.g., 19.99):");
+                    priceInput = System.console().readLine();
+                }
+           }   
+           priceValid = false;
+           return -1;
     }
 
 
