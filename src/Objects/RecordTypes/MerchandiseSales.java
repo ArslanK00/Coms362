@@ -27,7 +27,7 @@ public class MerchandiseSales
     {
         while(choice != -1)
         {
-            System.out.println("Choose an option: \n 1.Add Units Sold \n 2. Delete unit details by ID \n 3. add category \n 4. get categories \n 5. Find unit by name \n 6. Find unit by category \n -1. Exit");
+            System.out.println("Choose an option: \n 1.Add Units Sold \n 2. Delete unit details by ID \n 3. add category \n 4. get categories \n 5. Find unit by name \n 6. Find unit by category \n 7. Get units sold by year \n 8. Get units sold by month \n 9. Get units sold by name \n -1. Exit");
 
             choice = Integer.parseInt(System.console().readLine());
             switch(choice)
@@ -50,13 +50,28 @@ public class MerchandiseSales
                     break;
                 case 5:
                     System.out.println("Enter the name of the unit you want to find:");
-                    String name = System.console().readLine();
-                    findUnitByName(name);
+                    String UNitname = System.console().readLine();
+                    findUnitByName(UNitname);
                     break;
                 case 6:
                     System.out.println("Enter the category ID of the units you want to find:");
                     int categoryID = Integer.parseInt(System.console().readLine());
                     findUnitByCategory(categoryID);
+                    break;
+                case 7:
+                    System.out.println("Enter the year for which you want to get units sold:");
+                    int year = Integer.parseInt(System.console().readLine());
+                    getUnitsSoldbyYear(year);
+                    break;
+                case 8:
+                    System.out.println("Enter the month for which you want to get units sold:");
+                    int month = Integer.parseInt(System.console().readLine());
+                    getUnitsSoldbyMonth(month);
+                    break;
+                case 9:
+                    System.out.println("Enter the name of the unit for which you want to get sales data:");
+                    String name = System.console().readLine();
+                    getUnitsSoldByName(name);
                     break;
                 case -1:
                     System.out.println("Exiting...");
@@ -67,24 +82,106 @@ public class MerchandiseSales
         }
     }
     
-    public int getUnitsSoldbyCategory()
+    public void getUnitsSoldbyCategory(int categoryID)
     {
-        return 0;
+        File myFile = new File(FilePathMerch);
+        ArrayList<String[]> merchData = new ArrayList<>();
+        try(Scanner myReader = new Scanner(myFile))
+        {
+            while(myReader.hasNextLine())
+            {
+                String[] data = myReader.nextLine().split(",");
+                if(Integer.parseInt(data[1].trim()) == categoryID)
+                {
+                    merchData.add(data);
+                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5] + " Date: " + data[6]);
+                }
+            }
+            return;
+        }
+        catch(FileNotFoundException e){
+            System.out.println("An error occurred while reading the merchandise sales: " + e.getMessage());
+        }
+    
+        System.out.println("No merchandise sales data found.");
+        return;
     }
     
-    public int getUnitsSoldbyMonth()
+    public void getUnitsSoldbyMonth(int month)//Double Check Code
     {
-        return 0;
+                File myFile = new File(FilePathMerch);
+        ArrayList<String[]> merchData = new ArrayList<>();
+        try(Scanner myReader = new Scanner(myFile))
+        {
+            while(myReader.hasNextLine())
+            {
+                String[] data = myReader.nextLine().split(",");
+                int CurrMonth = Integer.parseInt(data[6].split("-")[1].trim());
+                if(CurrMonth == month)
+                {
+                    merchData.add(data);
+                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5] + " Date: " + data[6]);
+                }
+            }
+            return;
+        }
+        catch(FileNotFoundException e){
+            System.out.println("An error occurred while reading the merchandise sales: " + e.getMessage());
+        }
+    
+        System.out.println("No merchandise sales data found.");
+        return;
     }
 
-    public int getUnitsSoldbyYear()
+    public void getUnitsSoldbyYear(int year)//Double Check Code
     {
-        return 0;
+                        File myFile = new File(FilePathMerch);
+        ArrayList<String[]> merchData = new ArrayList<>();
+        try(Scanner myReader = new Scanner(myFile))
+        {
+            while(myReader.hasNextLine())
+            {
+                String[] data = myReader.nextLine().split(",");
+                int CurrYear = Integer.parseInt(data[6].split("-")[0].trim());
+                if(CurrYear == year)
+                {
+                    merchData.add(data);
+                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5] + " Date: " + data[6]);
+                }
+            }
+            return;
+
+        }
+        catch(FileNotFoundException e){
+            System.out.println("An error occurred while reading the merchandise sales: " + e.getMessage());
+        }
+    
+        System.out.println("No merchandise sales data found.");
+        
     }
 
-    public int getUnitsSoldByName()
+    public void getUnitsSoldByName(String name)//Double Check Code
     {
-        return 0;
+                        File myFile = new File(FilePathMerch);
+        ArrayList<String[]> merchData = new ArrayList<>();
+        try(Scanner myReader = new Scanner(myFile))
+        {
+            while(myReader.hasNextLine())
+            {
+                String[] data = myReader.nextLine().split(",");
+                if(data[2].replaceAll("\\s+", "").toLowerCase().equals(name.toLowerCase().replaceAll("\\s+", "")))
+                {
+                    merchData.add(data);
+                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5] + " Date: " + data[6]);
+                }
+            }
+
+        }
+        catch(FileNotFoundException e){
+            System.out.println("An error occurred while reading the merchandise sales: " + e.getMessage());
+        }
+    
+        System.out.println("No merchandise sales data found.");
     }
 
     public void AddUnitsSold()
