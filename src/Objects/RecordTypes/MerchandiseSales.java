@@ -142,7 +142,7 @@ public class MerchandiseSales
         return;
     }
     
-    public void getUnitsSoldbyMonth(int month)
+    public void getUnitsSoldbyMonth(int month)//See How many units were sold by month
     {
         String monthStringCheck;
         if((month > 12 || month < 1) )
@@ -165,7 +165,7 @@ public class MerchandiseSales
                 if(CurrMonth == month)
                 {
                     merchData.add(data);
-                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5]  + " Cost to Make: " + data[4] + " Date: " + data[6]);
+                    System.out.println("Name: " + data[2] + "Units Sold: " +  data[3] + " Date: " + data[6]);
                 }
             }
             if(merchData.size() > 0)
@@ -181,7 +181,7 @@ public class MerchandiseSales
         return;
     }
 
-    public void getUnitsSoldbyYear(int year)//Double Check Code
+    public void getUnitsSoldbyYear(int year)//See how many Units were sold by year
     {
         String yearStringCheck;
         if((year > 9999 || year < 1000) )
@@ -204,7 +204,7 @@ public class MerchandiseSales
                 if(CurrYear == year)
                 {
                     merchData.add(data);
-                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5]  + " Cost to Make: " + data[4] + " Date: " + data[6]);
+                    System.out.println("Name: " + data[2] + "Units Sold: " +  data[3] + " Date: " + data[6]);
                 }
             }
             if(merchData.size() > 0)
@@ -220,8 +220,9 @@ public class MerchandiseSales
         System.out.println("No merchandise sales data found.");
         
     }
+    
 
-    public void getUnitsSoldByName(String name)//Double Check Code
+    public void getUnitsSoldByName(String name)//See how many units were sold by name
     {
         File myFile = new File(FilePathMerch);
         ArrayList<String[]> merchData = new ArrayList<>();
@@ -233,7 +234,7 @@ public class MerchandiseSales
                 if(data[2].replaceAll("\\s+", "").toLowerCase().equals(name.toLowerCase().replaceAll("\\s+", "")))
                 {
                     merchData.add(data);
-                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5]  + " Cost to Make: " + data[4] + " Date: " + data[6]);
+                    System.out.println("Name: " + data[2] + " Units Sold: " +  data[3]);
                 }
             }
             if (merchData.size()> 0) 
@@ -249,7 +250,7 @@ public class MerchandiseSales
         System.out.println("No merchandise sales data found.");
     }
 
-    public void AddUnitsSold()
+    public void AddUnitsSold()//Add new Item to Merchandise DataBase
     {
             Map<Integer, String> Categories = getCatgories(true);
             //Get Categories from MerchandiseSalesCategories and list them below with numbers, indicating which number corresponds too
@@ -327,7 +328,7 @@ public class MerchandiseSales
 
     
 
-    public int addCategory(String categoryName)
+    public int addCategory(String categoryName)//Adds category to category database
     {
         int numberOfIDs = 0;
         HashMap<Integer, String> categories = new HashMap<>(getCatgories(false));
@@ -349,7 +350,7 @@ public class MerchandiseSales
     }
 
 
-    public static Map<Integer, String> getCatgories(boolean printCategories)
+    public static Map<Integer, String> getCatgories(boolean printCategories)//loads all categories
     {
         Map<Integer, String> categories = new  HashMap<>();
         File myFile = new File(FilePathCategories);
@@ -373,7 +374,7 @@ public class MerchandiseSales
         return categories;
     }
 
-    public float calculateRevenuebyCategory(int categoryID)
+    public float calculateRevenuebyCategory(int categoryID)//Calculates total revenue by Category
     {
         String[][] merchData = getMerch();
         float totalRevenue = 0;
@@ -384,17 +385,17 @@ public class MerchandiseSales
                 totalRevenue += Float.parseFloat(merchData[i][4].trim()) * Integer.parseInt(merchData[i][3].trim());
             }
         }
-        System.out.println(totalRevenue);
+        System.out.println("Total revenue for Category: " + categoryID + " is: " + totalRevenue);
         return (float) totalRevenue;
     }
 
-    public float calculateRevenuebyMonth(String month)
+    public float calculateRevenuebyMonth(String month) //Calculates total Revenue by Month
     {
         String[][] merchData = getMerch();
         float totalRevenue = 0;
         if(!(month != null && month.matches("\\d{2}") && Integer.parseInt(month) >= 1 && Integer.parseInt(month) <= 12))
         {
-            System.out.println("Incorrect Year format. Please enter a valid year 00.");
+            System.out.println("Incorrect Month format. Please enter a valid month (01-12).");
             String MonthStringCheck = System.console().readLine();
             calculateRevenuebyYear(MonthStringCheck);
         }
@@ -404,12 +405,12 @@ public class MerchandiseSales
                 totalRevenue += Float.parseFloat(merchData[i][4].trim()) * Integer.parseInt(merchData[i][3].trim());
             }
         }
-                System.out.println(totalRevenue);
+                System.out.println("Total revenue for Month: " + month + " is: " + totalRevenue);
 
         return (float) totalRevenue;
     }
 
-    public float calculateRevenuebyYear(String year)
+    public float calculateRevenuebyYear(String year)//Calculates total revenue by year
     {
         String[][] merchData = getMerch();
         float totalRevenue = 0;
@@ -426,7 +427,7 @@ public class MerchandiseSales
                 totalRevenue += Float.parseFloat(merchData[i][4].trim()) * Integer.parseInt(merchData[i][3].trim());
             }
         }
-                System.out.println(totalRevenue);
+                System.out.println("Total revenue for Year: " + year + " is: " + totalRevenue);
 
         return (float) totalRevenue;
     }
@@ -436,7 +437,7 @@ public class MerchandiseSales
 
     }
 
-    public void editUnitDetailsbyID(int id)
+    public void editUnitDetailsbyID(int id)//Edit any item by ID
     {
         String[][] merchData = getMerch();
         System.out.println("Type in the Unit ID the of the item you want to edit:");
@@ -513,7 +514,7 @@ public class MerchandiseSales
         
     }
 
-    public void deleteUnitDetailsByID(int id)
+    public void deleteUnitDetailsByID(int id)//loads the merch database deletes specific item then rewrites
     {
         Path p = Paths.get(FilePathMerch);
         ArrayList<String[]> lines = new ArrayList<String[]>();
@@ -553,35 +554,9 @@ public class MerchandiseSales
     }
 
 
-    public ArrayList<String[]> findUnitByName(String name)
-    {
-        File myFile = new File(FilePathMerch);
-        ArrayList<String[]> results = new ArrayList<>();
-        try(Scanner myReader = new Scanner(myFile))
-        {
-            while(myReader.hasNextLine())
-                {
-                String[] data = myReader.nextLine().split(",");
-                if(data[2].toLowerCase().replaceAll("\\s+", "").equals(name.toLowerCase().replaceAll("\\s+", "")))
-                {
-                    results.add(data);
-                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5]  + " Cost to Make: " + data[4] + " Date: " + data[6]);
-                }
-            }
-            if(results.size() > 0)
-            {
-                return results;
-            }
-        }
-        catch(FileNotFoundException e){
-            System.out.println("An error occurred while reading the Names: " + e.getMessage());
-        }
-    
-        System.out.println("No unit found with the given the name");
-        return results;
-    }
 
-    public static String[][] getMerch()
+
+    public static String[][] getMerch()//loads all merch from databse
     {
         File myFile = new File(FilePathMerch);
         ArrayList<String[]> merchData = new ArrayList<>();
@@ -607,7 +582,7 @@ public class MerchandiseSales
         return null;
     }
 
-    private static int getNextMerchID()
+    private static int getNextMerchID()//finds the next appropriate id for item
     {
         String[][] merchData = getMerch();
         HashSet<Integer> hashTable = new HashSet<>();
@@ -635,7 +610,8 @@ public class MerchandiseSales
             return -1;
         }
     }
-    public ArrayList<String[]> findUnitByCategory(int categoryID)
+
+    public ArrayList<String[]> findUnitByCategory(int categoryID)//get unit inforamtion by category
     {
         File myFile = new File(FilePathMerch);
         ArrayList<String[]> results = new ArrayList<>();
@@ -661,7 +637,7 @@ public class MerchandiseSales
         return null;
     }
 
-    public String[] findUnitByID(int unitID)
+    public String[] findUnitByID(int unitID)//get unit information by ID
     {
         File myFile = new File(FilePathMerch);
         ArrayList<String[]> results = new ArrayList<>();
@@ -686,6 +662,36 @@ public class MerchandiseSales
         System.out.println("No unit found with the given category ID.");
         return null;
     }
+
+    public ArrayList<String[]> findUnitByName(String name)//Get Item information from name
+    {
+        File myFile = new File(FilePathMerch);
+        ArrayList<String[]> results = new ArrayList<>();
+        try(Scanner myReader = new Scanner(myFile))
+        {
+            while(myReader.hasNextLine())
+                {
+                String[] data = myReader.nextLine().split(",");
+                if(data[2].toLowerCase().replaceAll("\\s+", "").equals(name.toLowerCase().replaceAll("\\s+", "")))
+                {
+                    results.add(data);
+                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5]  + " Cost to Make: " + data[4] + " Date: " + data[6]);
+                }
+            }
+            if(results.size() > 0)
+            {
+                return results;
+            }
+        }
+        catch(FileNotFoundException e){
+            System.out.println("An error occurred while reading the Names: " + e.getMessage());
+        }
+    
+        System.out.println("No unit found with the given the name");
+        return results;
+    }
+
+
       
     private static boolean isDateValid(String[] dateParts)//Checks for Valid Date input
     {
