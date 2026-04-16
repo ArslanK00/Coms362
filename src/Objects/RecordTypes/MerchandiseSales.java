@@ -27,7 +27,7 @@ public class MerchandiseSales
     {
         while(choice != -1)
         {
-            System.out.println("Choose an option: \n 1.Add Units Sold \n 2. Delete unit details by ID \n 3. add category \n 4. get categories \n 5. Find unit by name \n 6. Find unit by category \n 7. Get unit info by year \n 8. Get units info by month \n 9. Get units info by name \n 10. Get revune  by category \n 11. get revenue sold b year \n 12. get revenue by month  \n   13 edit \n -1Exit");
+            System.out.println("Choose an option: \n 1.Add Units Sold \n 2. Delete unit details by ID \n 3. add category \n 4. get categories \n 5. Find unit by name \n 6. Find unit by category \n 7. Get units sold by year \n 8. Get units sold by month \n 9. Get units sold info by name \n 10. Get revune  by category \n 11. get revenue sold b year \n 12. get revenue by month  \n   13 edit \n -1Exit");
 
             choice = Integer.parseInt(System.console().readLine());
             switch(choice)
@@ -104,9 +104,9 @@ public class MerchandiseSales
     
     public void getUnitsSoldbyCategory(int categoryID)
     {
-
-            Map<Integer, String> Categories = getCatgories(true);
-            //Get Categories from MerchandiseSalesCategories and list them below with numbers, indicating which number corresponds too
+        
+        Map<Integer, String> Categories = getCatgories(true);
+        //Get Categories from MerchandiseSalesCategories and list them below with numbers, indicating which number corresponds too
             String categoryIDString;
             if(!Categories.containsKey(categoryID))
             {
@@ -129,7 +129,7 @@ public class MerchandiseSales
                 if(Integer.parseInt(data[1].trim()) == categoryID)
                 {
                     merchData.add(data);
-                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5]  + " Cost to Make: " + data[4] + " Date: " + data[6]);
+                    System.out.println("Category: " + data[1] + "Name: " + data[2] + "Units Sold: " +  data[3] + " Date: " + data[6]);
                 }
             }
             return;
