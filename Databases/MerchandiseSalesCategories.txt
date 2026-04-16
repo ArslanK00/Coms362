@@ -3,3 +3,5 @@
 3:Socks
 4:Hats
 5:Shoes
+6:Shirts
+7:Glasses

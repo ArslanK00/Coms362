@@ -27,7 +27,7 @@ public class MerchandiseSales
     {
         while(choice != -1)
         {
-            System.out.println("Choose an option: \n 1.Add Units Sold \n 2. Delete unit details by ID \n 3. add category \n 4. get categories \n 5. Find unit by name \n 6. Find unit by category \n 7. Get units sold by year \n 8. Get units sold by month \n 9. Get units sold by name \n 10. Get units sold by category \n 11. get units sold b year \n 12. get units by month -1. \n   13edit Exit");
+            System.out.println("Choose an option: \n 1.Add Units Sold \n 2. Delete unit details by ID \n 3. add category \n 4. get categories \n 5. Find unit by name \n 6. Find unit by category \n 7. Get unit info by year \n 8. Get units info by month \n 9. Get units info by name \n 10. Get revune  by category \n 11. get revenue sold b year \n 12. get revenue by month  \n   13 edit \n -1Exit");
 
             choice = Integer.parseInt(System.console().readLine());
             switch(choice)
