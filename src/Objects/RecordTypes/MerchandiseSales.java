@@ -84,6 +84,21 @@ public class MerchandiseSales
     
     public void getUnitsSoldbyCategory(int categoryID)
     {
+
+            Map<Integer, String> Categories = getCatgories(true);
+            //Get Categories from MerchandiseSalesCategories and list them below with numbers, indicating which number corresponds too
+            String categoryIDString;
+            if(!Categories.containsKey(categoryID))
+            {
+                while(!(categoryIDString = System.console().readLine()).matches("-?\\d+"))
+                {
+                    System.out.println("Invalid input. Please enter a valid Category ID:");
+                }
+                categoryID = Integer.parseInt(categoryIDString);
+
+            }
+            
+
         File myFile = new File(FilePathMerch);
         ArrayList<String[]> merchData = new ArrayList<>();
         try(Scanner myReader = new Scanner(myFile))
@@ -107,9 +122,19 @@ public class MerchandiseSales
         return;
     }
     
-    public void getUnitsSoldbyMonth(int month)//Double Check Code
+    public void getUnitsSoldbyMonth(int month)
     {
-                File myFile = new File(FilePathMerch);
+        String monthStringCheck;
+        if((month > 12 || month < 1) )
+        {
+            System.out.println("Invalid month. Please enter a month between 1 and 12. please try again.");
+            while(!(monthStringCheck = System.console().readLine()).matches("-?\\d+"))
+            {
+                System.out.println("Invalid input. Please enter a valid month:");
+            }
+            getUnitsSoldbyMonth(Integer.parseInt(monthStringCheck));
+        }
+        File myFile = new File(FilePathMerch);
         ArrayList<String[]> merchData = new ArrayList<>();
         try(Scanner myReader = new Scanner(myFile))
         {
@@ -123,7 +148,10 @@ public class MerchandiseSales
                     System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5] + " Date: " + data[6]);
                 }
             }
-            return;
+            if(merchData.size() > 0)
+            {
+                return;
+            }
         }
         catch(FileNotFoundException e){
             System.out.println("An error occurred while reading the merchandise sales: " + e.getMessage());
@@ -135,7 +163,17 @@ public class MerchandiseSales
 
     public void getUnitsSoldbyYear(int year)//Double Check Code
     {
-                        File myFile = new File(FilePathMerch);
+        String yearStringCheck;
+        if((year > 9999 || year < 1000) )
+        {
+            System.out.println("Invalid year. Please enter a valid year. please try again.");
+            while(!(yearStringCheck = System.console().readLine()).matches("-?\\d+"))
+            {
+                System.out.println("Invalid input. Please enter a valid year:");
+            }
+            getUnitsSoldbyYear(Integer.parseInt(yearStringCheck));
+        }
+        File myFile = new File(FilePathMerch);
         ArrayList<String[]> merchData = new ArrayList<>();
         try(Scanner myReader = new Scanner(myFile))
         {
@@ -149,7 +187,10 @@ public class MerchandiseSales
                     System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5] + " Date: " + data[6]);
                 }
             }
-            return;
+            if(merchData.size() > 0)
+            {
+                return;
+            }
 
         }
         catch(FileNotFoundException e){
@@ -162,7 +203,7 @@ public class MerchandiseSales
 
     public void getUnitsSoldByName(String name)//Double Check Code
     {
-                        File myFile = new File(FilePathMerch);
+        File myFile = new File(FilePathMerch);
         ArrayList<String[]> merchData = new ArrayList<>();
         try(Scanner myReader = new Scanner(myFile))
         {
@@ -174,6 +215,10 @@ public class MerchandiseSales
                     merchData.add(data);
                     System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5] + " Date: " + data[6]);
                 }
+            }
+            if (merchData.size()> 0) 
+                {
+                return;
             }
 
         }
