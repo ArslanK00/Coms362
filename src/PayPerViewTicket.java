@@ -1,109 +1,85 @@
-// package src;
-// import java.io.FileWriter;
-// import java.io.IOException;
-// import java.time.YearMonth;
+import java.io.File;
+import java.io.IOException;
+import java.time.YearMonth;
 
-// import src.Objects.AbstractRecord;
-// public class PayPerViewTicket extends AbstractRecord
-// {
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
-//     private static String eventdateStr;
-//     private static float cost;
-//     private static String EventName;
-//     private static String FilePath = "TicketSystemDatabases/UploadedPayPerViewTickets.txt";
-//     private static boolean priceValid = false;
+public class PayPerViewTicket {
 
-//     public PayPerViewTicket() 
-//     {
-        
-//     }
+    private static String endUpload = "Y";
+    public static void main(String[] args) 
+    {
+       
+         uploadPayPerViewTicket();
+    }
 
+    public static void uploadPayPerViewTicket() 
+    {
+         int id = 1;
 
-//     public static void uploadPayPerViewTicket() 
-//     {
+        while(endUpload.equalsIgnoreCase("Y"))
+        {
+            System.out.println("Would you like to upload a Pay Per View ticket? (Y/N)");
+            String endUpload = System.console().readLine();
             
-//             System.out.println("Please Fill out the following information to upload a Pay-Per-View ticket.");
+            if(endUpload.equalsIgnoreCase("N"))
+            {
+                break;
+            }
             
-//             System.out.println("Enter the event name:");
-//             String eventName = System.console().readLine();
-//             EventName = eventName;
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode ticketData = mapper.createObjectNode();
+            ticketData.put("ticketID", id++); 
 
-//             System.out.println("Enter the price:");
-//             float price = 0;
-//             while(!priceValid)//Checks for valid price input
-//             {
-//                 String priceInput = System.console().readLine();
-//                 if(priceInput.matches("\\d+(\\.\\d{1,2})?"))
-//                 {
-//                     price = Float.parseFloat(priceInput);
-//                     cost = price;
-//                     priceValid = true;
-//                 }
-//                 else
-//                 {
-//                     System.out.println("Invalid price format. Please enter a valid price (ex: 19.99):");
-//                 }
+            System.out.println("Enter the event name:");
+            String event = System.console().readLine();
+            ticketData.put("event", event);
 
-//             }
+            System.out.println("Enter the price:");
+            double price = Double.parseDouble(System.console().readLine());
+            ticketData.put("price", price);
 
-//             System.out.println("Enter the event date (YYYY-MM):");
-//             String eventDateStr = System.console().readLine();
-//             String[] dateParts = eventDateStr.split("-");
-//             while (!isDateValid(dateParts)) 
-//             {
-//                 System.out.println("Invalid Year or month. Please enter as YYYY-MM:");
-//                 eventDateStr = System.console().readLine();
-//                 dateParts = eventDateStr.split("-");
-//             }
-            
-//             eventdateStr = YearMonth.parse(eventDateStr).toString();
 
-//             try (FileWriter writer = new FileWriter(FilePath, true)) 
-//             {
-//                 writer.write(EventName + "," + eventdateStr + "," + cost + "\n");
-//                 System.out.println("Item added successfully.");
-//             } 
-//             catch (IOException e) 
-//             {
-//                 e.printStackTrace();
-//             }
-//     }
+            System.out.println("Enter the event date (YYYY-MM):");
+            String eventDateStr = System.console().readLine();
+            String[] dateParts = eventDateStr.split("-");
+            while (Integer.parseInt(dateParts[1]) > 12 || Integer.parseInt(dateParts[1]) < 1) 
+            {
+                System.out.println("Invalid month. Please enter a month between 01 and 12.");
+                eventDateStr = System.console().readLine();
+                dateParts = eventDateStr.split("-");
+            }
+            YearMonth eventDate = YearMonth.parse(eventDateStr);
+            ticketData.put("eventDate", eventDate.toString());  
 
-//     private static boolean isDateValid(String[] dateParts)//Checks for Valid Date input
-//     {
-//         if (dateParts.length != 2) return false;
-        
-//         String year = dateParts[0];
-//         String month = dateParts[1];
+            try 
+            {
+                File file = new File("TicketSystemDatabases/UploadedPayPerViewTickets.json");
 
-//         if (!year.matches("\\d{4}") || !month.matches("\\d{2}"))
-//         return false;
+                ArrayNode ticketsArray;
 
-//         int m = Integer.parseInt(month);
-//         if(m < 1 || m > 12) return false;
-//         return true;
-//     }
+            if (file.exists()) 
+            {
+                ticketsArray = (ArrayNode) mapper.readTree(file);
+            } 
+            else 
+            {
+                ticketsArray = mapper.createArrayNode();
+            }
 
-//     @Override
-//     public String getDate() 
-//     {
-//         return this.eventdateStr;
-//     }
+            ticketsArray.add(ticketData);
 
-//     @Override
-//     public float getCost() 
-//     {
-//         return this.cost;
-//     }
+            mapper.writerWithDefaultPrettyPrinter().writeValue(file, ticketsArray);
 
-//     public String getEventName() 
-//     {
-//         return this.EventName;
-//     }
-
-//     @Override
-//     public String toString() 
-//     {
-//         return "PayPerViewTicket [Event Name=" + EventName + ", Event Date=" + getDate() + ", Cost=" + getCost() + "]";
-//     }
-// }
+            System.out.println("Ticket added successfully!");
+            } 
+            catch (IOException e) 
+            {
+                System.out.println("An error occurred while saving the ticket data: " + e.getMessage());
+            }
+           
+        }
+    }
+}
