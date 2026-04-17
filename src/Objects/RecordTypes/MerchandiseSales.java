@@ -2,10 +2,11 @@ package Objects.RecordTypes;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Serializable;
 import java.time.YearMonth;
 
-public class MerchandiseSales implements Record, Serializable
+
+
+public class MerchandiseSales implements Record
 {
     private String name;
     private float cost;
@@ -38,6 +39,7 @@ public class MerchandiseSales implements Record, Serializable
     
     public MerchandiseSales[] TurnAllMerchandiseToSystemRecords(boolean SendtoRecords)
     {
+        
         UploadMerchandiseSales uploadMerch = new UploadMerchandiseSales();
         String[][] merchData = uploadMerch.getMerch();
         MerchandiseSales[] MerchSystemRecords = new MerchandiseSales[uploadMerch.getMerch().length];
