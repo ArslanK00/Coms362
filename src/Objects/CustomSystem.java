@@ -1,7 +1,7 @@
-package src.Objects;
+package Objects;
 import java.util.ArrayList;
 
-import src.Objects.RecordTypes.Record;
+import Objects.RecordTypes.Record;
 
 public class CustomSystem {
     ArrayList<Event> events;

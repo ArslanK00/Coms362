@@ -1,4 +1,4 @@
-package src.Objects.RecordTypes;
+package Objects.RecordTypes;
 
 public enum RecordEnum {
     PayPerViewTicket,

@@ -1,4 +1,4 @@
-package src.Objects.RecordTypes;
+package Objects.RecordTypes;
 import java.time.YearMonth;
 
 public abstract class AbstractRecord implements Record{

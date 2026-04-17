@@ -1,4 +1,4 @@
-package src.Objects.RecordTypes;
+package Objects.RecordTypes;
 
 public class LiveEventTicket extends AbstractRecord {
     private RecordEnum recordType = RecordEnum.LiveEventTicket;
