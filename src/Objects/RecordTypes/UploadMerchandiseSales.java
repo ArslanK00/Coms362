@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Scanner;
 
-public class UploadMerchandiseSales 
+public class UploadMerchandiseSales //need to move out of Record Types
 {
     
     private static String FilePathMerch = "Databases/MerchandiseSales.txt";
