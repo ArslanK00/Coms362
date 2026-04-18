@@ -12,25 +12,7 @@ public class wweRevenueCalculator {
 
     static CustomSystem wweSystem = new CustomSystem();
     public static void main(String[] args){
-        // LiveEventTicket ticket1 = new LiveEventTicket(1, "ticket1");
-        // PayPerViewTicket ticket2 = new PayPerViewTicket(2, "ticket2");
 
-        // Event event1 = new Event("Event1", "N/A");
-        // Event event2 = new Event("Event2", "N/A");
-        // Event event3 = new Event("Event3", "N/A");
-        // wweSystem.addEvent(event1);
-        // wweSystem.addEvent(event2);
-        // wweSystem.addEvent(event3);
-
-        // System.out.println(wweSystem.listEvents());
-        // System.out.println(wweSystem.getEvent(3)); //This should return the summary of event3
-
-        // wweSystem.addRecordToEvent(3, ticket1); //Adding ticket1 to event3
-        // wweSystem.addRecordToEvent(3, ticket2); //Adding ticket2 to event3
-
-        // System.out.println(wweSystem.listEventRecords(3));
-
-        //Read all 
 
         System.out.println("Welcome to the Ticketing System!");
 
@@ -38,6 +20,7 @@ public class wweRevenueCalculator {
             System.out.println("Please select an option:");
             System.out.println("1 Add an event to the system");
             System.out.println("2 View Events");
+           // System.out.println("3 Employees");
             System.out.println("3 Calculate all Revenue");
             System.out.println("4 Exit");
             String choice = System.console().readLine();
@@ -197,29 +180,6 @@ public class wweRevenueCalculator {
                 }
 
             }
-
-            // Add this later, because I'm super tired
-            // System.out.println("Enter the event date (YYYY-MM):");
-            // String eventDateStr = System.console().readLine();
-            // String[] dateParts = eventDateStr.split("-");
-            // while (!isDateValid(dateParts)) 
-            // {
-            //     System.out.println("Invalid Year or month. Please enter as YYYY-MM:");
-            //     eventDateStr = System.console().readLine();
-            //     dateParts = eventDateStr.split("-");
-            // }
-            
-            // eventdateStr = YearMonth.parse(eventDateStr).toString();
-
-            // try (FileWriter writer = new FileWriter(FilePath, true)) 
-            // {
-            //     writer.write(EventName + "," + eventdateStr + "," + cost + "\n");
-            //     System.out.println("Item added successfully.");
-            // } 
-            // catch (IOException e) 
-            // {
-            //     e.printStackTrace();
-            // }
             return ticket;
     }
 
@@ -250,28 +210,6 @@ public class wweRevenueCalculator {
 
             }
 
-            // Implement this later, I'm a little too eepy rn
-            // System.out.println("Enter the event date (YYYY-MM):");
-            // String eventDateStr = System.console().readLine();
-            // String[] dateParts = eventDateStr.split("-");
-            // while (!isDateValid(dateParts)) 
-            // {
-            //     System.out.println("Invalid Year or month. Please enter as YYYY-MM:");
-            //     eventDateStr = System.console().readLine();
-            //     dateParts = eventDateStr.split("-");
-            // }
-            
-            // eventdateStr = YearMonth.parse(eventDateStr).toString();
-
-            // try (FileWriter writer = new FileWriter(FilePath, true)) 
-            // {
-            //     writer.write(EventName + "," + eventdateStr + "," + cost + "\n");
-            //     System.out.println("Item added successfully.");
-            // } 
-            // catch (IOException e) 
-            // {
-            //     e.printStackTrace();
-            // }
             return ticket;
     }
 
