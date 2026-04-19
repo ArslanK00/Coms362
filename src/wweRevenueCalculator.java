@@ -98,16 +98,15 @@ public class wweRevenueCalculator {
 
             try{
                 int eventIndex = Integer.parseInt(choice);
+                if(eventIndex == 0){
+                    return;
+                }
                 Event chosenEvent = wweSystem.getEvent(eventIndex);
                 eventController(eventIndex);
 
             } catch(NumberFormatException e){
-                if(choice.equalsIgnoreCase("0")){
-                    return;
-                }
-                else{
-                    System.out.println("Invalid input");
-                }
+                System.out.println("Invalid input");
+                
             } catch(IndexOutOfBoundsException f){
                 System.out.println("Invalid input");
             }
@@ -279,37 +278,59 @@ public class wweRevenueCalculator {
     }
 
     private static void systemEmployees(){
-        Scanner scanner = new Scanner(System.in);
-        int choice;
+        //Scanner scanner = new Scanner(System.in);
+        String choice;
 
         //if there are no employees currently in the system
         if(wweSystem.numberOfEmployees() == 0){
             System.out.println("There are currently no employees in the system");
+            //scanner.close();
             return;
         }
         else{ //if there is at least one employee in the system
             while(true){
                 wweSystem.listEmployees();
                 System.out.println("Please select an employee by number, or enter '0' to return the previous screen");
-                choice = scanner.nextInt();
-                if(choice == 0){
-                    return;
-                }
-                else if(choice > 0 && choice <= wweSystem.numberOfEmployees()){
-                    employeeController(choice);
-                }
-                else{
-                    System.out.println("Invalid input");
-                }
+                choice = System.console().readLine();
+                try{
+                    int employeeIndex = Integer.parseInt(choice);
+                    if(employeeIndex > 0 && employeeIndex <= wweSystem.numberOfEmployees()){
+                        employeeController(employeeIndex);
+                    }
+                    else if(employeeIndex == 0){
+                        return;
+                    }
+                    else{
+                        System.out.println("Invalid option");
+                    }
+
+                 } catch(NumberFormatException e){
+                    System.out.println("Invalid option");
+                 }
             }
         }
 
     }
 
     public static void employeeController(int emp){
+        Scanner scanner = new Scanner(System.in);
         Employee employee = wweSystem.getEmployee(emp);
+        System.out.println(employee.toString());
+        int choice;
 
-        //TODO
+        while(true){
+            System.out.println("What would you like to do with this employee?\n1 Edit\n2 Exit");
+            choice = scanner.nextInt();
+            switch(choice){
+                case 1:
+                    employee.toString();
+                    System.out.println(employee.toString());
+                    break;
+                case 2:
+                    scanner.close();
+                    return;
+            }
+        }
     }
 
     /**
@@ -318,6 +339,7 @@ public class wweRevenueCalculator {
      */
     private static void addEmployeeToSystem(){
         //TODO
+        System.out.println("Feature not yet implemented");
     }
 
 
