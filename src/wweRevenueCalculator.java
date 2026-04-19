@@ -319,7 +319,7 @@ public class wweRevenueCalculator {
      * @param emp
      * Description: Used to manage employees in the system.
      */
-    public static void employeeController(int emp){
+    private static void employeeController(int emp){
         //Scanner scanner = new Scanner(System.in);
         Employee employee = wweSystem.getEmployee(emp);
         System.out.println(employee.toString());

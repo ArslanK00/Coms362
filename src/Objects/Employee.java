@@ -13,11 +13,11 @@ public class Employee {
         lastName = last;
     }
 
-    private void setFirstName(String firstName){
+    public void setFirstName(String firstName){
         this.firstName = firstName;
     }
 
-    private void setLastName(String lastName){
+    public void setLastName(String lastName){
         this.lastName = lastName;
     }
 
