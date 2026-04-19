@@ -1,6 +1,8 @@
 package Objects;
 
-
+/**
+ * @author Eleena Rath
+ */
 public class Employee {
     
     private String firstName;

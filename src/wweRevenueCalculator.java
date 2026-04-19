@@ -276,6 +276,10 @@ public class wweRevenueCalculator {
         return true;
     }
 
+    /**
+     * @author Eleena Rath
+     * Description: Used to choose an employee in the system
+     */
     private static void systemEmployees(){
         String choice;
 
@@ -310,6 +314,11 @@ public class wweRevenueCalculator {
 
     }
 
+    /**
+     * @author Eleena Rath
+     * @param emp
+     * Description: Used to manage employees in the system.
+     */
     public static void employeeController(int emp){
         //Scanner scanner = new Scanner(System.in);
         Employee employee = wweSystem.getEmployee(emp);
@@ -332,7 +341,7 @@ public class wweRevenueCalculator {
 
     /**
      * @author Eleena Rath
-     * @return new employee
+     * Description: Creates a new employee and adds them to the system.
      */
     private static void addEmployeeToSystem(){
         String firstName, lastName;
