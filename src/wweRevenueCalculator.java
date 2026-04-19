@@ -2,7 +2,6 @@
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.YearMonth;
-import java.util.Scanner;
 
 import Objects.CustomSystem;
 import Objects.Employee;
@@ -278,17 +277,16 @@ public class wweRevenueCalculator {
     }
 
     private static void systemEmployees(){
-        //Scanner scanner = new Scanner(System.in);
         String choice;
 
         //if there are no employees currently in the system
         if(wweSystem.numberOfEmployees() == 0){
             System.out.println("There are currently no employees in the system");
-            //scanner.close();
             return;
         }
         else{ //if there is at least one employee in the system
             while(true){
+                System.out.println("\nEmployees: ");
                 wweSystem.listEmployees();
                 System.out.println("Please select an employee by number, or enter '0' to return the previous screen");
                 choice = System.console().readLine();
@@ -313,21 +311,20 @@ public class wweRevenueCalculator {
     }
 
     public static void employeeController(int emp){
-        Scanner scanner = new Scanner(System.in);
+        //Scanner scanner = new Scanner(System.in);
         Employee employee = wweSystem.getEmployee(emp);
         System.out.println(employee.toString());
-        int choice;
+        String choice;
 
         while(true){
-            System.out.println("What would you like to do with this employee?\n1 Edit\n2 Exit");
-            choice = scanner.nextInt();
+            System.out.println("What would you like to do with this employee?\n1 Edit\n0 Exit");
+            choice = System.console().readLine();
             switch(choice){
-                case 1:
-                    employee.toString();
+                case "1":
+                    employee.editEmployee();
                     System.out.println(employee.toString());
                     break;
-                case 2:
-                    scanner.close();
+                case "0":
                     return;
             }
         }
@@ -338,8 +335,31 @@ public class wweRevenueCalculator {
      * @return new employee
      */
     private static void addEmployeeToSystem(){
-        //TODO
-        System.out.println("Feature not yet implemented");
+        String firstName, lastName;
+        while(true){
+            System.out.println("Enter the employee's first name, or enter 'exit' to cancel");
+            firstName = System.console().readLine();
+            if(firstName.equals("exit")){
+                return;
+            }
+            System.out.println("Enter the employee's last name, or enter 'exit' to cancel");
+            lastName = System.console().readLine();
+            if(lastName.equals("exit")){
+                return;
+            }
+
+            //validate input
+            if(firstName.length() < 2 || lastName.length() < 2){
+                System.out.println("Both the employee's first and last name must be at least two characters.");
+            }
+            else{
+                Employee employee = new Employee(firstName, lastName);
+                wweSystem.addEmployee(employee);
+                System.out.println("Employee successfully created!");
+                break;
+            }
+        }
+        
     }
 
 

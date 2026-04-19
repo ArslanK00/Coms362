@@ -1,6 +1,5 @@
 package Objects;
 
-import java.util.Scanner;
 
 public class Employee {
     
@@ -25,13 +24,12 @@ public class Employee {
     }
 
     public void editEmployee(){
-        Scanner scanner = new Scanner(System.in);
         String newFirstName, newLastName;
         while(true){
             System.out.println("Employee's first name: ");
-            newFirstName = scanner.next();
+            newFirstName = System.console().readLine();
             System.out.println("Employee's last name: ");
-            newLastName = scanner.next();
+            newLastName = System.console().readLine();
 
             if(newFirstName.length() < 2 || newLastName.length() < 2){
                 System.out.println("The employee's first and last name must be at least two characters long.");
@@ -39,7 +37,6 @@ public class Employee {
             else{
                 setFirstName(newFirstName);
                 setLastName(newLastName);
-                scanner.close();
                 break;
             }
         }
@@ -49,7 +46,7 @@ public class Employee {
 
     @Override
     public String toString(){
-        return "Employee: " + "firstName" + "lastName";
+        return "Employee: " + firstName + " " + lastName;
     }
 
 }
