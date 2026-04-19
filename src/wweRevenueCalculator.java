@@ -2,8 +2,10 @@
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.YearMonth;
+import java.util.Scanner;
 
 import Objects.CustomSystem;
+import Objects.Employee;
 import Objects.Event;
 import Objects.RecordTypes.LiveEventTicket;
 import Objects.RecordTypes.PayPerViewTicket;
@@ -18,11 +20,12 @@ public class wweRevenueCalculator {
 
         while(true){
             System.out.println("Please select an option:");
-            System.out.println("1 Add an event to the system");
+            System.out.println("1 Add an Event to the System");
             System.out.println("2 View Events");
-           // System.out.println("3 Employees");
-            System.out.println("3 Calculate all Revenue");
-            System.out.println("4 Exit");
+            System.out.println("3 Add Employee");
+            System.out.println("4 View Employees");
+            System.out.println("5 Calculate All Revenue");
+            System.out.println("0 Exit");
             String choice = System.console().readLine();
 
             switch (choice) {
@@ -33,10 +36,16 @@ public class wweRevenueCalculator {
                     systemEvents();
                     break;
                 case "3":
+                    addEmployeeToSystem();
+                    break;
+                case "4":
+                    systemEmployees();
+                    break;
+                case "5":
                     //CalculateAll
                     calculateAllRevenue();
                     break;
-                case "4":
+                case "0":
                     System.out.println("Exiting the system. Goodbye!");
                     //Save all records to a file
 
@@ -84,7 +93,7 @@ public class wweRevenueCalculator {
         System.out.println(wweSystem.listEvents());
 
         while(true){
-            System.out.println("Please select an event by its number, or 'exit' to go back to the previous screen");
+            System.out.println("Please select an event by its number, or enter '0' to go back to the previous screen");
             String choice = System.console().readLine();
 
             try{
@@ -93,7 +102,7 @@ public class wweRevenueCalculator {
                 eventController(eventIndex);
 
             } catch(NumberFormatException e){
-                if(choice.equalsIgnoreCase("exit")){
+                if(choice.equalsIgnoreCase("0")){
                     return;
                 }
                 else{
@@ -267,6 +276,48 @@ public class wweRevenueCalculator {
         int m = Integer.parseInt(month);
         if(m < 1 || m > 12) return false;
         return true;
+    }
+
+    private static void systemEmployees(){
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+
+        //if there are no employees currently in the system
+        if(wweSystem.numberOfEmployees() == 0){
+            System.out.println("There are currently no employees in the system");
+            return;
+        }
+        else{ //if there is at least one employee in the system
+            while(true){
+                wweSystem.listEmployees();
+                System.out.println("Please select an employee by number, or enter '0' to return the previous screen");
+                choice = scanner.nextInt();
+                if(choice == 0){
+                    return;
+                }
+                else if(choice > 0 && choice <= wweSystem.numberOfEmployees()){
+                    employeeController(choice);
+                }
+                else{
+                    System.out.println("Invalid input");
+                }
+            }
+        }
+
+    }
+
+    public static void employeeController(int emp){
+        Employee employee = wweSystem.getEmployee(emp);
+
+        //TODO
+    }
+
+    /**
+     * @author Eleena Rath
+     * @return new employee
+     */
+    private static void addEmployeeToSystem(){
+        //TODO
     }
 
 
