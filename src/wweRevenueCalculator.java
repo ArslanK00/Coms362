@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.YearMonth;
 
 import Objects.CustomSystem;
+import Objects.Employee;
 import Objects.Event;
 import Objects.RecordTypes.LiveEventTicket;
 import Objects.RecordTypes.PayPerViewTicket;
@@ -12,34 +13,18 @@ public class wweRevenueCalculator {
 
     static CustomSystem wweSystem = new CustomSystem();
     public static void main(String[] args){
-        // LiveEventTicket ticket1 = new LiveEventTicket(1, "ticket1");
-        // PayPerViewTicket ticket2 = new PayPerViewTicket(2, "ticket2");
 
-        // Event event1 = new Event("Event1", "N/A");
-        // Event event2 = new Event("Event2", "N/A");
-        // Event event3 = new Event("Event3", "N/A");
-        // wweSystem.addEvent(event1);
-        // wweSystem.addEvent(event2);
-        // wweSystem.addEvent(event3);
-
-        // System.out.println(wweSystem.listEvents());
-        // System.out.println(wweSystem.getEvent(3)); //This should return the summary of event3
-
-        // wweSystem.addRecordToEvent(3, ticket1); //Adding ticket1 to event3
-        // wweSystem.addRecordToEvent(3, ticket2); //Adding ticket2 to event3
-
-        // System.out.println(wweSystem.listEventRecords(3));
-
-        //Read all 
 
         System.out.println("Welcome to the Ticketing System!");
 
         while(true){
             System.out.println("Please select an option:");
-            System.out.println("1 Add an event to the system");
+            System.out.println("1 Add an Event to the System");
             System.out.println("2 View Events");
-            System.out.println("3 Calculate all Revenue");
-            System.out.println("4 Exit");
+            System.out.println("3 Add Employee");
+            System.out.println("4 View Employees");
+            System.out.println("5 Calculate All Revenue");
+            System.out.println("0 Exit");
             String choice = System.console().readLine();
 
             switch (choice) {
@@ -50,10 +35,16 @@ public class wweRevenueCalculator {
                     systemEvents();
                     break;
                 case "3":
+                    addEmployeeToSystem();
+                    break;
+                case "4":
+                    systemEmployees();
+                    break;
+                case "5":
                     //CalculateAll
                     calculateAllRevenue();
                     break;
-                case "4":
+                case "0":
                     System.out.println("Exiting the system. Goodbye!");
                     //Save all records to a file
 
@@ -101,21 +92,20 @@ public class wweRevenueCalculator {
         System.out.println(wweSystem.listEvents());
 
         while(true){
-            System.out.println("Please select an event by its number, or 'exit' to go back to the previous screen");
+            System.out.println("Please select an event by its number, or enter '0' to go back to the previous screen");
             String choice = System.console().readLine();
 
             try{
                 int eventIndex = Integer.parseInt(choice);
+                if(eventIndex == 0){
+                    return;
+                }
                 Event chosenEvent = wweSystem.getEvent(eventIndex);
                 eventController(eventIndex);
 
             } catch(NumberFormatException e){
-                if(choice.equalsIgnoreCase("exit")){
-                    return;
-                }
-                else{
-                    System.out.println("Invalid input");
-                }
+                System.out.println("Invalid input");
+                
             } catch(IndexOutOfBoundsException f){
                 System.out.println("Invalid input");
             }
@@ -197,29 +187,6 @@ public class wweRevenueCalculator {
                 }
 
             }
-
-            // Add this later, because I'm super tired
-            // System.out.println("Enter the event date (YYYY-MM):");
-            // String eventDateStr = System.console().readLine();
-            // String[] dateParts = eventDateStr.split("-");
-            // while (!isDateValid(dateParts)) 
-            // {
-            //     System.out.println("Invalid Year or month. Please enter as YYYY-MM:");
-            //     eventDateStr = System.console().readLine();
-            //     dateParts = eventDateStr.split("-");
-            // }
-            
-            // eventdateStr = YearMonth.parse(eventDateStr).toString();
-
-            // try (FileWriter writer = new FileWriter(FilePath, true)) 
-            // {
-            //     writer.write(EventName + "," + eventdateStr + "," + cost + "\n");
-            //     System.out.println("Item added successfully.");
-            // } 
-            // catch (IOException e) 
-            // {
-            //     e.printStackTrace();
-            // }
             return ticket;
     }
 
@@ -250,28 +217,6 @@ public class wweRevenueCalculator {
 
             }
 
-            // Implement this later, I'm a little too eepy rn
-            // System.out.println("Enter the event date (YYYY-MM):");
-            // String eventDateStr = System.console().readLine();
-            // String[] dateParts = eventDateStr.split("-");
-            // while (!isDateValid(dateParts)) 
-            // {
-            //     System.out.println("Invalid Year or month. Please enter as YYYY-MM:");
-            //     eventDateStr = System.console().readLine();
-            //     dateParts = eventDateStr.split("-");
-            // }
-            
-            // eventdateStr = YearMonth.parse(eventDateStr).toString();
-
-            // try (FileWriter writer = new FileWriter(FilePath, true)) 
-            // {
-            //     writer.write(EventName + "," + eventdateStr + "," + cost + "\n");
-            //     System.out.println("Item added successfully.");
-            // } 
-            // catch (IOException e) 
-            // {
-            //     e.printStackTrace();
-            // }
             return ticket;
     }
 
@@ -329,6 +274,101 @@ public class wweRevenueCalculator {
         int m = Integer.parseInt(month);
         if(m < 1 || m > 12) return false;
         return true;
+    }
+
+    /**
+     * @author Eleena Rath
+     * Description: Used to choose an employee in the system
+     */
+    private static void systemEmployees(){
+        String choice;
+
+        //if there are no employees currently in the system
+        if(wweSystem.numberOfEmployees() == 0){
+            System.out.println("There are currently no employees in the system");
+            return;
+        }
+        else{ //if there is at least one employee in the system
+            while(true){
+                System.out.println("\nEmployees: ");
+                wweSystem.listEmployees();
+                System.out.println("Please select an employee by number, or enter '0' to return the previous screen");
+                choice = System.console().readLine();
+                try{
+                    int employeeIndex = Integer.parseInt(choice);
+                    if(employeeIndex > 0 && employeeIndex <= wweSystem.numberOfEmployees()){
+                        employeeController(employeeIndex);
+                    }
+                    else if(employeeIndex == 0){
+                        return;
+                    }
+                    else{
+                        System.out.println("Invalid option");
+                    }
+
+                 } catch(NumberFormatException e){
+                    System.out.println("Invalid option");
+                 }
+            }
+        }
+
+    }
+
+    /**
+     * @author Eleena Rath
+     * @param emp
+     * Description: Used to manage employees in the system.
+     */
+    private static void employeeController(int emp){
+        //Scanner scanner = new Scanner(System.in);
+        Employee employee = wweSystem.getEmployee(emp);
+        System.out.println(employee.toString());
+        String choice;
+
+        while(true){
+            System.out.println("What would you like to do with this employee?\n1 Edit\n0 Exit");
+            choice = System.console().readLine();
+            switch(choice){
+                case "1":
+                    employee.editEmployee();
+                    System.out.println(employee.toString());
+                    break;
+                case "0":
+                    return;
+            }
+        }
+    }
+
+    /**
+     * @author Eleena Rath
+     * Description: Creates a new employee and adds them to the system.
+     */
+    private static void addEmployeeToSystem(){
+        String firstName, lastName;
+        while(true){
+            System.out.println("Enter the employee's first name, or enter 'exit' to cancel");
+            firstName = System.console().readLine();
+            if(firstName.equals("exit")){
+                return;
+            }
+            System.out.println("Enter the employee's last name, or enter 'exit' to cancel");
+            lastName = System.console().readLine();
+            if(lastName.equals("exit")){
+                return;
+            }
+
+            //validate input
+            if(firstName.length() < 2 || lastName.length() < 2){
+                System.out.println("Both the employee's first and last name must be at least two characters.");
+            }
+            else{
+                Employee employee = new Employee(firstName, lastName);
+                wweSystem.addEmployee(employee);
+                System.out.println("Employee successfully created!");
+                break;
+            }
+        }
+        
     }
 
 

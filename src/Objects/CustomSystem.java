@@ -6,11 +6,12 @@ import Objects.RecordTypes.Record;
 public class CustomSystem {
     ArrayList<Event> events;
     ArrayList<Record> records;
-    // We don't need a List of Employees right now
+    ArrayList<Employee> employees; //Modification: by Eleena R.
 
     public CustomSystem() {
         events = new ArrayList<Event>();
         records = new ArrayList<Record>();
+        employees = new ArrayList<Employee>();  //Modification: by Eleena R.
     };
 
     public void addEvent(Event event) {
@@ -73,4 +74,42 @@ public class CustomSystem {
         return total;
     }
 
+
+    /**
+     * @author Eleena Rath 
+     * Description: lists the employees currently in the database
+     */    
+    public void listEmployees(){
+        int index;
+        for (int i = 0; i < employees.size(); i++){
+            index = i + 1;
+            System.out.println(index + "-" + employees.get(i).getName());
+        }
+    }
+
+    /**
+     * @author Eleena Rath
+     * @param index
+     * @return Employee
+     */
+    public Employee getEmployee(int index){
+        return employees.get(index - 1);
+    }
+
+    /**
+     * @author Eleena Rath
+     * @param employee
+     * Description: Adds an employee to the database
+     */
+    public void addEmployee(Employee employee){
+        employees.add(employee);
+    }
+
+    /**
+     * @author Eleena Rath
+     * @return number of employees in the database
+     */
+    public int numberOfEmployees(){
+        return employees.size();
+    }
 }
