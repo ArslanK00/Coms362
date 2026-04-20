@@ -1,17 +1,20 @@
 package Objects;
+
 import java.util.ArrayList;
 
 import Objects.RecordTypes.Record;
 
 public class Event {
-     String name;
+    String name;
     String venue;
-    
+    String arenaName;
+
     ArrayList<Record> records;
 
     public Event(String name, String venue) {
         this.name = name;
         this.venue = venue;
+        this.arenaName = null;
         this.records = new ArrayList<Record>();
     }
 
@@ -19,8 +22,8 @@ public class Event {
         records.add(record);
     }
 
-    public Record getRecord(int index){
-        return records.get(index-1);
+    public Record getRecord(int index) {
+        return records.get(index - 1);
     }
 
     /**
@@ -28,14 +31,14 @@ public class Event {
      * @param record
      */
     public void deleteRecord(int index) {
-        records.remove(index-1);
+        records.remove(index - 1);
     }
 
     /**
      * @author EleenaRath
      * @return
      */
-    public int numberOfRecords(){
+    public int numberOfRecords() {
         return records.size();
     }
 
@@ -47,13 +50,25 @@ public class Event {
         return venue;
     }
 
+    public String getArenaName() {
+        return arenaName;
+    }
+
+    public void setArenaName(String arenaName) {
+        this.arenaName = arenaName;
+    }
+
+    public boolean hasArena() {
+        return arenaName != null && !arenaName.isEmpty();
+    }
+
     /**
      * @author Eleena Rath
      * @return
      */
-    public String listRecords(){
+    public String listRecords() {
         String recordsList = "";
-        for (int i = 0; i < records.size(); i++){
+        for (int i = 0; i < records.size(); i++) {
             int index = i + 1;
             recordsList += index + "-" + records.get(i);
         }
@@ -62,7 +77,7 @@ public class Event {
 
     /**
      * @author Matayas Durr
-     * Calculates total revenue for this event
+     *         Calculates total revenue for this event
      * @return total revenue from all records in this event
      */
     public float calculateRevenue() {
@@ -77,9 +92,9 @@ public class Event {
      * @author Eleena Rath
      */
     @Override
-    public String toString(){
+    public String toString() {
         String summary = "Event Name: " + name + "\n"
-        + "Venue: " +  venue + "\n";
+                + "Venue: " + venue + "\n";
 
         return summary;
     }
