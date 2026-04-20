@@ -14,6 +14,11 @@ public class Salary extends AbstractRecord{
         super(name);
     }
 
+    public Salary(String name, Employee employee){
+        super(name);
+        this.employee = employee;
+    }
+
     public YearMonth getDate(){
         return date;
     }
@@ -38,10 +43,15 @@ public class Salary extends AbstractRecord{
         this.name = name;
     }
 
+
     //Override toString method
     @Override
     public String toString(){
-        return employee.getName() + " " + recordType + ": " + cost;
+        String summary = "";
+        summary += employee.getName() + " " + recordType + ": " + cost
+         +"\nDate: " + date  + "\nDescription: " + description;
+        
+        return summary;
     }
 
 }
