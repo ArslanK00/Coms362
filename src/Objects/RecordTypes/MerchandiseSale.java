@@ -9,8 +9,6 @@ import java.io.Serializable;
 import java.time.YearMonth;
 import java.util.ArrayList;
 
-
-
 public class MerchandiseSale implements Record, Serializable
 {
     private String name;
@@ -47,39 +45,38 @@ public class MerchandiseSale implements Record, Serializable
     }
 
 
-public ArrayList<MerchandiseSale> TurnAllMerchandiseToRecords(boolean sendToRecords)  //Makes object serializable in file
-{
+    public ArrayList<MerchandiseSale> TurnAllMerchandiseToRecords(boolean sendToRecords)  //Makes object serializable in file
+    {
 
-    MerchandiseController uploadMerch = new MerchandiseController(false);
-    String[][] merchData = uploadMerch.getMerch();
+        MerchandiseController uploadMerch = new MerchandiseController(false);
+        String[][] merchData = uploadMerch.getMerch();
 
-    ArrayList<MerchandiseSale> merchList = new ArrayList<>();
+        ArrayList<MerchandiseSale> merchList = new ArrayList<>();
 
-    for (int i = 0; i < merchData.length; i++) 
+        for (int i = 0; i < merchData.length; i++) 
         {
-        float tempCost = (Float.parseFloat(merchData[i][3]) * Float.parseFloat(merchData[i][4])) - (Float.parseFloat(merchData[i][3]) * Float.parseFloat(merchData[i][5]));
-        MerchandiseSale merchSale = new MerchandiseSale(merchData[i][2].trim(), tempCost, YearMonth.parse(merchData[i][6].trim()));
-        merchList.add(merchSale);
-        if (!sendToRecords) 
-        {
-            System.out.println(merchSale.name + ", " + merchSale.cost + ", " + merchSale.date);
+            float tempCost = (Float.parseFloat(merchData[i][3]) * Float.parseFloat(merchData[i][4])) - (Float.parseFloat(merchData[i][3]) * Float.parseFloat(merchData[i][5]));
+            MerchandiseSale merchSale = new MerchandiseSale(merchData[i][2].trim(), tempCost, YearMonth.parse(merchData[i][6].trim()));
+            merchList.add(merchSale);
+            if (!sendToRecords) 
+            {
+                System.out.println(merchSale.name + ", " + merchSale.cost + ", " + merchSale.date);
+            }
         }
-    }
-    if (sendToRecords) 
+        if (sendToRecords) 
         {
-            try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FilePathToRecords))) {
+            try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FilePathToRecords))) 
+            {
             out.writeObject(merchList);
-
             System.out.println("Successfully saved all Merchandise Records");
-
-        } catch (IOException e) 
-        {
-            e.printStackTrace();
+            } 
+            catch (IOException e) 
+            {
+                e.printStackTrace();
+            }
         }
+        return merchList;
     }
-
-    return merchList;
-}
 
     public ArrayList<MerchandiseSale> readRecords() 
     {
