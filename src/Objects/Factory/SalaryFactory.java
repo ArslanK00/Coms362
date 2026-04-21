@@ -21,6 +21,7 @@ public class SalaryFactory extends RecordFactory{
 
         String choice;
         //1. Choose the Employee
+        System.out.println("\nAll employees:");
         wweSystem.listEmployees();
         while(true){
             System.out.println("Select the employee by number, or enter '0' to cancel");

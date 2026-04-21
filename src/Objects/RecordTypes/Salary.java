@@ -33,6 +33,9 @@ public class Salary extends AbstractRecord{
 
     public void setCost(float cost){
         this.cost = cost;
+        if(cost > 0){
+            this.cost *= -1;
+        }
     }
 
     public String getName(){

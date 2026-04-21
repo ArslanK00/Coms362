@@ -9,6 +9,8 @@ import Objects.Event;
 import Objects.Factory.SalaryFactory;
 import Objects.RecordTypes.LiveEventTicket;
 import Objects.RecordTypes.PayPerViewTicket;
+import Objects.RecordTypes.Salary;
+//import Objects.RecordTypes.*;
 
 public class wweRevenueCalculator {
 
@@ -44,10 +46,10 @@ public class wweRevenueCalculator {
                     systemEmployees();
                     break;
                 case "5":
-                    systemRecords();
+                    createARecord();
                     break;
                 case "6":
-                    createARecord();
+                    systemRecords();
                     break;
                 case "7":
                     //CalculateAll
@@ -136,8 +138,9 @@ public class wweRevenueCalculator {
             System.out.println("1 View all records for this event");
             System.out.println("2 Add a Live-Event ticket record");
             System.out.println("3 Add a Pay-Per-View ticket record");
-            System.out.println("4 Delete a record");
-            System.out.println("5 Calculate this event's revenue");
+            System.out.println("4 Add an event salary");
+            System.out.println("5 Delete a record");
+            System.out.println("6 Calculate this event's revenue");
             System.out.println("0 Exit");
 
             String choice = System.console().readLine();
@@ -154,9 +157,15 @@ public class wweRevenueCalculator {
                     wweSystem.addRecordToEvent(eventIndex, ppvTicket);
                     break;
                 case "4":
-                    deleteRecordFromEvent(eventIndex);
+                    SalaryFactory salaryFactory = new SalaryFactory(wweSystem);
+                    salaryFactory.createRecord();
+                    Salary eventSalary = salaryFactory.returnSalary();
+                    wweSystem.addRecordToEvent(eventIndex, eventSalary);
                     break;
                 case "5":
+                    deleteRecordFromEvent(eventIndex);
+                    break;
+                case "6":
                     //Calculate the revenue for this event
                     System.out.println(event.calculateRevenue());
                     break;
@@ -387,7 +396,7 @@ public class wweRevenueCalculator {
      */
     private static void createARecord(){
         while(true){
-            System.out.println("Choose a record to add:\n1 Annual Salary\nExit");
+            System.out.println("Choose a record to add:\n1 Annual Salary\n0 Exit");
             String choice = System.console().readLine();
 
             switch(choice){
@@ -398,12 +407,15 @@ public class wweRevenueCalculator {
                     wweSystem.addRecord(salaryFactory.returnSalary());
                     System.out.println("Annual salary successfully created");
                     break;
-                case "2":
+                case "0":
                     return;
             }
         }
     }
 
+    /**
+     * @author Eleena Rath
+     */
     private static void systemRecords(){
         System.out.println("All Records in System:");
         wweSystem.listRecords();
@@ -415,8 +427,8 @@ public class wweRevenueCalculator {
                 if(choice.equals("0")){
                     return;
                 }
-                Record record = (Record)wweSystem.getRecord(Integer.parseInt(choice));
-                recordController(record);
+                //Potential compiler issues abound here.
+                recordController((Record)wweSystem.getRecord(Integer.parseInt(choice)));
             } catch(Exception e){
                 System.out.println("Invalid input");
             }
@@ -424,8 +436,25 @@ public class wweRevenueCalculator {
         }
     }
 
+    /**
+     * @author Eleena Rath
+     * @param record
+     */
     public static void recordController(Record record){
-        //TODO
+        String choice;
+        System.out.println(record.toString());
+        while(true){
+            System.out.println("What would you like to do with this record?");
+            System.out.println("1 Edit (not yet implemented)"); //TODO
+            System.out.println("2 Delete (not yet implemented)"); //TODO
+            System.out.println("0 Exit");
+            
+            choice = System.console().readLine();
+            switch(choice){
+                case "0":
+                    break;
+            }
+        }
     }
 
 
