@@ -6,13 +6,13 @@ import java.time.YearMonth;
 
 
 
-public class MerchandiseSales implements Record
+public class MerchandiseSale implements Record
 {
     private String name;
     private float cost;
     private YearMonth date;
-    String FilePathToRecords = "Databases/Records.txt";
-    public MerchandiseSales(String name, float cost, YearMonth date) 
+    private String FilePathToRecords = "Databases/Records.txt";
+    public MerchandiseSale(String name, float cost, YearMonth date) 
     {
         this.name = name;
         this.cost = cost;
@@ -36,13 +36,18 @@ public class MerchandiseSales implements Record
         return name;
     }
 
+    public void EditMerchandiseDatabase()
+    {
+        MerchandiseController EditDatabase = new MerchandiseController(true);
+    }
+
     
-    public MerchandiseSales[] TurnAllMerchandiseToSystemRecords(boolean SendtoRecords)
+    public MerchandiseSale[] TurnAllMerchandiseToRecords(boolean SendtoRecords)
     {
         
-        UploadMerchandiseSales uploadMerch = new UploadMerchandiseSales(false);
+        MerchandiseController uploadMerch = new MerchandiseController(false);
         String[][] merchData = uploadMerch.getMerch();
-        MerchandiseSales[] MerchSystemRecords = new MerchandiseSales[uploadMerch.getMerch().length];
+        MerchandiseSale[] MerchSystemRecords = new MerchandiseSale[uploadMerch.getMerch().length];
         try
         {
             FileWriter Writer = new FileWriter(FilePathToRecords, true);
@@ -51,7 +56,7 @@ public class MerchandiseSales implements Record
 
 
                 float tempCost = (Float.parseFloat(merchData[i][3]) * Float.parseFloat(merchData[i][4])) - (Float.parseFloat(merchData[i][3]) * Float.parseFloat(merchData[i][5]));
-                MerchandiseSales merchSale = new MerchandiseSales(merchData[i][2].trim(),tempCost,YearMonth.parse(merchData[i][6].trim()));
+                MerchandiseSale merchSale = new MerchandiseSale(merchData[i][2].trim(),tempCost,YearMonth.parse(merchData[i][6].trim()));
                 MerchSystemRecords[i] = merchSale;
                 if(SendtoRecords)
                 {

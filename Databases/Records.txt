@@ -1,0 +1,6 @@
+Cool Socks, 70.0, 2010-10
+Bucket hat, 550.0, 1010-10
+Beanie, 0.89990234, 2014-05
+Cool thing, 759.80005, 2010-10
+Ugly hat, 50.0, 2020-10
+Ripped Jeans, 1260.0, 1998-10
