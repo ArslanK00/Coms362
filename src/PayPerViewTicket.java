@@ -41,6 +41,10 @@ public class PayPerViewTicket {
             double price = Double.parseDouble(System.console().readLine());
             ticketData.put("price", price);
 
+            System.out.println("Enter the amount:");
+            int amount = Int.parseInt(System.console().readLine());
+            ticketData.put("amount", amount);
+
 
             System.out.println("Enter the event date (YYYY-MM):");
             String eventDateStr = System.console().readLine();
