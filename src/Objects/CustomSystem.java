@@ -36,7 +36,8 @@ public class CustomSystem {
         getEvent(eventIndex).deleteRecord(recordIndex);
     }
 
- 
+    
+
     /**
      * @author Eleena Rath
      * @param index
@@ -70,6 +71,11 @@ public class CustomSystem {
         float total = 0;
         for (Event event : events) {
             total += event.calculateRevenue();
+        }
+
+        //Addition by Eleena Rath
+        for (Record record: records){
+            total += record.getCost();
         }
         return total;
     }
@@ -111,5 +117,33 @@ public class CustomSystem {
      */
     public int numberOfEmployees(){
         return employees.size();
+    }
+
+    /**
+     * @author Eleena Rath
+     */
+    public void listRecords(){
+        int index;
+        for (int i = 0; i < records.size(); i++){
+            index = i + 1;
+            System.out.println(index + "-" + records.get(i).toString());
+        }
+    }
+
+    /**
+     * @author Eleena Rath
+     * @param index
+     * @return
+     */
+    public Record getRecord(int index){
+        return records.get(index - 1);
+    }
+
+    /**
+     * @author Eleena Rath
+     * @param record
+     */
+    public void addRecord(Record record){
+        records.add(record);
     }
 }
