@@ -26,81 +26,81 @@ public class UploadMerchandiseSales //need to move out of Record Types
     int choice = 0;
     public UploadMerchandiseSales()
     {
-        // while(choice != -1)
-        // {
-        //     System.out.println("Choose an option: \n 1.Add Units Sold \n 2. Delete unit details by ID \n 3. add category \n 4. get categories \n 5. Find unit by name \n 6. Find unit by category \n 7. Get units sold by year \n 8. Get units sold by month \n 9. Get units sold info by name \n 10. Get revune  by category \n 11. get revenue sold b year \n 12. get revenue by month  \n   13 edit \n -1Exit");
+        while(choice != -1)
+        {
+            System.out.println("Choose an option: \n 1.Add Units Sold \n 2. Delete unit details by ID \n 3. add category \n 4. get categories \n 5. Find unit by name \n 6. Find unit by category \n 7. Get units sold by year \n 8. Get units sold by month \n 9. Get units sold info by name \n 10. Get revune  by category \n 11. get revenue sold b year \n 12. get revenue by month  \n   13. edit Unit by ID \n -1. Exit");
 
-        //     choice = Integer.parseInt(System.console().readLine());
-        //     switch(choice)
-        //     {
-        //         case 1:
-        //             AddUnitsSold();
-        //             break;
-        //         case 2:
-        //             System.out.println("Enter the ID of the unit you want to delete:");
-        //             int id = Integer.parseInt(System.console().readLine());
-        //             deleteUnitDetailsByID(id);
-        //             break;
-        //         case 3:
-        //             System.out.println("Enter the name of the new category:");
-        //             String newCategory = System.console().readLine();
-        //             addCategory(newCategory);
-        //             break;
-        //         case 4:
-        //             getCatgories(true);
-        //             break;
-        //         case 5:
-        //             System.out.println("Enter the name of the unit you want to find:");
-        //             String UNitname = System.console().readLine();
-        //             findUnitByName(UNitname);
-        //             break;
-        //         case 6:
-        //             System.out.println("Enter the category ID of the units you want to find:");
-        //             int categoryID = Integer.parseInt(System.console().readLine());
-        //             findUnitByCategory(categoryID);
-        //             break;
-        //         case 7:
-        //             System.out.println("Enter the year for which you want to get units sold:");
-        //             int year = Integer.parseInt(System.console().readLine());
-        //             getUnitsSoldbyYear(year);
-        //             break;
-        //         case 8:
-        //             System.out.println("Enter the month for which you want to get units sold:");
-        //             int month = Integer.parseInt(System.console().readLine());
-        //             getUnitsSoldbyMonth(month);
-        //             break;
-        //         case 9:
-        //             System.out.println("Enter the name of the unit for which you want to get sales data:");
-        //             String name = System.console().readLine();
-        //             getUnitsSoldByName(name);
-        //             break;
-        //         case 10:
-        //             System.out.println("Enter the category ID for which you want to get sales data:");
-        //             int ID = Integer.parseInt(System.console().readLine());
-        //             calculateRevenuebyCategory(ID);
-        //             break;
-        //         case 11:
-        //             System.out.println("Enter the year for which you want to get sales data:");
-        //             String yearString = System.console().readLine();
-        //             calculateRevenuebyYear(yearString);
-        //             break;
-        //         case 12:
-        //             System.out.println("Enter the month for which you want to get sales data:");
-        //             String monthString = System.console().readLine();
-        //             calculateRevenuebyMonth(monthString);
-        //             break;
-        //         case 13:
-        //             System.out.println("Enter the ID of the unit you want to edit:");
-        //             int idToEdit = Integer.parseInt(System.console().readLine());
-        //             editUnitDetailsbyID(idToEdit);
-        //             break;
-        //         case -1:
-        //             System.out.println("Exiting...");
-        //             break;
-        //         default:
-        //             System.out.println("Invalid choice. Please try again.");
-        //     }
-        // }
+            choice = Integer.parseInt(System.console().readLine());
+            switch(choice)
+            {
+                case 1:
+                    AddUnitsSold();
+                    break;
+                case 2:
+                    System.out.println("Enter the ID of the unit you want to delete:");
+                    int id = Integer.parseInt(System.console().readLine());
+                    deleteUnitDetailsByID(id);
+                    break;
+                case 3:
+                    System.out.println("Enter the name of the new category:");
+                    String newCategory = System.console().readLine();
+                    addCategory(newCategory);
+                    break;
+                case 4:
+                    getCatgories(true);
+                    break;
+                case 5:
+                    System.out.println("Enter the name of the unit you want to find:");
+                    String UNitname = System.console().readLine();
+                    findUnitByName(UNitname);
+                    break;
+                case 6:
+                    System.out.println("Enter the category ID of the units you want to find:");
+                    int categoryID = Integer.parseInt(System.console().readLine());
+                    findUnitByCategory(categoryID);
+                    break;
+                case 7:
+                    System.out.println("Enter the year for which you want to get units sold:");
+                    int year = Integer.parseInt(System.console().readLine());
+                    getUnitsSoldbyYear(year);
+                    break;
+                case 8:
+                    System.out.println("Enter the month for which you want to get units sold:");
+                    int month = Integer.parseInt(System.console().readLine());
+                    getUnitsSoldbyMonth(month);
+                    break;
+                case 9:
+                    System.out.println("Enter the name of the unit for which you want to get sales data:");
+                    String name = System.console().readLine();
+                    getUnitsSoldByName(name);
+                    break;
+                case 10:
+                    System.out.println("Enter the category ID for which you want to get sales data:");
+                    int ID = Integer.parseInt(System.console().readLine());
+                    calculateRevenuebyCategory(ID);
+                    break;
+                case 11:
+                    System.out.println("Enter the year for which you want to get sales data:");
+                    String yearString = System.console().readLine();
+                    calculateRevenuebyYear(yearString);
+                    break;
+                case 12:
+                    System.out.println("Enter the month for which you want to get sales data:");
+                    String monthString = System.console().readLine();
+                    calculateRevenuebyMonth(monthString);
+                    break;
+                case 13:
+                    System.out.println("Enter the ID of the unit you want to edit:");
+                    int idToEdit = Integer.parseInt(System.console().readLine());
+                    editUnitDetailsbyID(idToEdit);
+                    break;
+                case -1:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
     }
     
     public void getUnitsSoldbyCategory(int categoryID)
