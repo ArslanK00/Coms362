@@ -16,8 +16,7 @@ public class SalaryFactory extends RecordFactory{
         this.wweSystem = wweSystem;
     }
 
-    public Record createRecord(){
-        //TODO
+    public Objects.RecordTypes.Record createRecord(){
 
         String choice;
         //1. Choose the Employee

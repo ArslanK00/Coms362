@@ -1,10 +1,11 @@
 package Objects;
 import java.util.ArrayList;
 
+import Objects.RecordTypes.AbstractRecord;
 import Objects.RecordTypes.Record;
 
 public class Event {
-     String name;
+    String name;
     String venue;
     
     ArrayList<Record> records;
@@ -73,9 +74,36 @@ public class Event {
         return total;
     }
 
-    /**
-     * @author Eleena Rath
-     */
+    // Added by Matayas Durr: supports sorting records by value
+    public void sortByValue() {
+        records.sort((a, b) -> Float.compare(b.getCost(), a.getCost()));
+    }
+
+    // Added by Matayas Durr: supports sorting records by category
+    public void sortByCategory() {
+        records.sort((a, b) -> {
+            AbstractRecord first = (AbstractRecord) a;
+            AbstractRecord second = (AbstractRecord) b;
+
+            String firstCategory = first.getCategory() == null ? "" : first.getCategory();
+            String secondCategory = second.getCategory() == null ? "" : second.getCategory();
+
+            return firstCategory.compareToIgnoreCase(secondCategory);
+        });
+    }
+
+    // Added by Matayas Durr: calculates revenue-only total
+    public float calculateRevenueOnly() {
+        float total = 0;
+        for (Record record : records) {
+            AbstractRecord currentRecord = (AbstractRecord) record;
+            if (currentRecord.isRevenue()) {
+                total += record.getCost();
+            }
+        }
+        return total;
+    }
+
     @Override
     public String toString(){
         String summary = "Event Name: " + name + "\n"
