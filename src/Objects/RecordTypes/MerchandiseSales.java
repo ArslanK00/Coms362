@@ -40,7 +40,7 @@ public class MerchandiseSales implements Record
     public MerchandiseSales[] TurnAllMerchandiseToSystemRecords(boolean SendtoRecords)
     {
         
-        UploadMerchandiseSales uploadMerch = new UploadMerchandiseSales();
+        UploadMerchandiseSales uploadMerch = new UploadMerchandiseSales(false);
         String[][] merchData = uploadMerch.getMerch();
         MerchandiseSales[] MerchSystemRecords = new MerchandiseSales[uploadMerch.getMerch().length];
         try
