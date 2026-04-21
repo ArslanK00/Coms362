@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Scanner;
 
-public class UploadMerchandiseSales //need to move out of Record Types
+public class MerchandiseController //need to move out of Record Types
 {
     
     private static String FilePathMerch = "Databases/MerchandiseSales.txt";
@@ -24,7 +24,7 @@ public class UploadMerchandiseSales //need to move out of Record Types
     private float cost;
     private static String MerchdateStr;
     int choice = 0;
-    public UploadMerchandiseSales(boolean EditDatabase)
+    public MerchandiseController(boolean EditDatabase)
     {
         while(choice != -1 && EditDatabase)
         {
