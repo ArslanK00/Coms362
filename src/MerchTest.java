@@ -5,6 +5,7 @@ public class MerchTest {
     {
         //UploadMerchandiseSales merchSales = new UploadMerchandiseSales();
         MerchandiseSale merchsales = new MerchandiseSale("T-shirt", 20.0f, java.time.YearMonth.of(2020, 10));
+        System.out.println(merchsales.toString());
         merchsales.TurnAllMerchandiseToRecords(true);
         merchsales.EditMerchandiseDatabase();
         //merchsales.readRecords();

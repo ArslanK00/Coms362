@@ -9,14 +9,16 @@ import java.io.Serializable;
 import java.time.YearMonth;
 import java.util.ArrayList;
 
-public class MerchandiseSale implements Record, Serializable
+public class MerchandiseSale extends AbstractRecord implements Serializable
 {
     private String name;
     private float cost;
     private YearMonth date;
     private String FilePathToRecords = "Databases/Records.txt";
+    private RecordEnum RecType = RecordEnum.MerchandiseSale;
     public MerchandiseSale(String name, float cost, YearMonth date) 
     {
+        super(name);
         this.name = name;
         this.cost = cost;
         this.date = date;
@@ -85,7 +87,7 @@ public class MerchandiseSale implements Record, Serializable
             ArrayList<MerchandiseSale> arr = (ArrayList<MerchandiseSale>) in.readObject();
             for(MerchandiseSale m : arr)
             {
-                System.out.println("Name: " + m.name + " Cost: " + m.cost + " Date: " + m.date);
+                System.out.println("Reccord Type: " + RecType + " Name: " + m.name + " Cost: " + m.cost + " Date: " + m.date);
             }
             return arr;
 
@@ -96,5 +98,20 @@ public class MerchandiseSale implements Record, Serializable
         }
 
         return new ArrayList<>();
+    }
+
+    @Override
+    public String toString(){
+        String summary = "Record Type: " + RecType + "\n"
+        + "Name: " + name + "\n"
+        + "Cost: " + cost + "\n"
+        + "Date: " + date + "\n";
+        
+        if(description == null || description.length() == 0){
+            return summary;
+        }
+
+        summary += "Description: " + description + "\n";
+        return summary;
     }
 }
