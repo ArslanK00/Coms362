@@ -1,4 +1,6 @@
-package Objects;
+package Objects.Factory;
+
+import Objects.RecordTypes.Record;
 
 /**
  * @author Eleena Rath
