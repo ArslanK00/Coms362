@@ -79,17 +79,10 @@ public class wweRevenueCalculator {
 
         System.out.println("Enter the event name:");
         String eventName = System.console().readLine();
-        System.out.println("Enter the event name:");
-        String eventName = System.console().readLine();
 
         System.out.println("Enter the event venue:");
         String eventVenue = System.console().readLine();
-        System.out.println("Enter the event venue:");
-        String eventVenue = System.console().readLine();
 
-        Event newEvent = new Event(eventName, eventVenue);
-        wweSystem.addEvent(newEvent);
-        System.out.println("Event added to the system: " + eventName + " at " + eventVenue);
         Event newEvent = new Event(eventName, eventVenue);
         wweSystem.addEvent(newEvent);
         System.out.println("Event added to the system: " + eventName + " at " + eventVenue);
@@ -142,7 +135,7 @@ public class wweRevenueCalculator {
             System.out.println("8 Sort records by category");
             System.out.println("9 View revenue only");
             System.out.println("0 Record Arena Rental Cost For an Event");
-            System.out.println("7 Exit");
+            System.out.println("- Exit");
 
             String choice = System.console().readLine();
             switch (choice) {
@@ -184,7 +177,7 @@ public class wweRevenueCalculator {
                 case "0":
                     recordArenaRentalCost(eventIndex);
                     break;
-                case "7":
+                case "-":
                     return;
                 default:
                     System.out.println("Invalid option. Please try again.");
