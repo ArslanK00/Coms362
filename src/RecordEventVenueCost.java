@@ -3,6 +3,7 @@ import Objects.Event;
 import Objects.RecordTypes.ArenaRentalCost;
 import java.time.YearMonth;
 
+
 /**
  * @author Jamey Nguyen
  *         Use Case: Record the cost of renting an arena
@@ -26,18 +27,22 @@ public class RecordEventVenueCost {
      * Guides the user through the process of recording an arena rental cost
      */
     public void recordArenaRentalCost() {
+        int eventIndex = promptForEventSelection();
+        if (eventIndex == -1) {
+            System.out.println("Operation cancelled.");
+            return;
+        }
+
+        recordArenaRentalCost(eventIndex);
+    }
+
+    /**
+     * Records an arena rental cost for a pre-selected event.
+     * This is used when the user has already chosen an event in the main flow.
+     */
+    public void recordArenaRentalCost(int eventIndex) {
         try {
-            // Step 1: List events and get selection
             System.out.println("\n=== Record Arena Rental Cost ===\n");
-            System.out.println("Available Events:");
-            System.out.println(system.listEvents());
-
-            int eventIndex = getValidEventSelection();
-            if (eventIndex == -1) {
-                System.out.println("Operation cancelled.");
-                return;
-            }
-
             Event selectedEvent = system.getEvent(eventIndex);
             System.out.println("Selected Event: " + selectedEvent.getName());
 
@@ -103,7 +108,10 @@ public class RecordEventVenueCost {
      * Validates that the input is a valid event index
      * Returns -1 if user cancels
      */
-    private int getValidEventSelection() {
+    private int promptForEventSelection() {
+        System.out.println("Available Events:");
+        System.out.println(system.listEvents());
+
         while (true) {
             System.out.print("Select an event (enter number, or 0 to cancel): ");
             String input = System.console().readLine().trim();

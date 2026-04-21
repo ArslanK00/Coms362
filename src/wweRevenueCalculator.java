@@ -124,7 +124,7 @@ public class wweRevenueCalculator {
             System.out.println("3 Add a Pay-Per-View ticket record");
             System.out.println("4 Delete a record");
             System.out.println("5 Calculate this event's revenue");
-            System.out.println("6 Record Arena Rental Cost");
+            System.out.println("6 Record Arena Rental Cost For an Event");
             System.out.println("7 Exit");
 
             String choice = System.console().readLine();
@@ -148,7 +148,7 @@ public class wweRevenueCalculator {
                     System.out.println(event.calculateRevenue());
                     break;
                 case "6":
-                    recordArenaRentalCost();
+                    recordArenaRentalCost(eventIndex);
                     break;
                 case "7":
                     return;
@@ -364,9 +364,9 @@ public class wweRevenueCalculator {
      * @author Jamey Nguyen
      *         Records arena rental cost for an event
      */
-    private static void recordArenaRentalCost() {
+    private static void recordArenaRentalCost(int eventIndex) {
         RecordEventVenueCost arenaRecorder = new RecordEventVenueCost(wweSystem);
-        arenaRecorder.recordArenaRentalCost();
+        arenaRecorder.recordArenaRentalCost(eventIndex);
     }
 
 }
