@@ -46,44 +46,6 @@ public class MerchandiseSale implements Record, Serializable
         MerchandiseController EditDatabase = new MerchandiseController(true);
     }
 
-    
-//     public MerchandiseSale[] TurnAllMerchandiseToRecords(boolean SendtoRecords) Just adding to text file
-//     {
-        
-//         MerchandiseController uploadMerch = new MerchandiseController(false);
-//         String[][] merchData = uploadMerch.getMerch();
-//         MerchandiseSale[] MerchSystemRecords = new MerchandiseSale[uploadMerch.getMerch().length];
-//         try
-//         {
-//             FileWriter Writer = new FileWriter(FilePathToRecords, true);
-//             for (int i = 0; i < merchData.length; i++) 
-//             {
-//                 float tempCost = (Float.parseFloat(merchData[i][3]) * Float.parseFloat(merchData[i][4])) - (Float.parseFloat(merchData[i][3]) * Float.parseFloat(merchData[i][5]));
-//                 MerchandiseSale merchSale = new MerchandiseSale(merchData[i][2].trim(),tempCost,YearMonth.parse(merchData[i][6].trim()));
-//                 MerchSystemRecords[i] = merchSale;
-//                 if(SendtoRecords)
-//                 {
-//                     Writer.write(MerchSystemRecords[i].name + ", " + MerchSystemRecords[i].cost + ", " + MerchSystemRecords[i].date + "\n");
-                    
-//                 }
-//                 else 
-//                 {
-//                     System.out.println(MerchSystemRecords[i].name + ", " + MerchSystemRecords[i].cost + ", " + MerchSystemRecords[i].date);
-//                 }
-//             }
-//             Writer.close();
-//             System.out.println("Successfully retrieved all Merchandise Records");
-//         }
-//         catch (IOException ex) 
-//         {
-//             System.out.println("IOException is caught");
-//         }
-
-//         return MerchSystemRecords;
-
-//     }
-
-// }
 
 public ArrayList<MerchandiseSale> TurnAllMerchandiseToRecords(boolean sendToRecords)  //Makes object serializable in file
 {
@@ -128,13 +90,12 @@ public ArrayList<MerchandiseSale> TurnAllMerchandiseToRecords(boolean sendToReco
             {
                 System.out.println("Name: " + m.name + " Cost: " + m.cost + " Date: " + m.date);
             }
-                
             return arr;
 
         } 
         catch (Exception e) 
         {
-        e.printStackTrace();
+            e.printStackTrace();
         }
 
         return new ArrayList<>();
