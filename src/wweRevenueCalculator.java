@@ -192,7 +192,7 @@ public class wweRevenueCalculator {
 
         System.out.println("Enter a name for the record:");
         String name = System.console().readLine();
-        LiveEventTicket ticket = new LiveEventTicket(event.numberOfRecords(), name);
+        LiveEventTicket ticket = new LiveEventTicket(name, price, YearMonth.now(), 0);
 
         // Added by Matayas Durr: assigns category and revenue type to records
         ticket.setCategory("Live Event");
