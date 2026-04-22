@@ -14,16 +14,16 @@ public class LiveEventTicket extends AbstractRecord implements Serializable
     private String name;
     private float cost;
     private YearMonth date;
-    private int amount
+    private int amount;
     private String FilePathToRecords = "Databases/Records.txt";
-    private RecordEnum RecType = RecordEnum.LiveEventSale;
-    public LiveEventSale(String name, float cost, YearMonth date, int amount) 
+    private RecordEnum RecType = RecordEnum.LiveEventTicket;
+    public LiveEventTicket(String name, float cost, YearMonth date, int amount) 
     {
         super(name);
         this.name = name;
         this.cost = cost;
         this.date = date;
-        this.amount = amount
+        this.amount = amount;
     }
 
 
@@ -52,22 +52,23 @@ public class LiveEventTicket extends AbstractRecord implements Serializable
         return amount;
     }
 
-    public ArrayList<LiveEventSale> TurnAllLiveEventToRecords(boolean sendToRecords)  //Makes object serializable in file
+    public ArrayList<LiveEventTicket> TurnAllLiveEventToRecords(boolean sendToRecords)  //Makes object serializable in file
     {
 
         LiveEventController uploadLiveEvent = new LiveEventController(false);
         String[][] liveEventData = uploadLiveEvent.getLiveEvent();
 
-        ArrayList<LiveEventSale> liveEventList = new ArrayList<>();
+        ArrayList<LiveEventTicket> liveEventList = new ArrayList<>();
 
         for (int i = 0; i < liveEventData.length; i++) 
         {
             float tempCost = (Float.parseFloat(liveEventData[i][3]) * Float.parseFloat(liveEventData[i][4])) - (Float.parseFloat(liveEventData[i][3]) * Float.parseFloat(liveEventData[i][5]));
-            LiveEventSale liveEventSale = new LiveEventSale(liveEventData[i][2].trim(), tempCost, YearMonth.parse(liveEventData[i][6].trim()));
-            liveEventList.add(liveEventSale);
+            int amount = Integer.parseInt(liveEventData[i][4]);
+            LiveEventTicket liveEventTicket = new LiveEventTicket(liveEventData[i][2].trim(), tempCost, YearMonth.parse(liveEventData[i][6].trim()), amount);
+            liveEventList.add(liveEventTicket);
             if (!sendToRecords) 
             {
-                System.out.println(liveEventSale.name + ", " + liveEventSale.cost + ", " + liveEventSale.date);
+                System.out.println(liveEventTicket.name + ", " + liveEventTicket.cost + ", " + liveEventTicket.date);
             }
         }
         if (sendToRecords) 
@@ -85,12 +86,12 @@ public class LiveEventTicket extends AbstractRecord implements Serializable
         return liveEventList;
     }
 
-    public ArrayList<LiveEventSale> readRecords() 
+    public ArrayList<LiveEventTicket> readRecords() 
     {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(FilePathToRecords))) 
         {
-            ArrayList<LiveEventSale> arr = (ArrayList<LiveEventSale>) in.readObject();
-            for(LiveEventSale m : arr)
+            ArrayList<LiveEventTicket> arr = (ArrayList<LiveEventTicket>) in.readObject();
+            for(LiveEventTicket m : arr)
             {
                 System.out.println("Reccord Type: " + RecType + " Name: " + m.name + " Cost: " + m.cost + " Date: " + m.date);
             }

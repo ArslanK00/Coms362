@@ -14,16 +14,16 @@ public class PayPerViewTicket extends AbstractRecord implements Serializable
     private String name;
     private float cost;
     private YearMonth date;
-    private int amount
+    private int amount;
     private String FilePathToRecords = "Databases/Records.txt";
-    private RecordEnum RecType = RecordEnum.PayPerViewSale;
-    public PayPerViewSale(String name, float cost, YearMonth date, int amount) 
+    private RecordEnum RecType = RecordEnum.PayPerViewTicket;
+    public PayPerViewTicket(String name, float cost, YearMonth date, int amount) 
     {
         super(name);
         this.name = name;
         this.cost = cost;
         this.date = date;
-        this.amount = amount
+        this.amount = amount;
     }
 
 
@@ -52,22 +52,23 @@ public class PayPerViewTicket extends AbstractRecord implements Serializable
         return amount;
     }
 
-    public ArrayList<PayPerViewSale> TurnAllPayPerViewToRecords(boolean sendToRecords)  //Makes object serializable in file
+    public ArrayList<PayPerViewTicket> TurnAllPayPerViewToRecords(boolean sendToRecords)  //Makes object serializable in file
     {
 
         PayPerViewController uploadPayPerView = new PayPerViewController(false);
         String[][] payPerViewData = uploadPayPerView.getPayPerView();
 
-        ArrayList<PayPerViewSale> payPerViewList = new ArrayList<>();
+        ArrayList<PayPerViewTicket> payPerViewList = new ArrayList<>();
 
         for (int i = 0; i < payPerViewData.length; i++) 
         {
             float tempCost = (Float.parseFloat(payPerViewData[i][3]) * Float.parseFloat(payPerViewData[i][4])) - (Float.parseFloat(payPerViewData[i][3]) * Float.parseFloat(payPerViewData[i][5]));
-            PayPerViewSale payPerViewSale = new PayPerViewSale(payPerViewData[i][2].trim(), tempCost, YearMonth.parse(payPerViewData[i][6].trim()));
-            payPerViewList.add(payPerViewSale);
+            int amount = Integer.parseInt(payPerViewData[i][4]);
+            PayPerViewTicket payPerViewTicket = new PayPerViewTicket(payPerViewData[i][2].trim(), tempCost, YearMonth.parse(payPerViewData[i][6].trim()), amount);
+            payPerViewList.add(payPerViewTicket);
             if (!sendToRecords) 
             {
-                System.out.println(payPerViewSale.name + ", " + payPerViewSale.cost + ", " + payPerViewSale.date);
+                System.out.println(payPerViewTicket.name + ", " + payPerViewTicket.cost + ", " + payPerViewTicket.date);
             }
         }
         if (sendToRecords) 
@@ -85,12 +86,12 @@ public class PayPerViewTicket extends AbstractRecord implements Serializable
         return payPerViewList;
     }
 
-    public ArrayList<PayPerViewSale> readRecords() 
+    public ArrayList<PayPerViewTicket> readRecords() 
     {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(FilePathToRecords))) 
         {
-            ArrayList<PayPerViewSale> arr = (ArrayList<PayPerViewSale>) in.readObject();
-            for(PayPerViewSale m : arr)
+            ArrayList<PayPerViewTicket> arr = (ArrayList<PayPerViewTicket>) in.readObject();
+            for(PayPerViewTicket m : arr)
             {
                 System.out.println("Reccord Type: " + RecType + " Name: " + m.name + " Cost: " + m.cost + " Date: " + m.date);
             }
