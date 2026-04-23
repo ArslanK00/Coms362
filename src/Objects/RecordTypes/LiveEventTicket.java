@@ -25,6 +25,9 @@ public class LiveEventTicket extends AbstractRecord implements Serializable
         this.date = date;
         this.amount = amount;
     }
+    public LiveEventTicket(String name){
+        super(name);
+    }
 
 
     @Override
@@ -104,6 +107,11 @@ public class LiveEventTicket extends AbstractRecord implements Serializable
         }
 
         return new ArrayList<>();
+    }
+
+    @Override
+    public void setCost(float cost){
+        this.cost = cost;
     }
 
     @Override

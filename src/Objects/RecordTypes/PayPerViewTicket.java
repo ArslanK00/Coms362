@@ -25,6 +25,9 @@ public class PayPerViewTicket extends AbstractRecord implements Serializable
         this.date = date;
         this.amount = amount;
     }
+    public PayPerViewTicket(String name){
+        super(name);
+    }
 
 
     @Override
@@ -104,6 +107,10 @@ public class PayPerViewTicket extends AbstractRecord implements Serializable
         }
 
         return new ArrayList<>();
+    }
+
+    public void setCost(float cost){
+        this.cost = cost;
     }
 
     @Override

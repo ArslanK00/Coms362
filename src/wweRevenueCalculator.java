@@ -9,7 +9,7 @@ import Objects.Factory.SalaryFactory;
 import Objects.RecordTypes.LiveEventTicket;
 import Objects.RecordTypes.PayPerViewTicket;
 import Objects.RecordTypes.Salary;
-import Objects.RecordTypes.*;
+//import Objects.RecordTypes.*;
 
 public class wweRevenueCalculator {
 
@@ -130,7 +130,7 @@ public class wweRevenueCalculator {
             System.out.println("3 Add a Pay-Per-View ticket record");
             System.out.println("4 Add an event salary");
             System.out.println("5 Delete a record");
-            System.out.println("6 Calculate this event's revenue");
+            System.out.println("6 Calculate this event's profit");
             System.out.println("7 Sort records by value");
             System.out.println("8 Sort records by category");
             System.out.println("9 View revenue only");
@@ -192,7 +192,7 @@ public class wweRevenueCalculator {
 
         System.out.println("Enter a name for the record:");
         String name = System.console().readLine();
-        LiveEventTicket ticket = new LiveEventTicket(name, price, YearMonth.now(), 0);
+        LiveEventTicket ticket = new LiveEventTicket(name, 0, YearMonth.now(), 0);
 
         // Added by Matayas Durr: assigns category and revenue type to records
         ticket.setCategory("Live Event");
@@ -219,7 +219,7 @@ public class wweRevenueCalculator {
 
         System.out.println("Enter the name of the record:");
         String name = System.console().readLine();
-        PayPerViewTicket ticket = new PayPerViewTicket(eventIndex, name);
+        PayPerViewTicket ticket = new PayPerViewTicket(name);
 
         // Added by Matayas Durr: assigns category and revenue type to records
         ticket.setCategory("Pay Per View");
@@ -251,7 +251,7 @@ public class wweRevenueCalculator {
 
         System.out.println(event.listRecords());
         while (true) {
-            System.out.println("Please select an event by its number, or 'exit' to go back to the previous screen");
+            System.out.println("Please select an record by its number, or 'exit' to go back to the previous screen");
             String choice = System.console().readLine();
 
             try {
