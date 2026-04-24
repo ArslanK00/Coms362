@@ -119,7 +119,7 @@ public class PayPerViewTicket extends AbstractRecord implements Serializable
         + "Name: " + name + "\n"
         + "Cost: " + cost + "\n"
         + "Date: " + date + "\n"
-        + "Amount:" + amount + "\n";
+        + "Amount: " + amount + "\n";
         
         if(description == null || description.length() == 0){
             return summary;
