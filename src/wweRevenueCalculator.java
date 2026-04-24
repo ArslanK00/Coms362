@@ -413,10 +413,13 @@ public class wweRevenueCalculator {
      * @author Eleena Rath
      */
     private static void systemRecords() {
-        System.out.println("All Records in System:");
-        wweSystem.listRecords();
-        System.out.println("Select a record by its number, or enter '0' to exit");
+        //System.out.println("All Records in System:");
+        //wweSystem.listRecords();
+        //System.out.println("Select a record by its number, or enter '0' to exit");
         while (true) {
+            System.out.println("All Records in System:");
+            wweSystem.listRecords();
+            System.out.println("Select a record by its number, or enter '0' to exit");
             String choice = System.console().readLine();
 
             try {
@@ -424,8 +427,9 @@ public class wweRevenueCalculator {
                     return;
                 }
                 // Potential compiler issues abound here.
-                recordController((Record) wweSystem.getRecord(Integer.parseInt(choice)));
+                recordController((Objects.RecordTypes.Record) wweSystem.getRecord(Integer.parseInt(choice)));
             } catch (Exception e) {
+                e.printStackTrace();
                 System.out.println("Invalid input");
             }
 
@@ -436,7 +440,7 @@ public class wweRevenueCalculator {
      * @author Eleena Rath
      * @param record
      */
-    public static void recordController(Record record) {
+    public static void recordController(Objects.RecordTypes.Record record) {
         String choice;
         System.out.println(record.toString());
         while (true) {
@@ -448,7 +452,7 @@ public class wweRevenueCalculator {
             choice = System.console().readLine();
             switch (choice) {
                 case "0":
-                    break;
+                    return;
             }
         }
     }
