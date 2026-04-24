@@ -1,5 +1,3 @@
-import java.io.FileWriter;
-import java.io.IOException;
 import java.time.YearMonth;
 
 import Objects.CustomSystem;
@@ -7,6 +5,7 @@ import Objects.Employee;
 import Objects.Event;
 import Objects.Factory.SalaryFactory;
 import Objects.RecordTypes.LiveEventTicket;
+import Objects.RecordTypes.MerchandiseController;
 import Objects.RecordTypes.PayPerViewTicket;
 import Objects.RecordTypes.Salary;
 //import Objects.RecordTypes.*;
@@ -28,6 +27,7 @@ public class wweRevenueCalculator {
             System.out.println("5 Add a Record to the System");
             System.out.println("6 View System Records");
             System.out.println("7 Calculate All Revenue");
+            System.out.println("8 Edit merchandise");
             System.out.println("0 Exit");
             String choice = System.console().readLine();
 
@@ -53,6 +53,9 @@ public class wweRevenueCalculator {
                 case "7":
                     // CalculateAll
                     calculateAllRevenue();
+                    break;
+                case "8":
+                    MerchandiseController merch = new MerchandiseController(true);
                     break;
                 case "0":
                     System.out.println("Exiting the system. Goodbye!");
