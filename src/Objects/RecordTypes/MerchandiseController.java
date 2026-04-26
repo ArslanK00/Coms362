@@ -2,9 +2,13 @@ package Objects.RecordTypes;
 
 // package src;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.YearMonth;
@@ -19,6 +23,8 @@ public class MerchandiseController //need to move out of Record Types
     
     private static String FilePathMerch = "Databases/MerchandiseSales.txt";
     private static String FilePathCategories = "Databases/MerchandiseSalesCategories.txt";
+    private String FilePathToRecords = "Databases/Records.txt";
+
 
     private boolean priceValid = false;
     private float cost;
@@ -28,7 +34,25 @@ public class MerchandiseController //need to move out of Record Types
     {
         while(choice != -1 && EditDatabase)
         {
-            System.out.println("Choose an option: \n 1.Add Units Sold \n 2. Delete unit details by ID \n 3. add category \n 4. get categories \n 5. Find unit by name \n 6. Find unit by category \n 7. Get units sold by year \n 8. Get units sold by month \n 9. Get units sold info by name \n 10. Get revune  by category \n 11. get revenue sold b year \n 12. get revenue by month  \n   13. edit Unit by ID \n -1. Exit");
+            System.out.println("Choose an option:");
+            System.out.println("1.Add Units Sold");
+            System.out.println("2. add category");
+            System.out.println("3. get all merch");
+            System.out.println("4. get categories");
+            System.out.println("5. Find unit by name");
+            System.out.println("6. Find unit by category");
+            System.out.println("7. Get units sold by year");
+            System.out.println("8. Get units sold by month");
+            System.out.println("9. Get units sold info by name");
+            System.out.println("10. Get revune  by category");
+            System.out.println("11. get revenue sold b year");
+            System.out.println("12. get revenue by month");
+            System.out.println("13. edit Unit by ID");
+            System.out.println("14. Delete unit details by ID");
+            System.out.println("15. Send merchandise to Records");
+
+
+            System.out.println("-1. Exit");
 
             choice = Integer.parseInt(System.console().readLine());
             switch(choice)
@@ -36,15 +60,18 @@ public class MerchandiseController //need to move out of Record Types
                 case 1:
                     AddUnitsSold();
                     break;
-                case 2:
+                case 14:
                     System.out.println("Enter the ID of the unit you want to delete:");
                     int id = Integer.parseInt(System.console().readLine());
                     deleteUnitDetailsByID(id);
                     break;
-                case 3:
+                case 2:
                     System.out.println("Enter the name of the new category:");
                     String newCategory = System.console().readLine();
                     addCategory(newCategory);
+                    break;
+                case 3:
+                    getMerch(true);
                     break;
                 case 4:
                     getCatgories(true);
@@ -94,6 +121,8 @@ public class MerchandiseController //need to move out of Record Types
                     int idToEdit = Integer.parseInt(System.console().readLine());
                     editUnitDetailsbyID(idToEdit);
                     break;
+                case 15:
+                    TurnAllMerchandiseToRecords(true);
                 case -1:
                     System.out.println("Exiting...");
                     break;
@@ -219,8 +248,7 @@ public class MerchandiseController //need to move out of Record Types
         catch(FileNotFoundException e){
             System.out.println("An error occurred while reading the merchandise sales: " + e.getMessage());
         }
-    
-        System.out.println("No merchandise sales data found.");
+        if(merchData.isEmpty()) System.out.println("No merchandise sales data found.");
         
     }
     
@@ -379,7 +407,7 @@ public class MerchandiseController //need to move out of Record Types
 
     public float calculateRevenuebyCategory(int categoryID)//Calculates total revenue by Category
     {
-        String[][] merchData = getMerch();
+        String[][] merchData = getMerch(false);
         float totalRevenue = 0;
         for(int i = 0; i < merchData.length; i++)        
             {
@@ -394,7 +422,7 @@ public class MerchandiseController //need to move out of Record Types
 
     public float calculateRevenuebyMonth(String month) //Calculates total Revenue by Month
     {
-        String[][] merchData = getMerch();
+        String[][] merchData = getMerch(false);
         float totalRevenue = 0;
         if(!(month != null && month.matches("\\d{2}") && Integer.parseInt(month) >= 1 && Integer.parseInt(month) <= 12))
         {
@@ -415,7 +443,7 @@ public class MerchandiseController //need to move out of Record Types
 
     public float calculateRevenuebyYear(String year)//Calculates total revenue by year
     {
-        String[][] merchData = getMerch();
+        String[][] merchData = getMerch(false);
         float totalRevenue = 0;
         if(!(year != null && year.matches("\\d{4}") && Integer.parseInt(year) >= 1000 && Integer.parseInt(year) <= 9999))
         {
@@ -437,7 +465,7 @@ public class MerchandiseController //need to move out of Record Types
 
     public void editUnitDetailsbyID(int id)//Edit any item by ID
     {
-        String[][] merchData = getMerch();
+        String[][] merchData = getMerch(false);
         System.out.println("Type in the Unit ID the of the item you want to edit:");
         boolean idExists = false;
         for(int i = 0; i< merchData.length; i++)
@@ -554,7 +582,7 @@ public class MerchandiseController //need to move out of Record Types
 
 
 
-    public static String[][] getMerch()//loads all merch from databse
+    public static String[][] getMerch(boolean print)//loads all merch from databse
     {
         File myFile = new File(FilePathMerch);
         ArrayList<String[]> merchData = new ArrayList<>();
@@ -569,6 +597,10 @@ public class MerchandiseController //need to move out of Record Types
             for(int i = 0; i < merchData.size(); i++)
             {
                 merchArray[i] = merchData.get(i);
+                if(print)
+                {
+                    System.out.println("Unit ID: " + merchArray[i][0] + " Category ID: " + merchArray[i][1] + " Name: " + merchArray[i][2] + " Units Sold: " + merchArray[i][3] + " Price: " + merchArray[i][4]  + " Cost to Make: " + merchArray[i][5] + " Date: " + merchArray[i][6]);
+                }
             }
             return merchArray;
         }
@@ -582,7 +614,7 @@ public class MerchandiseController //need to move out of Record Types
 
     private static int getNextMerchID()//finds the next appropriate id for item
     {
-        String[][] merchData = getMerch();
+        String[][] merchData = getMerch(false);
         HashSet<Integer> hashTable = new HashSet<>();
         for(int i = 0; i< merchData.length; i++)
         {
@@ -622,7 +654,7 @@ public class MerchandiseController //need to move out of Record Types
                 if(Integer.parseInt(data[1].trim()) == categoryID)
                 {
                     results.add(data);
-                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5]  + " Cost to Make: " + data[4] + " Date: " + data[6]);
+                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[4]  + " Cost to Make: " + data[5] + " Date: " + data[6]);
                 }
             }
             return results;
@@ -648,7 +680,7 @@ public class MerchandiseController //need to move out of Record Types
                 if(Integer.parseInt(data[0].trim()) == unitID)
                 {
                     results.add(data);
-                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5]  + " Cost to Make: " + data[4] + " Date: " + data[6]);
+                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[4]  + " Cost to Make: " + data[5] + " Date: " + data[6]);
                 }
             }
             return results.get(0);
@@ -673,7 +705,7 @@ public class MerchandiseController //need to move out of Record Types
                 if(data[2].toLowerCase().replaceAll("\\s+", "").equals(name.toLowerCase().replaceAll("\\s+", "")))
                 {
                     results.add(data);
-                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5]  + " Cost to Make: " + data[4] + " Date: " + data[6]);
+                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[4]  + " Cost to Make: " + data[5] + " Date: " + data[6]);
                 }
             }
             if(results.size() > 0)
@@ -689,6 +721,58 @@ public class MerchandiseController //need to move out of Record Types
         return results;
     }
 
+        public ArrayList<MerchandiseSale> TurnAllMerchandiseToRecords(boolean sendToRecords)  //Makes object serializable in file
+    {
+
+        MerchandiseController uploadMerch = new MerchandiseController(false);
+        String[][] merchData = uploadMerch.getMerch(false);
+
+        ArrayList<MerchandiseSale> merchList = new ArrayList<>();
+
+        for (int i = 0; i < merchData.length; i++) 
+        {
+            float tempCost = (Float.parseFloat(merchData[i][3]) * Float.parseFloat(merchData[i][4])) - (Float.parseFloat(merchData[i][3]) * Float.parseFloat(merchData[i][5]));
+            MerchandiseSale merchSale = new MerchandiseSale(merchData[i][2].trim(), tempCost, YearMonth.parse(merchData[i][6].trim()));
+            merchList.add(merchSale);
+            if (!sendToRecords) 
+            {
+                System.out.println(merchSale.getName() + ", " + merchSale.getCost() + ", " + merchSale.getDate());
+            }
+        }
+        if (sendToRecords) 
+        {
+            try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FilePathToRecords))) 
+            {
+            out.writeObject(merchList);
+            System.out.println("Successfully saved all Merchandise Records");
+            } 
+            catch (IOException e) 
+            {
+                e.printStackTrace();
+            }
+        }
+        return merchList;
+    }
+
+    public ArrayList<MerchandiseSale> readRecords() 
+    {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(FilePathToRecords))) 
+        {
+            ArrayList<MerchandiseSale> arr = (ArrayList<MerchandiseSale>) in.readObject();
+            for(MerchandiseSale m : arr)
+            {
+                System.out.println("Reccord Type: " + RecordEnum.MerchandiseSale + " Name: " + m.getName() + " Cost: " + m.getCost() + " Date: " + m.getDate());
+            }
+            return arr;
+
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
+    }
 
       
     private static boolean isDateValid(String[] dateParts)//Checks for Valid Date input

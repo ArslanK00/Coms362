@@ -24,7 +24,17 @@ public class ArenaRentalCost extends AbstractRecord {
     }
 
     public void setAdditionalFees(float additionalFees) {
-        this.additionalFees = additionalFees;
+        this.additionalFees = Math.abs(additionalFees);
+    }
+
+    @Override
+    public float getCost() {
+        return -1 * (Math.abs(cost) + Math.abs(additionalFees));
+    }
+
+    @Override
+    public void setCost(float cost) {
+        this.cost = Math.abs(cost);
     }
 
     @Override
@@ -34,7 +44,7 @@ public class ArenaRentalCost extends AbstractRecord {
                 + "Arena Name: " + arenaName + "\n"
                 + "Rental Cost: $" + cost + "\n"
                 + "Additional Fees: $" + additionalFees + "\n"
-                + "Total Cost: $" + (cost + additionalFees) + "\n"
+                + "Total Cost: $" + getCost() + "\n"
                 + "Date: " + date + "\n";
 
         if (description == null || description.length() == 0) {

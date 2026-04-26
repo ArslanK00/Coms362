@@ -26,6 +26,7 @@ public class CustomSystem {
 
     public void addRecordToEvent(int index, Record record) {
         events.get(index - 1).addRecord(record);
+        records.add(record);
     }
 
     /**
@@ -83,9 +84,19 @@ public class CustomSystem {
             total += event.calculateRevenue();
         }
 
-        //Addition by Eleena Rath
+        // Count system-level records only when they are not already attached to an event.
         for (Record record: records){
-            total += record.getCost();
+            boolean recordBelongsToEvent = false;
+            for (Event event : events) {
+                if (event.records.contains(record)) {
+                    recordBelongsToEvent = true;
+                    break;
+                }
+            }
+
+            if (!recordBelongsToEvent) {
+                total += record.getCost();
+            }
         }
         return total;
     }

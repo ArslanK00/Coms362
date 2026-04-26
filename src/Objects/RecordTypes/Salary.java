@@ -50,9 +50,9 @@ public class Salary extends AbstractRecord{
     //Override toString method
     @Override
     public String toString(){
-        String summary = "";
-        summary += employee.getName() + " " + recordType + ": " + cost
-         +"\nDate: " + date  + "\nDescription: " + description;
+        String summary = "Record Type: Employee " + recordType + "\n";
+        summary += "Employee: " + employee.getName() + "\n" + "Cost: " + cost
+         +"\nDate: " + date  + "\nDescription: " + description + "\n";
         
         return summary;
     }

@@ -1,5 +1,3 @@
-import java.io.FileWriter;
-import java.io.IOException;
 import java.time.YearMonth;
 
 import Objects.CustomSystem;
@@ -7,6 +5,7 @@ import Objects.Employee;
 import Objects.Event;
 import Objects.Factory.SalaryFactory;
 import Objects.RecordTypes.LiveEventTicket;
+import Objects.RecordTypes.MerchandiseController;
 import Objects.RecordTypes.PayPerViewTicket;
 import Objects.RecordTypes.Salary;
 //import Objects.RecordTypes.*;
@@ -28,6 +27,7 @@ public class wweRevenueCalculator {
             System.out.println("5 Add a Record to the System");
             System.out.println("6 View System Records");
             System.out.println("7 Calculate All Revenue");
+            System.out.println("8 Edit merchandise");
             System.out.println("0 Exit");
             String choice = System.console().readLine();
 
@@ -51,8 +51,11 @@ public class wweRevenueCalculator {
                     systemRecords();
                     break;
                 case "7":
-                    //CalculateAll
+                    // CalculateAll
                     calculateAllRevenue();
+                    break;
+                case "8":
+                    MerchandiseController merch = new MerchandiseController(true);
                     break;
                 case "0":
                     System.out.println("Exiting the system. Goodbye!");
@@ -109,7 +112,7 @@ public class wweRevenueCalculator {
 
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input");
-            } catch(IndexOutOfBoundsException f){
+            } catch (IndexOutOfBoundsException f) {
                 System.out.println("Invalid input");
             }
         }
@@ -130,7 +133,7 @@ public class wweRevenueCalculator {
             System.out.println("3 Add a Pay-Per-View ticket record");
             System.out.println("4 Add an event salary");
             System.out.println("5 Delete a record");
-            System.out.println("6 Calculate this event's revenue");
+            System.out.println("6 Calculate this event's profit");
             System.out.println("7 Sort records by value");
             System.out.println("8 Sort records by category");
             System.out.println("9 View revenue only");
@@ -189,63 +192,113 @@ public class wweRevenueCalculator {
     private static LiveEventTicket uploadLiveEventTicket(int eventIndex) {
         Event event = wweSystem.getEvent(eventIndex);
         System.out.println("Please Fill out the following information to upload a Live-Event ticket.");
-            
+
         System.out.println("Enter a name for the record:");
         String name = System.console().readLine();
-        LiveEventTicket ticket = new LiveEventTicket(event.numberOfRecords(), name);
 
-        // Added by Matayas Durr: assigns category and revenue type to records
-        ticket.setCategory("Live Event");
-        ticket.setRevenue(true);
-            
         boolean priceValid = false;
-        System.out.println("Enter the price:");
         float price = 0;
-        while(!priceValid)
-        {
+        System.out.println("Enter the price:");
+        while (!priceValid) {
             String priceInput = System.console().readLine();
-            if(priceInput.matches("\\d+(\\.\\d{1,2})?"))
-            {
+            if (priceInput.matches("\\d+(\\.\\d{1,2})?")) {
                 price = Float.parseFloat(priceInput);
-                ticket.setCost(price);
                 priceValid = true;
-            }
-            else
-            {
+            } else {
                 System.out.println("Invalid price format. Please enter a valid price (ex: 19.99):");
             }
         }
+
+        int amount = 0;
+        boolean amountValid = false;
+        System.out.println("Enter the amount of tickets sold:");
+        while (!amountValid) {
+            try {
+                amount = Integer.parseInt(System.console().readLine());
+                if (amount >= 0) {
+                    amountValid = true;
+                } else {
+                    System.out.println("Amount must be 0 or greater:");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid amount. Enter a whole number:");
+            }
+        }
+
+        YearMonth date = null;
+        boolean dateValid = false;
+        System.out.println("Enter the date (YYYY-MM):");
+        while (!dateValid) {
+            String dateInput = System.console().readLine();
+            try {
+                date = YearMonth.parse(dateInput);
+                dateValid = true;
+            } catch (Exception e) {
+                System.out.println("Invalid date format. Please use YYYY-MM:");
+            }
+        }
+
+        LiveEventTicket ticket = new LiveEventTicket(name, price * amount, date, amount);
+
+        ticket.setCategory("Live Event");
+        ticket.setRevenue(true);
+
         return ticket;
     }
 
-    private static PayPerViewTicket uploadPayPerViewTicket(int eventIndex){
+    private static PayPerViewTicket uploadPayPerViewTicket(int eventIndex) {
+        Event event = wweSystem.getEvent(eventIndex);
         System.out.println("Please Fill out the following information to upload a Pay-Per-View ticket.");
-            
-        System.out.println("Enter the name of the record:");
-        String name = System.console().readLine();
-        PayPerViewTicket ticket = new PayPerViewTicket(eventIndex, name);
 
-        // Added by Matayas Durr: assigns category and revenue type to records
-        ticket.setCategory("Pay Per View");
-        ticket.setRevenue(true);
+        System.out.println("Enter a name for the record:");
+        String name = System.console().readLine();
 
         boolean priceValid = false;
-        System.out.println("Enter the price:");
         float price = 0;
-        while(!priceValid)
-        {
+        System.out.println("Enter the price:");
+        while (!priceValid) {
             String priceInput = System.console().readLine();
-            if(priceInput.matches("\\d+(\\.\\d{1,2})?"))
-            {
+            if (priceInput.matches("\\d+(\\.\\d{1,2})?")) {
                 price = Float.parseFloat(priceInput);
-                ticket.setCost(price);
                 priceValid = true;
-            }
-            else
-            {
+            } else {
                 System.out.println("Invalid price format. Please enter a valid price (ex: 19.99):");
             }
         }
+
+        int amount = 0;
+        boolean amountValid = false;
+        System.out.println("Enter the amount of tickets sold:");
+        while (!amountValid) {
+            try {
+                amount = Integer.parseInt(System.console().readLine());
+                if (amount >= 0) {
+                    amountValid = true;
+                } else {
+                    System.out.println("Amount must be 0 or greater:");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid amount. Enter a whole number:");
+            }
+        }
+
+        YearMonth date = null;
+        boolean dateValid = false;
+        System.out.println("Enter the date (YYYY-MM):");
+        while (!dateValid) {
+            String dateInput = System.console().readLine();
+            try {
+                date = YearMonth.parse(dateInput);
+                dateValid = true;
+            } catch (Exception e) {
+                System.out.println("Invalid date format. Please use YYYY-MM:");
+            }
+        }
+
+        PayPerViewTicket ticket = new PayPerViewTicket(name, price * amount, date, amount);
+
+        ticket.setCategory("Pay-Per-View");
+        ticket.setRevenue(true);
 
         return ticket;
     }
@@ -258,8 +311,8 @@ public class wweRevenueCalculator {
         Event event = wweSystem.getEvent(eventIndex);
 
         System.out.println(event.listRecords());
-        while(true){
-            System.out.println("Please select an event by its number, or 'exit' to go back to the previous screen");
+        while (true) {
+            System.out.println("Please select an record by its number, or 'exit' to go back to the previous screen");
             String choice = System.console().readLine();
 
             try {
@@ -289,7 +342,7 @@ public class wweRevenueCalculator {
         System.out.println("Total revenue across all events: " + totalRevenue);
     }
 
-    private static boolean isDateValid(String[] dateParts)//Checks for Valid Date input
+    private static boolean isDateValid(String[] dateParts)// Checks for Valid Date input
     {
         if (dateParts.length != 2)
             return false;
@@ -313,12 +366,11 @@ public class wweRevenueCalculator {
     private static void systemEmployees() {
         String choice;
 
-        if(wweSystem.numberOfEmployees() == 0){
+        if (wweSystem.numberOfEmployees() == 0) {
             System.out.println("There are currently no employees in the system");
             return;
-        }
-        else{
-            while(true){
+        } else {
+            while (true) {
                 System.out.println("\nEmployees: ");
                 wweSystem.listEmployees();
                 System.out.println("Please select an employee by number, or enter '0' to return the previous screen");
@@ -345,7 +397,7 @@ public class wweRevenueCalculator {
      * @param emp
      *            Description: Used to manage employees in the system.
      */
-    private static void employeeController(int emp){
+    private static void employeeController(int emp) {
         Employee employee = wweSystem.getEmployee(emp);
         System.out.println(employee.toString());
         String choice;
@@ -363,7 +415,6 @@ public class wweRevenueCalculator {
             }
         }
     }
-
 
     /**
      * @author Eleena Rath
@@ -383,7 +434,7 @@ public class wweRevenueCalculator {
                 return;
             }
 
-            if(firstName.length() < 2 || lastName.length() < 2){
+            if (firstName.length() < 2 || lastName.length() < 2) {
                 System.out.println("Both the employee's first and last name must be at least two characters.");
             } else {
                 Employee employee = new Employee(firstName, lastName);
@@ -397,16 +448,17 @@ public class wweRevenueCalculator {
 
     /**
      * @author Eleena Rath
-     * For iteration 2: when a user chooses to add a record NOT tied to an event, such as an annual salary
+     *         For iteration 2: when a user chooses to add a record NOT tied to an
+     *         event, such as an annual salary
      */
-    private static void createARecord(){
-        while(true){
+    private static void createARecord() {
+        while (true) {
             System.out.println("Choose a record to add:\n1 Annual Salary\n0 Exit");
             String choice = System.console().readLine();
 
-            switch(choice){
+            switch (choice) {
                 case "1":
-                    //create a salary
+                    // create a salary
                     SalaryFactory salaryFactory = new SalaryFactory(wweSystem);
                     salaryFactory.createRecord();
                     wweSystem.addRecord(salaryFactory.returnSalary());
@@ -421,20 +473,24 @@ public class wweRevenueCalculator {
     /**
      * @author Eleena Rath
      */
-    private static void systemRecords(){
-        System.out.println("All Records in System:");
-        wweSystem.listRecords();
-        System.out.println("Select a record by its number, or enter '0' to exit");
-        while(true){
+    private static void systemRecords() {
+        //System.out.println("All Records in System:");
+        //wweSystem.listRecords();
+        //System.out.println("Select a record by its number, or enter '0' to exit");
+        while (true) {
+            System.out.println("All Records in System:");
+            wweSystem.listRecords();
+            System.out.println("Select a record by its number, or enter '0' to exit");
             String choice = System.console().readLine();
 
-            try{
-                if(choice.equals("0")){
+            try {
+                if (choice.equals("0")) {
                     return;
                 }
-                //Potential compiler issues abound here.
-                recordController((Record)wweSystem.getRecord(Integer.parseInt(choice)));
-            } catch(Exception e){
+                // Potential compiler issues abound here.
+                recordController((Objects.RecordTypes.Record) wweSystem.getRecord(Integer.parseInt(choice)));
+            } catch (Exception e) {
+                e.printStackTrace();
                 System.out.println("Invalid input");
             }
 
@@ -445,19 +501,19 @@ public class wweRevenueCalculator {
      * @author Eleena Rath
      * @param record
      */
-    public static void recordController(Record record){
+    public static void recordController(Objects.RecordTypes.Record record) {
         String choice;
         System.out.println(record.toString());
-        while(true){
+        while (true) {
             System.out.println("What would you like to do with this record?");
-            System.out.println("1 Edit (not yet implemented)"); //TODO
-            System.out.println("2 Delete (not yet implemented)"); //TODO
+            System.out.println("1 Edit (not yet implemented)"); // TODO
+            System.out.println("2 Delete (not yet implemented)"); // TODO
             System.out.println("0 Exit");
-            
+
             choice = System.console().readLine();
-            switch(choice){
+            switch (choice) {
                 case "0":
-                    break;
+                    return;
             }
         }
     }
