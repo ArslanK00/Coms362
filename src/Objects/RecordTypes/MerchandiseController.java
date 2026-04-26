@@ -248,8 +248,7 @@ public class MerchandiseController //need to move out of Record Types
         catch(FileNotFoundException e){
             System.out.println("An error occurred while reading the merchandise sales: " + e.getMessage());
         }
-    
-        System.out.println("No merchandise sales data found.");
+        if(merchData.isEmpty()) System.out.println("No merchandise sales data found.");
         
     }
     
@@ -655,7 +654,7 @@ public class MerchandiseController //need to move out of Record Types
                 if(Integer.parseInt(data[1].trim()) == categoryID)
                 {
                     results.add(data);
-                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5]  + " Cost to Make: " + data[4] + " Date: " + data[6]);
+                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[4]  + " Cost to Make: " + data[5] + " Date: " + data[6]);
                 }
             }
             return results;
@@ -681,7 +680,7 @@ public class MerchandiseController //need to move out of Record Types
                 if(Integer.parseInt(data[0].trim()) == unitID)
                 {
                     results.add(data);
-                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5]  + " Cost to Make: " + data[4] + " Date: " + data[6]);
+                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[4]  + " Cost to Make: " + data[5] + " Date: " + data[6]);
                 }
             }
             return results.get(0);
@@ -706,7 +705,7 @@ public class MerchandiseController //need to move out of Record Types
                 if(data[2].toLowerCase().replaceAll("\\s+", "").equals(name.toLowerCase().replaceAll("\\s+", "")))
                 {
                     results.add(data);
-                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[5]  + " Cost to Make: " + data[4] + " Date: " + data[6]);
+                    System.out.println("Unit ID: " + data[0] + " Category ID: " + data[1] + " Name: " + data[2] + " Units Sold: " + data[3] + " Price: " + data[4]  + " Cost to Make: " + data[5] + " Date: " + data[6]);
                 }
             }
             if(results.size() > 0)
