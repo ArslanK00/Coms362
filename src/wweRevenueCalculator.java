@@ -238,7 +238,7 @@ public class wweRevenueCalculator {
             }
         }
 
-        LiveEventTicket ticket = new LiveEventTicket(name, price, date, amount);
+        LiveEventTicket ticket = new LiveEventTicket(name, price * amount, date, amount);
 
         ticket.setCategory("Live Event");
         ticket.setRevenue(true);
@@ -295,7 +295,7 @@ public class wweRevenueCalculator {
             }
         }
 
-        PayPerViewTicket ticket = new PayPerViewTicket(name, price, date, amount);
+        PayPerViewTicket ticket = new PayPerViewTicket(name, price * amount, date, amount);
 
         ticket.setCategory("Pay-Per-View");
         ticket.setRevenue(true);
