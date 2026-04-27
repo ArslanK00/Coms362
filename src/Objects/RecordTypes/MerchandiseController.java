@@ -428,7 +428,7 @@ public class MerchandiseController //need to move out of Record Types
         {
             System.out.println("Incorrect Month format. Please enter a valid month (01-12).");
             String MonthStringCheck = System.console().readLine();
-            calculateRevenuebyYear(MonthStringCheck);
+            calculateRevenuebyMonth(MonthStringCheck);
         }
         for(int i = 0; i < merchData.length; i++)        {
             if(merchData[i][6].trim().split("-")[1].equals(month))
