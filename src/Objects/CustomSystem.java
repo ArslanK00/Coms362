@@ -1,10 +1,11 @@
 package Objects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import Objects.RecordTypes.Record;
 
-public class CustomSystem {
+public class CustomSystem implements Serializable{
     ArrayList<Event> events;
     ArrayList<Record> records;
     ArrayList<Employee> employees; // Modification: by Eleena R.
@@ -26,7 +27,7 @@ public class CustomSystem {
 
     public void addRecordToEvent(int index, Record record) {
         events.get(index - 1).addRecord(record);
-        records.add(record);
+        //records.add(record);
     }
 
     /**

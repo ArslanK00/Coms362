@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class LiveEventController 
 {
     private static String FilePathLiveEvent = "Databases/LiveEventSales.txt";
-    private boolean priceValid = false;
+    //private boolean priceValid = false;
     private int choice = 0;
 
     public LiveEventController(boolean editDatabase)
