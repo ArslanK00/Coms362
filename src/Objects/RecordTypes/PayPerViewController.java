@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class PayPerViewController 
 {
     private static String FilePathPayPerView = "Databases/PayPerViewSales.txt";
-    private boolean priceValid = false;
+    //private boolean priceValid = false;
     private int choice = 0;
 
     public PayPerViewController(boolean editDatabase)
