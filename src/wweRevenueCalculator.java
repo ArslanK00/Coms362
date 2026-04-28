@@ -508,12 +508,35 @@ public class wweRevenueCalculator {
             System.out.println("What would you like to do with this record?");
             System.out.println("1 Edit (not yet implemented)"); // TODO
             System.out.println("2 Delete (not yet implemented)"); // TODO
+            System.out.println("3 Audit record");
             System.out.println("0 Exit");
 
             choice = System.console().readLine();
             switch (choice) {
+                case "3":
+                    System.out.println("Enter reviewer name:");
+                    String reviewerName = System.console().readLine();
+
+                    System.out.println("Enter audit note:");
+                    String auditNote = System.console().readLine();
+
+                    Objects.RecordTypes.Record auditedRecord =
+                        new Objects.RecordTypes.AuditedRecordDecorator(
+                            record,
+                            reviewerName,
+                            auditNote
+                        );
+
+                    System.out.println("Audited record:");
+                    System.out.println(auditedRecord.toString());
+                    break;
+
                 case "0":
                     return;
+
+                default:
+                    System.out.println("Invalid option. Please try again.");
+                    break;
             }
         }
     }
