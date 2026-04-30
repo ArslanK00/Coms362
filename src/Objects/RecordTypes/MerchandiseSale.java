@@ -46,6 +46,7 @@ public class MerchandiseSale extends AbstractRecord
 
     @Override
     public void setName(String n) {
+        super.setName(n);
         this.name = n;
     }
 

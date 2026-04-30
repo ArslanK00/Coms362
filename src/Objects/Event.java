@@ -28,12 +28,27 @@ public class Event implements Serializable {
         return records.get(index - 1);
     }
 
+    public void replaceRecord(int recordIndex, Record newRecord) {
+        records.set(recordIndex - 1, newRecord);
+    }
+
+    public void replaceRecord(Record oldRecord, Record newRecord) {
+        int index = records.indexOf(oldRecord);
+        if (index != -1) {
+            records.set(index, newRecord);
+        }
+    }
+
     /**
      * @author Eleena Rath
      * @param record
      */
     public void deleteRecord(int index) {
         records.remove(index - 1);
+    }
+
+    public void deleteRecord(Record record) {
+        records.remove(record);
     }
 
     /**

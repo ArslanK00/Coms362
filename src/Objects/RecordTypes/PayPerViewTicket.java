@@ -8,32 +8,14 @@ import java.io.ObjectOutputStream;
 import java.time.YearMonth;
 import java.util.ArrayList;
 
-public class PayPerViewTicket extends AbstractRecord
-{
-    private String name;
-    private float cost;
-    private YearMonth date;
-    private int amount;
-    private String FilePathToRecords = "Databases/Records.txt";
-    private RecordEnum RecType;
-    public PayPerViewTicket(String name, float cost, YearMonth date, int amount) 
-    {
-        super(name);
-        this.name = name;
-        this.cost = cost;
-        this.date = date;
-        this.amount = amount;
-        this.RecType = RecordEnum.PayPerViewTicket;
-    }
-    public PayPerViewTicket(String name){
-        super(name);
+public class PayPerViewTicket extends AbstractTicket {
+
+    public PayPerViewTicket(String name, float cost, YearMonth date, int amount) {
+        super(name, cost, date, amount, RecordEnum.PayPerViewTicket);
     }
 
-
-    @Override
-    public YearMonth getDate() 
-    {
-        return date;
+    public PayPerViewTicket(String name) {
+        super(name);
     }
 
     @Override
@@ -46,10 +28,11 @@ public class PayPerViewTicket extends AbstractRecord
         return name;
     }
 
-    // public void EditPayPerViewDatabase()
-    // {
-    //     PayPerViewController EditDatabase = new PayPerViewController(true);
-    // }
+    @Override
+    public void setName(String name) {
+        super.setName(name);
+        this.name = name;
+    }
 
     public int getAmount() {
         return amount;
@@ -59,73 +42,72 @@ public class PayPerViewTicket extends AbstractRecord
         return RecType;
     }
 
-    public ArrayList<PayPerViewTicket> TurnAllPayPerViewToRecords(boolean sendToRecords)  //Makes object serializable in file
-    {
-
+    public ArrayList<PayPerViewTicket> TurnAllPayPerViewToRecords(boolean sendToRecords) {
         PayPerViewController uploadPayPerView = new PayPerViewController(false);
         String[][] payPerViewData = uploadPayPerView.getPayPerView();
 
         ArrayList<PayPerViewTicket> payPerViewList = new ArrayList<>();
 
-        for (int i = 0; i < payPerViewData.length; i++) 
-        {
-            float tempCost = (Float.parseFloat(payPerViewData[i][3]) * Float.parseFloat(payPerViewData[i][4])) - (Float.parseFloat(payPerViewData[i][3]) * Float.parseFloat(payPerViewData[i][5]));
+        for (int i = 0; i < payPerViewData.length; i++) {
+            float tempCost = (Float.parseFloat(payPerViewData[i][3]) * Float.parseFloat(payPerViewData[i][4]))
+                    - (Float.parseFloat(payPerViewData[i][3]) * Float.parseFloat(payPerViewData[i][5]));
             int amount = Integer.parseInt(payPerViewData[i][4]);
-            PayPerViewTicket payPerViewTicket = new PayPerViewTicket(payPerViewData[i][2].trim(), tempCost, YearMonth.parse(payPerViewData[i][6].trim()), amount);
+
+            PayPerViewTicket payPerViewTicket = new PayPerViewTicket(
+                    payPerViewData[i][2].trim(),
+                    tempCost,
+                    YearMonth.parse(payPerViewData[i][6].trim()),
+                    amount);
+
             payPerViewList.add(payPerViewTicket);
-            if (!sendToRecords) 
-            {
+
+            if (!sendToRecords) {
                 System.out.println(payPerViewTicket.name + ", " + payPerViewTicket.cost + ", " + payPerViewTicket.date);
             }
         }
-        if (sendToRecords) 
-        {
-            try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FilePathToRecords))) 
-            {
-            out.writeObject(payPerViewList);
-            System.out.println("Successfully saved all pay-per-view ticket records");
-            } 
-            catch (IOException e) 
-            {
+
+        if (sendToRecords) {
+            try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FilePathToRecords))) {
+                out.writeObject(payPerViewList);
+                System.out.println("Successfully saved all pay-per-view ticket records");
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+
         return payPerViewList;
     }
 
-    public ArrayList<PayPerViewTicket> readRecords() 
-    {
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(FilePathToRecords))) 
-        {
+    public ArrayList<PayPerViewTicket> readRecords() {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(FilePathToRecords))) {
             ArrayList<PayPerViewTicket> arr = (ArrayList<PayPerViewTicket>) in.readObject();
-            for(PayPerViewTicket m : arr)
-            {
-                System.out.println("Reccord Type: " + RecType + " Name: " + m.name + " Cost: " + m.cost + " Date: " + m.date);
-            }
-            return arr;
 
-        } 
-        catch (Exception e) 
-        {
+            for (PayPerViewTicket m : arr) {
+                System.out.println("Record Type: " + RecType + " Name: " + m.name + " Cost: " + m.cost + " Date: " + m.date);
+            }
+
+            return arr;
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         return new ArrayList<>();
     }
 
-    public void setCost(float cost){
+    @Override
+    public void setCost(float cost) {
         this.cost = cost;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         String summary = "Record Type: " + RecType + "\n"
-        + "Name: " + name + "\n"
-        + "Cost: " + cost + "\n"
-        + "Date: " + date + "\n"
-        + "Amount: " + amount + "\n";
-        
-        if(description == null || description.length() == 0){
+                + "Name: " + getName() + "\n"
+                + "Cost: " + cost + "\n"
+                + "Date: " + date + "\n"
+                + "Amount: " + amount + "\n";
+
+        if (description == null || description.length() == 0) {
             return summary;
         }
 

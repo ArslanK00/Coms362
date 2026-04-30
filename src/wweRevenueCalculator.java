@@ -1,5 +1,7 @@
 
 import java.io.Console;
+import java.util.ArrayList;
+import java.util.List;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -13,11 +15,13 @@ import Objects.CustomSystem;
 import Objects.Employee;
 import Objects.Event;
 import Objects.Factory.SalaryFactory;
-import Objects.RecordTypes.LiveEventTicket;
 import Objects.RecordTypes.MerchandiseController;
 import Objects.RecordTypes.PayPerViewTicket;
 import Objects.RecordTypes.Salary;
 import TrendData.RequestType;
+import Objects.Commands.*;
+import Objects.Commands.EventCommands.*;
+
 
 public class wweRevenueCalculator {
 
@@ -84,7 +88,7 @@ public class wweRevenueCalculator {
                     System.out.println("Exiting the system. Goodbye!");
                     //Save the CustomSystem object to a file
                     saveData();
-                    System.exit(1);
+                    System.exit(0);
                 default:
                     System.out.println("Invalid option. Please try again.");
                     break;
@@ -188,210 +192,37 @@ public class wweRevenueCalculator {
         Event event = wweSystem.getEvent(eventIndex);
         System.out.println(event.toString());
 
+        List<Command> eventCommands = new ArrayList<>();
+        eventCommands.add(new PrintEventRecords(event));
+        eventCommands.add(new UploadLiveEventTicket(wweSystem, event));
+        eventCommands.add(new UploadPayPerViewTicket(wweSystem, event));
+        eventCommands.add(new UploadEventSalary(wweSystem, event));
+        eventCommands.add(new RecordVenueRentalCost(wweSystem, event));
+        eventCommands.add(new DeleteRecordFromEvent(event));
+        eventCommands.add(new CalculateEventProfit(event));
+        eventCommands.add(new EventRecordRevenueOnly(event));
+        eventCommands.add(new SortEventRecordsByValue(event));
+        eventCommands.add(new SortEventRecordsByCategory(event));
+
+
         while (true) {
             System.out.println("What would you like to do with this event?");
-            System.out.println("1 View all records for this event");
-            System.out.println("2 Add a Live-Event ticket record");
-            System.out.println("3 Add a Pay-Per-View ticket record");
-            System.out.println("4 Add an event salary");
-            System.out.println("5 Delete a record");
-            System.out.println("6 Calculate this event's profit");
-            System.out.println("7 Sort records by value");
-            System.out.println("8 Sort records by category");
-            System.out.println("9 View revenue only");
-            System.out.println("0 Record Arena Rental Cost For an Event");
+            for(int i = 0; i < eventCommands.size(); i++){
+                System.out.println(i+1 + " " + eventCommands.get(i).toString());
+            }
             System.out.println("- Exit");
-
             String choice = System.console().readLine();
-            switch (choice) {
-                case "1":
-                    System.out.println(event.listRecords());
-                    break;
-                case "2":
-                    LiveEventTicket liveTicket = uploadLiveEventTicket(eventIndex);
-                    wweSystem.addRecordToEvent(eventIndex, liveTicket);
-                    break;
-                case "3":
-                    PayPerViewTicket ppvTicket = uploadPayPerViewTicket(eventIndex);
-                    wweSystem.addRecordToEvent(eventIndex, ppvTicket);
-                    break;
-                case "4":
-                    SalaryFactory salaryFactory = new SalaryFactory(wweSystem);
-                    salaryFactory.createRecord();
-                    Salary eventSalary = salaryFactory.returnSalary();
-                    wweSystem.addRecordToEvent(eventIndex, eventSalary);
-                    break;
-                case "5":
-                    deleteRecordFromEvent(eventIndex);
-                    break;
-                case "6":
-                    // Calculate the revenue for this event
-                    System.out.println(event.calculateRevenue());
-                    break;
-                case "7":
-                    event.sortByValue();
-                    System.out.println(event.listRecords());
-                    break;
-                case "8":
-                    event.sortByCategory();
-                    System.out.println(event.listRecords());
-                    break;
-                case "9":
-                    System.out.println("Revenue Only: " + event.calculateRevenueOnly());
-                    break;
-                case "0":
-                    recordArenaRentalCost(eventIndex);
-                    break;
-                case "-":
-                    return;
-                default:
-                    System.out.println("Invalid option. Please try again.");
-                    break;
-            }
-        }
-    }
-
-    private static LiveEventTicket uploadLiveEventTicket(int eventIndex) {
-        Event event = wweSystem.getEvent(eventIndex);
-        System.out.println("Please Fill out the following information to upload a Live-Event ticket.");
-
-        System.out.println("Enter a name for the record:");
-        String name = System.console().readLine();
-
-        boolean priceValid = false;
-        float price = 0;
-        System.out.println("Enter the price:");
-        while (!priceValid) {
-            String priceInput = System.console().readLine();
-            if (priceInput.matches("\\d+(\\.\\d{1,2})?")) {
-                price = Float.parseFloat(priceInput);
-                priceValid = true;
-            } else {
-                System.out.println("Invalid price format. Please enter a valid price (ex: 19.99):");
-            }
-        }
-
-        int amount = 0;
-        boolean amountValid = false;
-        System.out.println("Enter the amount of tickets sold:");
-        while (!amountValid) {
-            try {
-                amount = Integer.parseInt(System.console().readLine());
-                if (amount >= 0) {
-                    amountValid = true;
-                } else {
-                    System.out.println("Amount must be 0 or greater:");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid amount. Enter a whole number:");
-            }
-        }
-
-        YearMonth date = null;
-        boolean dateValid = false;
-        System.out.println("Enter the date (YYYY-MM):");
-        while (!dateValid) {
-            String dateInput = System.console().readLine();
-            try {
-                date = YearMonth.parse(dateInput);
-                dateValid = true;
-            } catch (Exception e) {
-                System.out.println("Invalid date format. Please use YYYY-MM:");
-            }
-        }
-
-        LiveEventTicket ticket = new LiveEventTicket(name, price * amount, date, amount);
-
-        ticket.setCategory("Live Event");
-        ticket.setRevenue(true);
-
-        return ticket;
-    }
-
-    private static PayPerViewTicket uploadPayPerViewTicket(int eventIndex) {
-        Event event = wweSystem.getEvent(eventIndex);
-        System.out.println("Please Fill out the following information to upload a Pay-Per-View ticket.");
-
-        System.out.println("Enter a name for the record:");
-        String name = System.console().readLine();
-
-        boolean priceValid = false;
-        float price = 0;
-        System.out.println("Enter the price:");
-        while (!priceValid) {
-            String priceInput = System.console().readLine();
-            if (priceInput.matches("\\d+(\\.\\d{1,2})?")) {
-                price = Float.parseFloat(priceInput);
-                priceValid = true;
-            } else {
-                System.out.println("Invalid price format. Please enter a valid price (ex: 19.99):");
-            }
-        }
-
-        int amount = 0;
-        boolean amountValid = false;
-        System.out.println("Enter the amount of tickets sold:");
-        while (!amountValid) {
-            try {
-                amount = Integer.parseInt(System.console().readLine());
-                if (amount >= 0) {
-                    amountValid = true;
-                } else {
-                    System.out.println("Amount must be 0 or greater:");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid amount. Enter a whole number:");
-            }
-        }
-
-        YearMonth date = null;
-        boolean dateValid = false;
-        System.out.println("Enter the date (YYYY-MM):");
-        while (!dateValid) {
-            String dateInput = System.console().readLine();
-            try {
-                date = YearMonth.parse(dateInput);
-                dateValid = true;
-            } catch (Exception e) {
-                System.out.println("Invalid date format. Please use YYYY-MM:");
-            }
-        }
-
-        PayPerViewTicket ticket = new PayPerViewTicket(name, price * amount, date, amount);
-
-        ticket.setCategory("Pay-Per-View");
-        ticket.setRevenue(true);
-
-        return ticket;
-    }
-
-    /**
-     * @author Eleena Rath
-     * @param eventIndex
-     */
-    private static void deleteRecordFromEvent(int eventIndex) {
-        Event event = wweSystem.getEvent(eventIndex);
-
-        System.out.println(event.listRecords());
-        while (true) {
-            System.out.println("Please select an record by its number, or 'exit' to go back to the previous screen");
-            String choice = System.console().readLine();
-
-            try {
-                int recordIndex = Integer.parseInt(choice);
-                wweSystem.deleteRecordFromEvent(eventIndex, recordIndex);
-                System.out.println("Record was successfully deleted");
+            if(choice.equals("-")){
                 return;
-
-            } catch (NumberFormatException e) {
-                if (choice.equalsIgnoreCase("exit")) {
-                    return;
-                } else {
-                    System.out.println("Invalid input");
-                }
-            } catch (IndexOutOfBoundsException f) {
+            }
+            
+            try{
+                int intChoice = Integer.parseInt(choice);   //possible NumberFormatException
+                eventCommands.get(intChoice-1).execute();   //possible IndexOutOfBoundsException
+            } catch(Exception e){
                 System.out.println("Invalid input");
             }
+            
         }
     }
 
@@ -530,7 +361,8 @@ public class wweRevenueCalculator {
                 if (choice.equals("0")) {
                     return;
                 }
-                recordController((Objects.RecordTypes.Record) wweSystem.getRecord(Integer.parseInt(choice)));
+                int recordIndex = Integer.parseInt(choice);
+                recordController(recordIndex, wweSystem.getRecord(recordIndex));
             } catch (Exception e) {
                 System.out.println("Invalid input");
             }
@@ -542,31 +374,84 @@ public class wweRevenueCalculator {
      * @author Eleena Rath
      * @param record
      */
-    public static void recordController(Objects.RecordTypes.Record record) {
+    private static Objects.RecordTypes.Record unwrapRecord(Objects.RecordTypes.Record record) {
+        while (record instanceof Objects.RecordTypes.RecordDecorator) {
+            record = ((Objects.RecordTypes.RecordDecorator) record).getWrappedRecord();
+        }
+        return record;
+    }
+
+    public static void recordController(int recordIndex, Objects.RecordTypes.Record record) {
         String choice;
         System.out.println(record.toString());
         while (true) {
             System.out.println("What would you like to do with this record?");
-            System.out.println("1 Edit (not yet implemented)"); // TODO
-            System.out.println("2 Delete (not yet implemented)"); // TODO
+            System.out.println("1 Edit record");
+            System.out.println("2 Delete record");
+            System.out.println("3 Audit record");
             System.out.println("0 Exit");
 
             choice = System.console().readLine();
             switch (choice) {
+                case "1":
+                    Objects.RecordTypes.Record baseRecord = unwrapRecord(record);
+
+                    if (baseRecord instanceof Objects.RecordTypes.AbstractRecord) {
+                        Objects.RecordTypes.AbstractRecord editableRecord =
+                            (Objects.RecordTypes.AbstractRecord) baseRecord;
+
+                        System.out.println("Enter new record name:");
+                        String newName = System.console().readLine();
+
+                        System.out.println("Enter new cost:");
+                        float newCost = Float.parseFloat(System.console().readLine());
+
+                        editableRecord.setName(newName);
+                        editableRecord.setCost(newCost);
+
+                        System.out.println("Record was successfully edited:");
+                        System.out.println(record.toString());
+                    } else {
+                        System.out.println("This record type cannot be edited.");
+                    }
+                    break;
+
+                case "2":
+                    wweSystem.deleteRecord(recordIndex);
+                    System.out.println("Record was successfully deleted");
+                    return;
+
+                case "3":
+                    System.out.println("Enter reviewer name:");
+                    String reviewerName = System.console().readLine();
+
+                    System.out.println("Enter audit note:");
+                    String auditNote = System.console().readLine();
+
+                    Objects.RecordTypes.Record auditedRecord =
+                        new Objects.RecordTypes.AuditedRecordDecorator(
+                            record,
+                            reviewerName,
+                            auditNote
+                        );
+
+                    wweSystem.replaceRecord(recordIndex, auditedRecord);
+                    record = auditedRecord;
+
+                    System.out.println("Audited record saved:");
+                    System.out.println(auditedRecord.toString());
+                    break;
+
                 case "0":
                     return;
+
+                default:
+                    System.out.println("Invalid option. Please try again.");
+                    break;
             }
         }
     }
 
-    /**
-     * @author Jamey Nguyen
-     *         Records arena rental cost for an event
-     */
-    private static void recordArenaRentalCost(int eventIndex) {
-        RecordEventVenueCost arenaRecorder = new RecordEventVenueCost(wweSystem);
-        arenaRecorder.recordArenaRentalCost(eventIndex);
-    }
 
     public CustomSystem getSystem()
     {

@@ -33,7 +33,12 @@ public class CustomSystem implements Serializable{
 
     public void addRecordToEvent(int index, Record record) {
         events.get(index - 1).addRecord(record);
-        //records.add(record);
+        records.add(record);
+    }
+
+    public void addRecordToEvent(Event event, Record record) {
+        event.addRecord(record);
+        records.add(record);
     }
 
     /**
@@ -43,6 +48,16 @@ public class CustomSystem implements Serializable{
      */
     public void deleteRecordFromEvent(int eventIndex, int recordIndex) {
         getEvent(eventIndex).deleteRecord(recordIndex);
+    }
+
+    public void deleteRecord(int recordIndex) {
+        Record recordToDelete = records.get(recordIndex - 1);
+
+        records.remove(recordIndex - 1);
+
+        for (Event event : events) {
+            event.deleteRecord(recordToDelete);
+        }
     }
 
     
@@ -201,20 +216,7 @@ public class CustomSystem implements Serializable{
         }
     }
 
-    public void deleteRecord(int i)
-    {
-        Record deleting = records.get( i - 1);
-        ArrayList<Record> newArr = new ArrayList<>();
-        for(Record r : records)
-        {
-            if(!r.equals(deleting))
-            {
-                newArr.add(r);
-            }
-        }
-        this.records = newArr;
-        
-    }
+
 
     public void deleteEmployee(int i)
     {
@@ -248,4 +250,13 @@ public class CustomSystem implements Serializable{
         
     // }
     
+    public void replaceRecord(int recordIndex, Record newRecord) {
+        Record oldRecord = records.get(recordIndex - 1);
+
+        records.set(recordIndex - 1, newRecord);
+
+        for (Event event : events) {
+            event.replaceRecord(oldRecord, newRecord);
+        }
+    }
 }
