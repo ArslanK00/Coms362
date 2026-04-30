@@ -1,11 +1,12 @@
 package Objects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import Objects.RecordTypes.AbstractRecord;
 import Objects.RecordTypes.Record;
 
-public class Event {
+public class Event implements Serializable {
     String name;
     String venue;
     String arenaName;

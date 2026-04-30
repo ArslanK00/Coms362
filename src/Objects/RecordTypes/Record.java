@@ -1,8 +1,9 @@
 package Objects.RecordTypes;
 
+import java.io.Serializable;
 import java.time.YearMonth;
 
-public interface Record {
+public interface Record extends Serializable{
 
     public YearMonth getDate();
 

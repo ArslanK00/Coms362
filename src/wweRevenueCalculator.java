@@ -1,5 +1,12 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.time.YearMonth;
 
 import Objects.CustomSystem;
 import Objects.Employee;
@@ -13,8 +20,13 @@ import Objects.Commands.EventCommands.*;
 public class wweRevenueCalculator {
 
     static CustomSystem wweSystem = new CustomSystem();
+    private static final String DATA_FILE = "Databases/Database.txt";
 
     public static void main(String[] args) {
+
+        //Load the data from the system
+        //Or create an empty CustomSystem object
+        loadData();
 
         System.out.println("Welcome to the Ticketing System!");
 
@@ -59,12 +71,51 @@ public class wweRevenueCalculator {
                     break;
                 case "0":
                     System.out.println("Exiting the system. Goodbye!");
+                    //Save the CustomSystem object to a file
+                    saveData();
                     System.exit(1);
                 default:
                     System.out.println("Invalid option. Please try again.");
                     break;
             }
         }
+    }
+
+    /**
+     * @author Eleena Rath
+     * Loads data from the DATA_FILE.txt if it exists. If the file doesn't exist, then a new database object is created.
+     * To save/load data, the following classes implement the Serializable interface:
+     * -Record interface
+     * -CustomSystem
+     * -Employee
+     * -Event
+     */
+    private static void loadData(){
+        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(DATA_FILE))){
+            wweSystem = (CustomSystem) ois.readObject();
+        } catch(FileNotFoundException e){
+            System.out.println("No database was found");
+            wweSystem = new CustomSystem();
+        } catch(ClassNotFoundException f){
+            System.out.println("No database object was found");
+            wweSystem = new CustomSystem();
+        } catch(IOException g){
+            g.printStackTrace();
+            System.exit(-1);
+        }
+    }
+
+    /**
+     * @author Eleena Rath
+     * Saves data to the DATA_FILE.txt
+     */
+    private static void saveData(){
+       try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(DATA_FILE))){
+            oos.writeObject(wweSystem);
+       }catch(IOException e){
+            e.printStackTrace();
+       }
+
     }
 
     private static void addEventToSystem() {
@@ -95,10 +146,10 @@ public class wweRevenueCalculator {
      * @author Eleena Rath
      */
     private static void systemEvents() {
-        System.out.println("All events in system:");
-        System.out.println(wweSystem.listEvents());
 
         while (true) {
+            System.out.println("All events in system:");
+            System.out.println(wweSystem.listEvents());
             System.out.println("Please select an event by its number, or enter '0' to go back to the previous screen");
             String choice = System.console().readLine();
 
@@ -169,22 +220,6 @@ public class wweRevenueCalculator {
         System.out.println("Total revenue across all events: " + totalRevenue);
     }
 
-    private static boolean isDateValid(String[] dateParts)// Checks for Valid Date input
-    {
-        if (dateParts.length != 2)
-            return false;
-
-        String year = dateParts[0];
-        String month = dateParts[1];
-
-        if (!year.matches("\\d{4}") || !month.matches("\\d{2}"))
-            return false;
-
-        int m = Integer.parseInt(month);
-        if (m < 1 || m > 12)
-            return false;
-        return true;
-    }
 
     /**
      * @author Eleena Rath
@@ -301,9 +336,6 @@ public class wweRevenueCalculator {
      * @author Eleena Rath
      */
     private static void systemRecords() {
-        //System.out.println("All Records in System:");
-        //wweSystem.listRecords();
-        //System.out.println("Select a record by its number, or enter '0' to exit");
         while (true) {
             System.out.println("All Records in System:");
             wweSystem.listRecords();
@@ -314,10 +346,8 @@ public class wweRevenueCalculator {
                 if (choice.equals("0")) {
                     return;
                 }
-                // Potential compiler issues abound here.
                 recordController((Objects.RecordTypes.Record) wweSystem.getRecord(Integer.parseInt(choice)));
             } catch (Exception e) {
-                e.printStackTrace();
                 System.out.println("Invalid input");
             }
 

@@ -1,9 +1,8 @@
 package Objects.RecordTypes;
 
-import java.io.Serializable;
 import java.time.YearMonth;
 
-public class MerchandiseSale extends AbstractRecord implements Serializable
+public class MerchandiseSale extends AbstractRecord
 {
     private String name;
     private float cost;
