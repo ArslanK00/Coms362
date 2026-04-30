@@ -346,7 +346,8 @@ public class wweRevenueCalculator {
                 if (choice.equals("0")) {
                     return;
                 }
-                recordController((Objects.RecordTypes.Record) wweSystem.getRecord(Integer.parseInt(choice)));
+                int recordIndex = Integer.parseInt(choice);
+                recordController(recordIndex, wweSystem.getRecord(recordIndex));
             } catch (Exception e) {
                 System.out.println("Invalid input");
             }
@@ -358,19 +359,80 @@ public class wweRevenueCalculator {
      * @author Eleena Rath
      * @param record
      */
-    public static void recordController(Objects.RecordTypes.Record record) {
+    private static Objects.RecordTypes.Record unwrapRecord(Objects.RecordTypes.Record record) {
+        while (record instanceof Objects.RecordTypes.RecordDecorator) {
+            record = ((Objects.RecordTypes.RecordDecorator) record).getWrappedRecord();
+        }
+        return record;
+    }
+
+    public static void recordController(int recordIndex, Objects.RecordTypes.Record record) {
         String choice;
         System.out.println(record.toString());
         while (true) {
             System.out.println("What would you like to do with this record?");
-            System.out.println("1 Edit (not yet implemented)"); // TODO
-            System.out.println("2 Delete (not yet implemented)"); // TODO
+            System.out.println("1 Edit record");
+            System.out.println("2 Delete record");
+            System.out.println("3 Audit record");
             System.out.println("0 Exit");
 
             choice = System.console().readLine();
             switch (choice) {
+                case "1":
+                    Objects.RecordTypes.Record baseRecord = unwrapRecord(record);
+
+                    if (baseRecord instanceof Objects.RecordTypes.AbstractRecord) {
+                        Objects.RecordTypes.AbstractRecord editableRecord =
+                            (Objects.RecordTypes.AbstractRecord) baseRecord;
+
+                        System.out.println("Enter new record name:");
+                        String newName = System.console().readLine();
+
+                        System.out.println("Enter new cost:");
+                        float newCost = Float.parseFloat(System.console().readLine());
+
+                        editableRecord.setName(newName);
+                        editableRecord.setCost(newCost);
+
+                        System.out.println("Record was successfully edited:");
+                        System.out.println(record.toString());
+                    } else {
+                        System.out.println("This record type cannot be edited.");
+                    }
+                    break;
+
+                case "2":
+                    wweSystem.deleteRecord(recordIndex);
+                    System.out.println("Record was successfully deleted");
+                    return;
+
+                case "3":
+                    System.out.println("Enter reviewer name:");
+                    String reviewerName = System.console().readLine();
+
+                    System.out.println("Enter audit note:");
+                    String auditNote = System.console().readLine();
+
+                    Objects.RecordTypes.Record auditedRecord =
+                        new Objects.RecordTypes.AuditedRecordDecorator(
+                            record,
+                            reviewerName,
+                            auditNote
+                        );
+
+                    wweSystem.replaceRecord(recordIndex, auditedRecord);
+                    record = auditedRecord;
+
+                    System.out.println("Audited record saved:");
+                    System.out.println(auditedRecord.toString());
+                    break;
+
                 case "0":
                     return;
+
+                default:
+                    System.out.println("Invalid option. Please try again.");
+                    break;
             }
         }
     }

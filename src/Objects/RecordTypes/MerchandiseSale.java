@@ -45,6 +45,7 @@ public class MerchandiseSale extends AbstractRecord
 
     @Override
     public void setName(String n) {
+        super.setName(n);
         this.name = n;
     }
 
@@ -52,7 +53,7 @@ public class MerchandiseSale extends AbstractRecord
     @Override
     public String toString(){
         String summary = "Record Type: " + RecType + "\n"
-        + "Name: " + name + "\n"
+        + "Name: " + getName() + "\n"
         + "Cost: " + cost + "\n"
         + "Date: " + date + "\n";
         

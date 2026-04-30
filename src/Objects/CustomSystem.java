@@ -27,7 +27,7 @@ public class CustomSystem implements Serializable{
 
     public void addRecordToEvent(int index, Record record) {
         events.get(index - 1).addRecord(record);
-        //records.add(record);
+        records.add(record);
     }
 
     /**
@@ -37,6 +37,16 @@ public class CustomSystem implements Serializable{
      */
     public void deleteRecordFromEvent(int eventIndex, int recordIndex) {
         getEvent(eventIndex).deleteRecord(recordIndex);
+    }
+
+    public void deleteRecord(int recordIndex) {
+        Record recordToDelete = records.get(recordIndex - 1);
+
+        records.remove(recordIndex - 1);
+
+        for (Event event : events) {
+            event.deleteRecord(recordToDelete);
+        }
     }
 
     
@@ -166,5 +176,15 @@ public class CustomSystem implements Serializable{
      */
     public void addRecord(Record record){
         records.add(record);
+    }
+
+    public void replaceRecord(int recordIndex, Record newRecord) {
+        Record oldRecord = records.get(recordIndex - 1);
+
+        records.set(recordIndex - 1, newRecord);
+
+        for (Event event : events) {
+            event.replaceRecord(oldRecord, newRecord);
+        }
     }
 }
