@@ -1,5 +1,7 @@
 package Objects;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import Objects.RecordTypes.AbstractRecord;
@@ -19,6 +21,16 @@ public class Event {
         this.records = new ArrayList<Record>();
     }
 
+    // New method to record the event in a text database
+    public void saveToFile() {
+        try (FileWriter writer = new FileWriter("Databases/Events.txt", true)) {
+            String arena = (arenaName == null || arenaName.isEmpty()) ? "No Arena Assigned" : arenaName;
+            writer.write(name + ", " + venue + ", " + arena + "\n");
+        } catch (IOException e) {
+            System.out.println("Could not write event to file: " + e.getMessage());
+        }
+    }
+
     public void addRecord(Record record) {
         records.add(record);
     }
@@ -27,18 +39,10 @@ public class Event {
         return records.get(index - 1);
     }
 
-    /**
-     * @author Eleena Rath
-     * @param record
-     */
     public void deleteRecord(int index) {
         records.remove(index - 1);
     }
 
-    /**
-     * @author EleenaRath
-     * @return
-     */
     public int numberOfRecords() {
         return records.size();
     }
@@ -63,24 +67,15 @@ public class Event {
         return arenaName != null && !arenaName.isEmpty();
     }
 
-    /**
-     * @author Eleena Rath
-     * @return
-     */
     public String listRecords() {
         String recordsList = "";
         for (int i = 0; i < records.size(); i++) {
             int index = i + 1;
-            recordsList += index + "-" + records.get(i);
+            recordsList += index + "-" + records.get(i) + "\n";
         }
         return recordsList;
     }
 
-    /**
-     * @author Matayas Durr
-     *         Calculates total revenue for this event
-     * @return total revenue from all records in this event
-     */
     public float calculateRevenue() {
         float total = 0;
         for (Record record : records) {
@@ -89,12 +84,10 @@ public class Event {
         return total;
     }
 
-    // Added by Matayas Durr: supports sorting records by value
     public void sortByValue() {
         records.sort((a, b) -> Float.compare(b.getCost(), a.getCost()));
     }
 
-    // Added by Matayas Durr: supports sorting records by category
     public void sortByCategory() {
         records.sort((a, b) -> {
             AbstractRecord first = (AbstractRecord) a;
@@ -107,7 +100,6 @@ public class Event {
         });
     }
 
-    // Added by Matayas Durr: calculates revenue-only total
     public float calculateRevenueOnly() {
         float total = 0;
         for (Record record : records) {
@@ -123,7 +115,22 @@ public class Event {
     public String toString() {
         String summary = "Event Name: " + name + "\n"
                 + "Venue: " + venue + "\n";
-
         return summary;
+    }
+
+    public static Event fromCSV(String csvLine) {
+        String[] parts = csvLine.split(",");
+        if (parts.length >= 2) {
+            Event e = new Event(parts[0].trim(), parts[1].trim());
+            if (parts.length >= 3 && !parts[2].trim().equals("No Arena Assigned")) {
+                e.setArenaName(parts[2].trim());
+            }
+            return e;
+        }
+        return null;
+    }
+
+    public ArrayList<Record> getRecordsList() {
+        return this.records;
     }
 }

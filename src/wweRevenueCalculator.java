@@ -1,11 +1,16 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.time.YearMonth;
+import java.util.Scanner;
 
 import Objects.CustomSystem;
 import Objects.Employee;
 import Objects.Event;
 import Objects.Factory.SalaryFactory;
+import Objects.RecordTypes.LiveEventController;
 import Objects.RecordTypes.LiveEventTicket;
 import Objects.RecordTypes.MerchandiseController;
+import Objects.RecordTypes.PayPerViewController;
 import Objects.RecordTypes.PayPerViewTicket;
 import Objects.RecordTypes.Salary;
 //import Objects.RecordTypes.*;
@@ -15,6 +20,8 @@ public class wweRevenueCalculator {
     static CustomSystem wweSystem = new CustomSystem();
 
     public static void main(String[] args) {
+
+        loadEventsFromFile();
 
         System.out.println("Welcome to the Ticketing System!");
 
@@ -67,6 +74,27 @@ public class wweRevenueCalculator {
         }
     }
 
+    /**
+     * @author Benjamin Diaz 
+     */
+    private static void loadEventsFromFile() {
+        File file = new File("Databases/Events.txt");
+        if (!file.exists()) return;
+
+        try (Scanner reader = new Scanner(file)) {
+            while (reader.hasNextLine()) {
+                String line = reader.nextLine();
+                Event loadedEvent = Event.fromCSV(line);
+                if (loadedEvent != null) {
+                    wweSystem.addEvent(loadedEvent);
+                }
+            }
+            System.out.println("Existing events loaded from database.");
+        } catch (FileNotFoundException e) {
+            System.out.println("No existing event database found.");
+        }
+    }
+
     private static void addEventToSystem() {
         String endUpload = "Y";
 
@@ -88,6 +116,7 @@ public class wweRevenueCalculator {
 
         Event newEvent = new Event(eventName, eventVenue);
         wweSystem.addEvent(newEvent);
+        newEvent.saveToFile();
         System.out.println("Event added to the system: " + eventName + " at " + eventVenue);
     }
 
@@ -143,15 +172,14 @@ public class wweRevenueCalculator {
             String choice = System.console().readLine();
             switch (choice) {
                 case "1":
+                    syncRecordsFromFile(event);
                     System.out.println(event.listRecords());
                     break;
                 case "2":
-                    LiveEventTicket liveTicket = uploadLiveEventTicket(eventIndex);
-                    wweSystem.addRecordToEvent(eventIndex, liveTicket);
+                    new LiveEventUploader().uploadAndSave(eventIndex);
                     break;
                 case "3":
-                    PayPerViewTicket ppvTicket = uploadPayPerViewTicket(eventIndex);
-                    wweSystem.addRecordToEvent(eventIndex, ppvTicket);
+                    new PayPerViewUploader().uploadAndSave(eventIndex);
                     break;
                 case "4":
                     SalaryFactory salaryFactory = new SalaryFactory(wweSystem);
@@ -189,120 +217,129 @@ public class wweRevenueCalculator {
         }
     }
 
-    private static LiveEventTicket uploadLiveEventTicket(int eventIndex) {
-        Event event = wweSystem.getEvent(eventIndex);
-        System.out.println("Please Fill out the following information to upload a Live-Event ticket.");
+    /**
+     * @author Benjamin Diaz 
+     */
+    abstract static class TicketUploaderTemplate {
+        public final void uploadAndSave(int eventIndex) {
+            Event event = wweSystem.getEvent(eventIndex);
+            String eventName = event.getName(); 
 
-        System.out.println("Enter a name for the record:");
-        String name = System.console().readLine();
+            System.out.println("Please Fill out the following information to upload a " + getTicketName() + ".");
 
-        boolean priceValid = false;
-        float price = 0;
-        System.out.println("Enter the price:");
-        while (!priceValid) {
-            String priceInput = System.console().readLine();
-            if (priceInput.matches("\\d+(\\.\\d{1,2})?")) {
-                price = Float.parseFloat(priceInput);
-                priceValid = true;
-            } else {
-                System.out.println("Invalid price format. Please enter a valid price (ex: 19.99):");
-            }
-        }
+            System.out.println("Enter a name for the record:");
+            String name = System.console().readLine();
 
-        int amount = 0;
-        boolean amountValid = false;
-        System.out.println("Enter the amount of tickets sold:");
-        while (!amountValid) {
-            try {
-                amount = Integer.parseInt(System.console().readLine());
-                if (amount >= 0) {
-                    amountValid = true;
+            boolean priceValid = false;
+            float price = 0;
+            System.out.println("Enter the price:");
+            while (!priceValid) {
+                String priceInput = System.console().readLine();
+                if (priceInput.matches("\\d+(\\.\\d{1,2})?")) {
+                    price = Float.parseFloat(priceInput);
+                    priceValid = true;
                 } else {
-                    System.out.println("Amount must be 0 or greater:");
+                    System.out.println("Invalid price format. Please enter a valid price (ex: 19.99):");
                 }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid amount. Enter a whole number:");
             }
+
+            int amount = 0;
+            boolean amountValid = false;
+            System.out.println("Enter the amount of tickets sold:");
+            while (!amountValid) {
+                try {
+                    amount = Integer.parseInt(System.console().readLine());
+                    if (amount >= 0) {
+                        amountValid = true;
+                    } else {
+                        System.out.println("Amount must be 0 or greater:");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid amount. Enter a whole number:");
+                }
+            }
+
+            boolean costValid = false;
+            float cost = 0;
+            System.out.println("Enter the cost/expense involved per ticket (enter 0 if n/a):");
+            while (!costValid) {
+                String costInput = System.console().readLine();
+                if (costInput.matches("\\d+(\\.\\d{1,2})?")) {
+                    cost = Float.parseFloat(costInput);
+                    costValid = true;
+                } else {
+                    System.out.println("Invalid format. Please enter a valid cost (ex: 19.99):");
+                }
+            }
+
+            YearMonth date = null;
+            boolean dateValid = false;
+            System.out.println("Enter the date (YYYY-MM):");
+            while (!dateValid) {
+                String dateInput = System.console().readLine();
+                try {
+                    date = YearMonth.parse(dateInput);
+                    dateValid = true;
+                } catch (Exception e) {
+                    System.out.println("Invalid date format. Please use YYYY-MM:");
+                }
+            }
+
+            saveToFile(name, price, amount, cost, date, eventName);
+            addTicketToSystem(eventIndex, name, price, amount, cost, date, eventName);
         }
 
-        YearMonth date = null;
-        boolean dateValid = false;
-        System.out.println("Enter the date (YYYY-MM):");
-        while (!dateValid) {
-            String dateInput = System.console().readLine();
-            try {
-                date = YearMonth.parse(dateInput);
-                dateValid = true;
-            } catch (Exception e) {
-                System.out.println("Invalid date format. Please use YYYY-MM:");
-            }
-        }
-
-        LiveEventTicket ticket = new LiveEventTicket(name, price * amount, date, amount);
-
-        ticket.setCategory("Live Event");
-        ticket.setRevenue(true);
-
-        return ticket;
+        protected abstract String getTicketName();
+        protected abstract void saveToFile(String name, float price, int amount, float cost, YearMonth date, String eventName);
+        protected abstract void addTicketToSystem(int eventIndex, String name, float price, int amount, float cost, YearMonth date, String eventName);
     }
 
-    private static PayPerViewTicket uploadPayPerViewTicket(int eventIndex) {
-        Event event = wweSystem.getEvent(eventIndex);
-        System.out.println("Please Fill out the following information to upload a Pay-Per-View ticket.");
+    /**
+     * @author Benjamin Diaz 
+     */
+    static class LiveEventUploader extends TicketUploaderTemplate {
+        @Override
+        protected String getTicketName() { return "Live-Event ticket"; }
 
-        System.out.println("Enter a name for the record:");
-        String name = System.console().readLine();
-
-        boolean priceValid = false;
-        float price = 0;
-        System.out.println("Enter the price:");
-        while (!priceValid) {
-            String priceInput = System.console().readLine();
-            if (priceInput.matches("\\d+(\\.\\d{1,2})?")) {
-                price = Float.parseFloat(priceInput);
-                priceValid = true;
-            } else {
-                System.out.println("Invalid price format. Please enter a valid price (ex: 19.99):");
-            }
+        @Override
+        protected void saveToFile(String name, float price, int amount, float cost, YearMonth date, String eventName) {
+            LiveEventController lec = new LiveEventController(false);
+            lec.saveEventToFile(name, price, amount, cost, date, eventName);
         }
 
-        int amount = 0;
-        boolean amountValid = false;
-        System.out.println("Enter the amount of tickets sold:");
-        while (!amountValid) {
-            try {
-                amount = Integer.parseInt(System.console().readLine());
-                if (amount >= 0) {
-                    amountValid = true;
-                } else {
-                    System.out.println("Amount must be 0 or greater:");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid amount. Enter a whole number:");
-            }
+        @Override
+        protected void addTicketToSystem(int eventIndex, String name, float price, int amount, float cost, YearMonth date, String eventName) {
+            // Include eventName in constructor
+            LiveEventTicket ticket = new LiveEventTicket(name, price * amount, date, amount, eventName);
+            ticket.setCategory("Live Event");
+            ticket.setRevenue(true);
+            wweSystem.addRecordToEvent(eventIndex, ticket);
         }
-
-        YearMonth date = null;
-        boolean dateValid = false;
-        System.out.println("Enter the date (YYYY-MM):");
-        while (!dateValid) {
-            String dateInput = System.console().readLine();
-            try {
-                date = YearMonth.parse(dateInput);
-                dateValid = true;
-            } catch (Exception e) {
-                System.out.println("Invalid date format. Please use YYYY-MM:");
-            }
-        }
-
-        PayPerViewTicket ticket = new PayPerViewTicket(name, price * amount, date, amount);
-
-        ticket.setCategory("Pay-Per-View");
-        ticket.setRevenue(true);
-
-        return ticket;
     }
 
+    /**
+     * @author Benjamin Diaz 
+     */
+    static class PayPerViewUploader extends TicketUploaderTemplate {
+        @Override
+        protected String getTicketName() { return "Pay-Per-View ticket"; }
+
+        @Override
+        protected void saveToFile(String name, float price, int amount, float cost, YearMonth date, String eventName) {
+            PayPerViewController pvc = new PayPerViewController(false);
+            pvc.saveEventToFile(name, price, amount, cost, date, eventName);
+        }
+
+        @Override
+        protected void addTicketToSystem(int eventIndex, String name, float price, int amount, float cost, YearMonth date, String eventName) {
+            // Include eventName in constructor
+            PayPerViewTicket ticket = new PayPerViewTicket(name, price * amount, date, amount, eventName);
+            ticket.setCategory("Pay-Per-View");
+            ticket.setRevenue(true);
+            wweSystem.addRecordToEvent(eventIndex, ticket);
+        }
+    }
+    
     /**
      * @author Eleena Rath
      * @param eventIndex
@@ -525,6 +562,50 @@ public class wweRevenueCalculator {
     private static void recordArenaRentalCost(int eventIndex) {
         RecordEventVenueCost arenaRecorder = new RecordEventVenueCost(wweSystem);
         arenaRecorder.recordArenaRentalCost(eventIndex);
+    }
+
+    /**
+     * @author Benjamin Diaz 
+     */
+    private static void syncRecordsFromFile(Event event) {
+        // Clear existing records to prevent duplicates during the reload
+        event.getRecordsList().clear(); 
+
+        String targetEvent = event.getName();
+
+        // 1. Sync Live Event Tickets
+        LiveEventController lec = new LiveEventController(false);
+        String[][] liveData = lec.getLiveEvent(); //[cite: 1]
+        for (String[] row : liveData) {
+            if (row.length >= 7 && row[1].trim().equalsIgnoreCase(targetEvent)) {
+                float price = Float.parseFloat(row[3].trim());
+                int quantity = Integer.parseInt(row[4].trim());
+                float totalCost = price * quantity;
+                YearMonth date = YearMonth.parse(row[6].trim());
+                
+                LiveEventTicket ticket = new LiveEventTicket(row[2].trim(), totalCost, date, quantity, targetEvent);
+                ticket.setCategory("Live Event");
+                ticket.setRevenue(true);
+                event.addRecord(ticket); //
+            }
+        }
+
+        // 2. Sync Pay-Per-View Tickets
+        PayPerViewController pvc = new PayPerViewController(false);
+        String[][] ppvData = pvc.getPayPerView(); //[cite: 5]
+        for (String[] row : ppvData) {
+            if (row.length >= 7 && row[1].trim().equalsIgnoreCase(targetEvent)) {
+                float price = Float.parseFloat(row[3].trim());
+                int quantity = Integer.parseInt(row[4].trim());
+                float totalCost = price * quantity;
+                YearMonth date = YearMonth.parse(row[6].trim());
+
+                PayPerViewTicket ticket = new PayPerViewTicket(row[2].trim(), totalCost, date, quantity, targetEvent);
+                ticket.setCategory("Pay-Per-View");
+                ticket.setRevenue(true);
+                event.addRecord(ticket); //
+            }
+        }
     }
 
 }
