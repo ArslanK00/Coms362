@@ -79,9 +79,9 @@ public class DrawTrendData
     //     AbstractRecord r15 = (AbstractRecord)p7;
     //    AbstractRecord r16 = (AbstractRecord)p8;
 
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(DatabaseFilePath))) 
-        {
-            wweRec.setSystem((CustomSystem)in.readObject());
+    //     try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(DatabaseFilePath))) 
+    //     {
+    //         wweRec.setSystem((CustomSystem)in.readObject());
     //         wweRec.getSystem().addAbstractRecord(r0);
     //         wweRec.getSystem().addAbstractRecord(r01);
     //         wweRec.getSystem().addAbstractRecord(r1);
@@ -101,14 +101,14 @@ public class DrawTrendData
     //         wweRec.getSystem().addAbstractRecord(r15);
     //         wweRec.getSystem().addAbstractRecord(r16);
     //         wweRec.saveData();
-            wweRec.getSystem().listAbstractRecords();
+    //         wweRec.getSystem().listAbstractRecords();
 
 
-        } 
-        catch (Exception e) 
-        {
-            e.printStackTrace();
-        }
+    //     } 
+    //     catch (Exception e) 
+    //     {
+    //         e.printStackTrace();
+    //     }
 
 
 
