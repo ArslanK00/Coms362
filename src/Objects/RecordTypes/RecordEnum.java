@@ -1,6 +1,6 @@
 package Objects.RecordTypes;
 
-public enum RecordEnum {
+public enum RecordEnum{
     PayPerViewTicket,
     LiveEventTicket,
     Salary,

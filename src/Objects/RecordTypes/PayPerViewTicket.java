@@ -5,11 +5,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.time.YearMonth;
 import java.util.ArrayList;
 
-public class PayPerViewTicket extends AbstractRecord implements Serializable
+public class PayPerViewTicket extends AbstractRecord
 {
     private String name;
     private float cost;
