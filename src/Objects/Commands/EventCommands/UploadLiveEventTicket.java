@@ -2,19 +2,24 @@ package Objects.Commands.EventCommands;
 
 import java.time.YearMonth;
 
-import Objects.CustomSystem;
 import Objects.Event;
 import Objects.Commands.Command;
 import Objects.RecordTypes.LiveEventTicket;
 
+/**
+ * @author Eleena Rath
+ */
 public class UploadLiveEventTicket implements Command{
     
-    Event event;
+    private Event event;
 
     public UploadLiveEventTicket(Event event){
         this.event = event;
     }
 
+    /**
+     * @author
+     */
     public void execute(){
         //Event event = wweSystem.getEvent(eventIndex);
         System.out.println("Please Fill out the following information to upload a Live-Event ticket.");

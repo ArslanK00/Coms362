@@ -10,7 +10,9 @@ import Objects.RecordTypes.PayPerViewTicket;
 import Objects.RecordTypes.Salary;
 //import Objects.RecordTypes.*;
 import Objects.Commands.*;
+import Objects.Commands.EventCommands.RecordVenueRentalCost;
 import Objects.Commands.EventCommands.UploadLiveEventTicket;
+import Objects.Commands.EventCommands.UploadPayPerViewTicket;
 
 public class wweRevenueCalculator {
 
@@ -154,8 +156,10 @@ public class wweRevenueCalculator {
                     //wweSystem.addRecordToEvent(eventIndex, liveTicket);
                     break;
                 case "3":
-                    PayPerViewTicket ppvTicket = uploadPayPerViewTicket(eventIndex);
-                    wweSystem.addRecordToEvent(eventIndex, ppvTicket);
+                    Command uploadppvTicket = new UploadPayPerViewTicket(event);
+                    uploadppvTicket.execute();
+                    //PayPerViewTicket ppvTicket = uploadPayPerViewTicket(eventIndex);
+                    //wweSystem.addRecordToEvent(eventIndex, ppvTicket);
                     break;
                 case "4":
                     SalaryFactory salaryFactory = new SalaryFactory(wweSystem);
@@ -182,7 +186,9 @@ public class wweRevenueCalculator {
                     System.out.println("Revenue Only: " + event.calculateRevenueOnly());
                     break;
                 case "0":
-                    recordArenaRentalCost(eventIndex);
+                    Command recordArena = new RecordVenueRentalCost(event);
+                    recordArena.execute();
+                    //recordArenaRentalCost(eventIndex);
                     break;
                 case "-":
                     return;
