@@ -1,0 +1,82 @@
+package Objects.Commands.EventCommands;
+
+import java.time.YearMonth;
+
+import Objects.Event;
+import Objects.Commands.Command;
+import Objects.RecordTypes.PayPerViewTicket;
+
+/**
+ * @author Eleena Rath
+ */
+public class UploadPayPerViewTicket implements Command{
+
+    private Event event;
+
+    public UploadPayPerViewTicket(Event event){
+        this.event = event;
+    }
+
+    /**
+     * @author
+     */
+    public void execute(){
+        System.out.println("Please Fill out the following information to upload a Pay-Per-View ticket.");
+
+        System.out.println("Enter a name for the record:");
+        String name = System.console().readLine();
+
+        boolean priceValid = false;
+        float price = 0;
+        System.out.println("Enter the price:");
+        while (!priceValid) {
+            String priceInput = System.console().readLine();
+            if (priceInput.matches("\\d+(\\.\\d{1,2})?")) {
+                price = Float.parseFloat(priceInput);
+                priceValid = true;
+            } else {
+                System.out.println("Invalid price format. Please enter a valid price (ex: 19.99):");
+            }
+        }
+
+        int amount = 0;
+        boolean amountValid = false;
+        System.out.println("Enter the amount of tickets sold:");
+        while (!amountValid) {
+            try {
+                amount = Integer.parseInt(System.console().readLine());
+                if (amount >= 0) {
+                    amountValid = true;
+                } else {
+                    System.out.println("Amount must be 0 or greater:");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid amount. Enter a whole number:");
+            }
+        }
+
+        YearMonth date = null;
+        boolean dateValid = false;
+        System.out.println("Enter the date (YYYY-MM):");
+        while (!dateValid) {
+            String dateInput = System.console().readLine();
+            try {
+                date = YearMonth.parse(dateInput);
+                dateValid = true;
+            } catch (Exception e) {
+                System.out.println("Invalid date format. Please use YYYY-MM:");
+            }
+        }
+
+        PayPerViewTicket ticket = new PayPerViewTicket(name, price * amount, date, amount);
+
+        ticket.setCategory("Pay-Per-View");
+        ticket.setRevenue(true);
+        event.addRecord(ticket);
+    }
+
+    @Override
+    public String toString(){
+        return "Add a Pay-Per-View ticket record";
+    }
+}
