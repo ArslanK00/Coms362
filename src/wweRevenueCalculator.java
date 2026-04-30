@@ -1,3 +1,5 @@
+
+import java.io.Console;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -5,6 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.time.YearMonth;
+import java.util.ArrayList;
 
 import Objects.CustomSystem;
 import Objects.Employee;
@@ -14,7 +17,7 @@ import Objects.RecordTypes.LiveEventTicket;
 import Objects.RecordTypes.MerchandiseController;
 import Objects.RecordTypes.PayPerViewTicket;
 import Objects.RecordTypes.Salary;
-//import Objects.RecordTypes.*;
+import TrendData.RequestType;
 
 public class wweRevenueCalculator {
 
@@ -39,6 +42,8 @@ public class wweRevenueCalculator {
             System.out.println("6 View System Records");
             System.out.println("7 Calculate All Revenue");
             System.out.println("8 Edit merchandise");
+            System.out.println("9 Visualize Revenue");
+
             System.out.println("0 Exit");
             String choice = System.console().readLine();
 
@@ -68,6 +73,13 @@ public class wweRevenueCalculator {
                 case "8":
                     MerchandiseController merch = new MerchandiseController(true);
                     break;
+                case "9":
+                    System.out.println("Please Choose what data you would like to look at:\n1: Data by year \n2: Data by Month\n3: Data by Record");
+                    String option = System.console().readLine();
+                    int optionInt = Integer.parseInt(option);
+                    DrawTrends(optionInt);
+                    break;
+                    
                 case "0":
                     System.out.println("Exiting the system. Goodbye!");
                     //Save the CustomSystem object to a file
@@ -108,7 +120,7 @@ public class wweRevenueCalculator {
      * @author Eleena Rath
      * Saves data to the DATA_FILE.txt
      */
-    private static void saveData(){
+    public static void saveData(){//ChangeBACKLATER
        try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(DATA_FILE))){
             oos.writeObject(wweSystem);
        }catch(IOException e){
@@ -554,6 +566,71 @@ public class wweRevenueCalculator {
     private static void recordArenaRentalCost(int eventIndex) {
         RecordEventVenueCost arenaRecorder = new RecordEventVenueCost(wweSystem);
         arenaRecorder.recordArenaRentalCost(eventIndex);
+    }
+
+    public CustomSystem getSystem()
+    {
+        return wweSystem;
+    }
+
+    public void setSystem(CustomSystem CS)
+    {
+        this.wweSystem = CS;
+    }
+
+    public void deleteRecord(int i)
+    {
+        wweSystem.deleteRecord(i);
+        saveData();
+    }
+
+
+    public void deleteEmployee(int i)
+    {
+        wweSystem.deleteEmployee(i);
+        saveData();
+    }
+
+    public static void DrawTrends(int optionInt)
+    {
+        String option = "";
+        while(optionInt != 1 && optionInt != 2 && optionInt != 3)
+        {
+            System.out.println("please choose the appropriate number");
+            option = System.console().readLine();
+            optionInt = Integer.parseInt(option);
+        }
+
+        switch(optionInt)
+        {
+            case 1: 
+                DrawTrendData d = new DrawTrendData(RequestType.YEAR, "none");
+                break;
+            case 2: 
+                System.out.println("Would You like to see a specific year or all month records held?(1/2)");
+                String choice = System.console().readLine();
+                int choiceInt = Integer.parseInt(choice);
+                while(choiceInt != 1 && choiceInt != 2)
+                {
+                    System.out.println("please choose the appropriate number");
+                    option = System.console().readLine();
+                    optionInt = Integer.parseInt(option);
+                }
+                if(choiceInt == 1)
+                {
+                    System.out.println("Type the Year you would like to look at");
+                    String Year = System.console().readLine();
+                    DrawTrendData d1 = new DrawTrendData(RequestType.MONTH, Year);
+                }
+                else
+                {
+                    DrawTrendData d1 = new DrawTrendData(RequestType.MONTH, "none");
+                }
+                break;
+            case 3: 
+                DrawTrendData d2 = new DrawTrendData(RequestType.ALLRECORDS, "none");
+                break;
+        }
     }
 
 }

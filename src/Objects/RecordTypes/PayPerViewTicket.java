@@ -15,7 +15,7 @@ public class PayPerViewTicket extends AbstractRecord
     private YearMonth date;
     private int amount;
     private String FilePathToRecords = "Databases/Records.txt";
-    private RecordEnum RecType = RecordEnum.PayPerViewTicket;
+    private RecordEnum RecType;
     public PayPerViewTicket(String name, float cost, YearMonth date, int amount) 
     {
         super(name);
@@ -23,6 +23,7 @@ public class PayPerViewTicket extends AbstractRecord
         this.cost = cost;
         this.date = date;
         this.amount = amount;
+        this.RecType = RecordEnum.PayPerViewTicket;
     }
     public PayPerViewTicket(String name){
         super(name);
@@ -52,6 +53,10 @@ public class PayPerViewTicket extends AbstractRecord
 
     public int getAmount() {
         return amount;
+    }
+        public RecordEnum getRecordEnum()
+    {
+        return RecType;
     }
 
     public ArrayList<PayPerViewTicket> TurnAllPayPerViewToRecords(boolean sendToRecords)  //Makes object serializable in file

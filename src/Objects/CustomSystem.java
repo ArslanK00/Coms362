@@ -3,17 +3,23 @@ package Objects;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import Objects.RecordTypes.AbstractRecord;
+import Objects.RecordTypes.MerchandiseController;
+import Objects.RecordTypes.MerchandiseSale;
 import Objects.RecordTypes.Record;
+import Objects.RecordTypes.RecordEnum;
+import Objects.RecordTypes.MerchandiseSale;
 
 public class CustomSystem implements Serializable{
     ArrayList<Event> events;
     ArrayList<Record> records;
     ArrayList<Employee> employees; // Modification: by Eleena R.
-
+    ArrayList<AbstractRecord> abstractRecords;
     public CustomSystem() {
         events = new ArrayList<Event>();
         records = new ArrayList<Record>();
         employees = new ArrayList<Employee>(); // Modification: by Eleena R.
+        abstractRecords = new ArrayList<AbstractRecord>();
     };
 
     public void addEvent(Event event) {
@@ -167,4 +173,79 @@ public class CustomSystem implements Serializable{
     public void addRecord(Record record){
         records.add(record);
     }
+
+    public void addMerchandiseFromDatabase()
+    {
+        MerchandiseController MC = new MerchandiseController(false);
+        for(MerchandiseSale ms : MC.TurnAllMerchandiseToRecords(false))
+        {
+            abstractRecords.add((AbstractRecord)ms);
+        }
+    }
+    public void addAbstractRecord(AbstractRecord ar)
+    {
+            abstractRecords.add(ar);
+    }
+
+    public ArrayList<AbstractRecord> getAbstractRecords()
+    {
+        return abstractRecords;
+    }
+
+    public void listAbstractRecords()
+    {
+        int index;
+        for (int i = 0; i < abstractRecords.size(); i++){
+            index = i + 1;
+            System.out.println(index + "-" + abstractRecords.get(i).toString());
+        }
+    }
+
+    public void deleteRecord(int i)
+    {
+        Record deleting = records.get( i - 1);
+        ArrayList<Record> newArr = new ArrayList<>();
+        for(Record r : records)
+        {
+            if(!r.equals(deleting))
+            {
+                newArr.add(r);
+            }
+        }
+        this.records = newArr;
+        
+    }
+
+    public void deleteEmployee(int i)
+    {
+        Employee deleting = employees.get(i-1);
+        ArrayList<Employee> newArr = new ArrayList<>();
+        for(Employee r : employees)
+        {
+            if(!r.equals(deleting))
+            {
+                newArr.add(r);
+            }
+        }
+        this.employees = newArr;
+    }
+
+    //     public void editRecord(int i, int choice)
+    // {
+    //     Record deleting = records.get( i - 1);
+    //     ArrayList<Record> newArr = new ArrayList<>();
+    //     for(Record r : records)
+    //     {
+    //         if(!r.equals(deleting))
+    //         {
+    //             newArr.add(r);
+    //         }
+    //     }
+    //     switch()
+    //     deleting.
+
+    //     this.records = newArr;
+        
+    // }
+    
 }

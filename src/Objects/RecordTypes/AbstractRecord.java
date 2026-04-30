@@ -68,6 +68,10 @@ public abstract class AbstractRecord implements Record{
     public void setRevenue(boolean isRevenue) {
         this.isRevenue = isRevenue;
     }
+    public RecordEnum getRecordEnum()
+    {
+        return this.recordType;
+    }
 
 
 }

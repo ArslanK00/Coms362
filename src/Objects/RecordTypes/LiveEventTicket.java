@@ -15,7 +15,7 @@ public class LiveEventTicket extends AbstractRecord
     private YearMonth date;
     private int amount;
     private String FilePathToRecords = "Databases/Records.txt";
-    private RecordEnum RecType = RecordEnum.LiveEventTicket;
+    private RecordEnum RecType;
     public LiveEventTicket(String name, float cost, YearMonth date, int amount) 
     {
         super(name);
@@ -23,6 +23,7 @@ public class LiveEventTicket extends AbstractRecord
         this.cost = cost;
         this.date = date;
         this.amount = amount;
+        this.RecType  = RecordEnum.LiveEventTicket;
     }
     public LiveEventTicket(String name){
         super(name);
@@ -52,6 +53,10 @@ public class LiveEventTicket extends AbstractRecord
 
     public int getAmount() {
         return amount;
+    }
+        public RecordEnum getRecordEnum()
+    {
+        return RecType;
     }
 
     public ArrayList<LiveEventTicket> TurnAllLiveEventToRecords(boolean sendToRecords)  //Makes object serializable in file
