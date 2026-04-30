@@ -74,4 +74,9 @@ public class UploadPayPerViewTicket implements Command{
         ticket.setRevenue(true);
         event.addRecord(ticket);
     }
+
+    @Override
+    public String toString(){
+        return "Add a Pay-Per-View ticket record";
+    }
 }

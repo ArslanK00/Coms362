@@ -19,4 +19,9 @@ public class PrintEventRecords implements Command {
         System.out.println(event.listRecords());
     }
 
+    @Override
+    public String toString(){
+        return "View all records for this event";
+    }
+
 }

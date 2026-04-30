@@ -14,6 +14,10 @@ public class RecordVenueRentalCost implements Command {
         this.event = event;
     }
 
+    /**
+     * @author Jamey Nguyen
+     *         Records arena rental cost for an event
+     */
     public void execute(){
        try {
             System.out.println("\n=== Record Arena Rental Cost ===\n");
@@ -150,5 +154,10 @@ public class RecordVenueRentalCost implements Command {
                 System.out.println("Invalid date format. Please use YYYY-MM format (e.g., 2026-04).");
             }
         }
+    }
+
+    @Override
+    public String toString(){
+        return "Record Arena Rental Cost ";
     }
 }

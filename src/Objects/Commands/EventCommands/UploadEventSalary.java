@@ -25,4 +25,10 @@ public class UploadEventSalary implements Command{
         Salary eventSalary = salaryFactory.returnSalary();
         event.addRecord(eventSalary);
     }
+
+    @Override
+    public String toString(){
+        
+        return "Add an event salary";
+    }
 }

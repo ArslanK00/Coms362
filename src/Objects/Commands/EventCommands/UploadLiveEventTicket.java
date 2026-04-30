@@ -76,4 +76,10 @@ public class UploadLiveEventTicket implements Command{
 
         event.addRecord(ticket);
     }
+
+    @Override
+    public String toString(){
+        
+        return "Add a Live-Event ticket record";
+    }
 }
