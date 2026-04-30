@@ -9,6 +9,8 @@ import Objects.RecordTypes.MerchandiseController;
 import Objects.RecordTypes.PayPerViewTicket;
 import Objects.RecordTypes.Salary;
 //import Objects.RecordTypes.*;
+import Objects.Commands.*;
+import Objects.Commands.EventCommands.UploadLiveEventTicket;
 
 public class wweRevenueCalculator {
 
@@ -146,8 +148,10 @@ public class wweRevenueCalculator {
                     System.out.println(event.listRecords());
                     break;
                 case "2":
-                    LiveEventTicket liveTicket = uploadLiveEventTicket(eventIndex);
-                    wweSystem.addRecordToEvent(eventIndex, liveTicket);
+                    Command uploadLiveEventTicket = new UploadLiveEventTicket(event);
+                    uploadLiveEventTicket.execute();
+                    //LiveEventTicket liveTicket = uploadLiveEventTicket(eventIndex);
+                    //wweSystem.addRecordToEvent(eventIndex, liveTicket);
                     break;
                 case "3":
                     PayPerViewTicket ppvTicket = uploadPayPerViewTicket(eventIndex);
