@@ -73,7 +73,7 @@ public class wweRevenueCalculator {
                     System.out.println("Exiting the system. Goodbye!");
                     //Save the CustomSystem object to a file
                     saveData();
-                    System.exit(1);
+                    System.exit(0);
                 default:
                     System.out.println("Invalid option. Please try again.");
                     break;
