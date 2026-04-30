@@ -45,6 +45,12 @@ public class LiveEventTicket extends AbstractRecord
         return name;
     }
 
+    @Override
+    public void setName(String name) {
+        super.setName(name);
+        this.name = name;
+    }
+
     // public void EditLiveEventDatabase()
     // {
     //     LiveEventController EditDatabase = new LiveEventController(true);
@@ -116,7 +122,7 @@ public class LiveEventTicket extends AbstractRecord
     @Override
     public String toString(){
         String summary = "Record Type: " + RecType + "\n"
-        + "Name: " + name + "\n"
+        + "Name: " + getName() + "\n"
         + "Cost: " + cost + "\n"
         + "Date: " + date + "\n"
         + "Amount: " + amount + "\n";

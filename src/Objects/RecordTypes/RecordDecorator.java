@@ -10,6 +10,10 @@ public abstract class RecordDecorator implements Record {
         this.wrappedRecord = record;
     }
 
+    public Record getWrappedRecord() {
+        return wrappedRecord;
+    }
+
     @Override
     public float getCost() {
         return wrappedRecord.getCost();

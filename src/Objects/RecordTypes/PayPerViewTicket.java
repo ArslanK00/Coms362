@@ -45,6 +45,12 @@ public class PayPerViewTicket extends AbstractRecord
         return name;
     }
 
+    @Override
+    public void setName(String name) {
+        super.setName(name);
+        this.name = name;
+    }
+
     // public void EditPayPerViewDatabase()
     // {
     //     PayPerViewController EditDatabase = new PayPerViewController(true);
@@ -115,7 +121,7 @@ public class PayPerViewTicket extends AbstractRecord
     @Override
     public String toString(){
         String summary = "Record Type: " + RecType + "\n"
-        + "Name: " + name + "\n"
+        + "Name: " + getName() + "\n"
         + "Cost: " + cost + "\n"
         + "Date: " + date + "\n"
         + "Amount: " + amount + "\n";
