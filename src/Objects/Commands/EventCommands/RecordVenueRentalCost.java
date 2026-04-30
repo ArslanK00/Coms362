@@ -3,14 +3,17 @@ package Objects.Commands.EventCommands;
 import java.time.YearMonth;
 
 import Objects.Event;
+import Objects.CustomSystem;
 import Objects.Commands.Command;
 import Objects.RecordTypes.ArenaRentalCost;
 
 public class RecordVenueRentalCost implements Command {
     
+    private CustomSystem database;
     private Event event;
 
-    public RecordVenueRentalCost(Event event){
+    public RecordVenueRentalCost(CustomSystem database, Event event){
+        this.database = database;
         this.event = event;
     }
 
@@ -71,7 +74,7 @@ public class RecordVenueRentalCost implements Command {
             arenaRecord.setCost(rentalCost);
             arenaRecord.setAdditionalFees(additionalFees);
 
-            event.addRecord(arenaRecord);
+            database.addRecordToEvent(event, arenaRecord);
             System.out.println("\n✓ Arena rental cost successfully recorded!");
 
         } catch (Exception e) {

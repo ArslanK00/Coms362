@@ -179,10 +179,10 @@ public class wweRevenueCalculator {
 
         List<Command> eventCommands = new ArrayList<>();
         eventCommands.add(new PrintEventRecords(event));
-        eventCommands.add(new UploadLiveEventTicket(event));
-        eventCommands.add(new UploadPayPerViewTicket(event));
+        eventCommands.add(new UploadLiveEventTicket(wweSystem, event));
+        eventCommands.add(new UploadPayPerViewTicket(wweSystem, event));
         eventCommands.add(new UploadEventSalary(wweSystem, event));
-        eventCommands.add(new RecordVenueRentalCost(event));
+        eventCommands.add(new RecordVenueRentalCost(wweSystem, event));
         eventCommands.add(new DeleteRecordFromEvent(event));
         eventCommands.add(new CalculateEventProfit(event));
         eventCommands.add(new EventRecordRevenueOnly(event));

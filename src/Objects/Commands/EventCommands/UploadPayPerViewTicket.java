@@ -3,6 +3,7 @@ package Objects.Commands.EventCommands;
 import java.time.YearMonth;
 
 import Objects.Event;
+import Objects.CustomSystem;
 import Objects.Commands.Command;
 import Objects.RecordTypes.PayPerViewTicket;
 
@@ -11,9 +12,11 @@ import Objects.RecordTypes.PayPerViewTicket;
  */
 public class UploadPayPerViewTicket implements Command{
 
+    private CustomSystem database;
     private Event event;
 
-    public UploadPayPerViewTicket(Event event){
+    public UploadPayPerViewTicket(CustomSystem database, Event event){
+        this.database = database;
         this.event = event;
     }
 
@@ -72,7 +75,7 @@ public class UploadPayPerViewTicket implements Command{
 
         ticket.setCategory("Pay-Per-View");
         ticket.setRevenue(true);
-        event.addRecord(ticket);
+        database.addRecordToEvent(event, ticket);
     }
 
     @Override

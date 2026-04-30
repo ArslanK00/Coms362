@@ -23,7 +23,7 @@ public class UploadEventSalary implements Command{
         SalaryFactory salaryFactory = new SalaryFactory(database);
         salaryFactory.createRecord();
         Salary eventSalary = salaryFactory.returnSalary();
-        event.addRecord(eventSalary);
+        database.addRecordToEvent(event, eventSalary);
     }
 
     @Override

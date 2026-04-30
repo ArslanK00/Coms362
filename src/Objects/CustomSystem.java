@@ -30,6 +30,11 @@ public class CustomSystem implements Serializable{
         records.add(record);
     }
 
+    public void addRecordToEvent(Event event, Record record) {
+        event.addRecord(record);
+        records.add(record);
+    }
+
     /**
      * @author Eleena Rath
      * @param eventIndex

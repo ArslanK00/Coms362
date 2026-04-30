@@ -3,6 +3,7 @@ package Objects.Commands.EventCommands;
 import java.time.YearMonth;
 
 import Objects.Event;
+import Objects.CustomSystem;
 import Objects.Commands.Command;
 import Objects.RecordTypes.LiveEventTicket;
 
@@ -11,9 +12,11 @@ import Objects.RecordTypes.LiveEventTicket;
  */
 public class UploadLiveEventTicket implements Command{
     
+    private CustomSystem database;
     private Event event;
 
-    public UploadLiveEventTicket(Event event){
+    public UploadLiveEventTicket(CustomSystem database, Event event){
+        this.database = database;
         this.event = event;
     }
 
@@ -74,7 +77,7 @@ public class UploadLiveEventTicket implements Command{
         ticket.setCategory("Live Event");
         ticket.setRevenue(true);
 
-        event.addRecord(ticket);
+        database.addRecordToEvent(event, ticket);
     }
 
     @Override
