@@ -24,6 +24,8 @@ public class MerchandiseController //need to move out of Record Types
     private static String FilePathMerch = "Databases/MerchandiseSales.txt";
     private static String FilePathCategories = "Databases/MerchandiseSalesCategories.txt";
     private String FilePathToRecords = "Databases/Records.txt";
+    private static String FilePathDatabase = "Databases/Database.txt";
+
 
 
     private boolean priceValid = false;
@@ -376,7 +378,7 @@ public class MerchandiseController //need to move out of Record Types
             System.out.println("An error occurred while adding the category: " + e.getMessage());
         }
 
-        return numberOfIDs;
+        return categories.size() + 1;
 
     }
 
@@ -721,7 +723,7 @@ public class MerchandiseController //need to move out of Record Types
         return results;
     }
 
-        public ArrayList<MerchandiseSale> TurnAllMerchandiseToRecords(boolean sendToRecords)  //Makes object serializable in file
+    public ArrayList<MerchandiseSale> TurnAllMerchandiseToRecords(boolean sendToRecords)  //Makes object serializable in file
     {
 
         MerchandiseController uploadMerch = new MerchandiseController(false);
@@ -736,12 +738,12 @@ public class MerchandiseController //need to move out of Record Types
             merchList.add(merchSale);
             if (!sendToRecords) 
             {
-                System.out.println(merchSale.getName() + ", " + merchSale.getCost() + ", " + merchSale.getDate());
+                System.out.println(merchSale.getRecordEnum().toString() + "," + merchSale.getName() + ", " + merchSale.getCost() + ", " + merchSale.getDate());
             }
         }
         if (sendToRecords) 
         {
-            try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FilePathToRecords))) 
+            try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FilePathDatabase))) 
             {
             out.writeObject(merchList);
             System.out.println("Successfully saved all Merchandise Records");

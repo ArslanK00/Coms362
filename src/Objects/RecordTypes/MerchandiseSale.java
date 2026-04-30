@@ -7,13 +7,14 @@ public class MerchandiseSale extends AbstractRecord
     private String name;
     private float cost;
     private YearMonth date;
-    private RecordEnum RecType = RecordEnum.MerchandiseSale;
+    private RecordEnum RecType;
     public MerchandiseSale(String name, float cost, YearMonth date) 
     {
         super(name);
         this.name = name;
         this.cost = cost;
         this.date = date;
+        this.RecType = RecordEnum.MerchandiseSale;
     }
 
 
@@ -49,12 +50,17 @@ public class MerchandiseSale extends AbstractRecord
         this.name = n;
     }
 
+    public RecordEnum getRecordEnum()
+    {
+        return RecType;
+    }
+
 
     @Override
     public String toString(){
         String summary = "Record Type: " + RecType + "\n"
-        + "Name: " + getName() + "\n"
-        + "Cost: " + cost + "\n"
+        + "Name: " + name + "\n"
+        + "Revenue: " + cost + "\n"
         + "Date: " + date + "\n";
         
         if(description == null || description.length() == 0){

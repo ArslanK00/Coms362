@@ -37,6 +37,10 @@ public class PayPerViewTicket extends AbstractTicket {
     public int getAmount() {
         return amount;
     }
+        public RecordEnum getRecordEnum()
+    {
+        return RecType;
+    }
 
     public ArrayList<PayPerViewTicket> TurnAllPayPerViewToRecords(boolean sendToRecords) {
         PayPerViewController uploadPayPerView = new PayPerViewController(false);

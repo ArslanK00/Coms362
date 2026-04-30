@@ -6,3 +6,5 @@
 6:Shirts
 7:Glasses
 8:Gloves
+9:posters
+

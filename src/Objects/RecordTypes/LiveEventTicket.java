@@ -37,6 +37,10 @@ public class LiveEventTicket extends AbstractTicket {
     public int getAmount() {
         return amount;
     }
+        public RecordEnum getRecordEnum()
+    {
+        return RecType;
+    }
 
     public ArrayList<LiveEventTicket> TurnAllLiveEventToRecords(boolean sendToRecords) {
         LiveEventController uploadLiveEvent = new LiveEventController(false);
