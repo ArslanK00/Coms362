@@ -1,6 +1,7 @@
 package Objects.RecordTypes;
 
-public class ArenaRentalCost extends AbstractRecord {
+
+public class ArenaRentalCost extends AbstractRecord{
     private RecordEnum recordType = RecordEnum.ArenaRentalCost;
     private String arenaName;
     private float additionalFees;

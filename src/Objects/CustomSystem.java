@@ -1,21 +1,29 @@
 package Objects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import Objects.RecordTypes.AbstractRecord;
+import Objects.RecordTypes.MerchandiseController;
+import Objects.RecordTypes.MerchandiseSale;
 import Objects.RecordTypes.Record;
 import Objects.Strategies.RevenueCalculationStrategy;
 import Objects.Strategies.TotalRevenueStrategy;
+import Objects.RecordTypes.RecordEnum;
+import Objects.RecordTypes.MerchandiseSale;
 
-public class CustomSystem {
+public class CustomSystem implements Serializable {
     ArrayList<Event> events;
     ArrayList<Record> records;
     ArrayList<Employee> employees; // Modification: by Eleena R.
+    ArrayList<AbstractRecord> abstractRecords;
 
     public CustomSystem() {
         events = new ArrayList<Event>();
         records = new ArrayList<Record>();
         employees = new ArrayList<Employee>(); // Modification: by Eleena R.
+        abstractRecords = new ArrayList<AbstractRecord>();
     };
 
     public void addEvent(Event event) {
@@ -32,6 +40,11 @@ public class CustomSystem {
         records.add(record);
     }
 
+    public void addRecordToEvent(Event event, Record record) {
+        event.addRecord(record);
+        records.add(record);
+    }
+
     /**
      * @author Eleena Rath
      * @param eventIndex
@@ -41,7 +54,15 @@ public class CustomSystem {
         getEvent(eventIndex).deleteRecord(recordIndex);
     }
 
-    
+    public void deleteRecord(int recordIndex) {
+        Record recordToDelete = records.get(recordIndex - 1);
+
+        records.remove(recordIndex - 1);
+
+        for (Event event : events) {
+            event.deleteRecord(recordToDelete);
+        }
+    }
 
     /**
      * @author Eleena Rath
@@ -111,8 +132,9 @@ public class CustomSystem {
             total += event.calculateRevenue();
         }
 
-        // Count system-level records only when they are not already attached to an event.
-        for (Record record: records){
+        // Count system-level records only when they are not already attached to an
+        // event.
+        for (Record record : records) {
             boolean recordBelongsToEvent = false;
             for (Event event : events) {
                 if (event.records.contains(record)) {
@@ -169,9 +191,9 @@ public class CustomSystem {
     /**
      * @author Eleena Rath
      */
-    public void listRecords(){
+    public void listRecords() {
         int index;
-        for (int i = 0; i < records.size(); i++){
+        for (int i = 0; i < records.size(); i++) {
             index = i + 1;
             System.out.println(index + "-" + records.get(i).toString());
         }
@@ -182,7 +204,7 @@ public class CustomSystem {
      * @param index
      * @return
      */
-    public Record getRecord(int index){
+    public Record getRecord(int index) {
         return records.get(index - 1);
     }
 
@@ -190,7 +212,69 @@ public class CustomSystem {
      * @author Eleena Rath
      * @param record
      */
-    public void addRecord(Record record){
+    public void addRecord(Record record) {
         records.add(record);
+    }
+
+    public void addMerchandiseFromDatabase() {
+        MerchandiseController MC = new MerchandiseController(false);
+        for (MerchandiseSale ms : MC.TurnAllMerchandiseToRecords(false)) {
+            abstractRecords.add((AbstractRecord) ms);
+        }
+    }
+
+    public void addAbstractRecord(AbstractRecord ar) {
+        abstractRecords.add(ar);
+    }
+
+    public ArrayList<AbstractRecord> getAbstractRecords() {
+        return abstractRecords;
+    }
+
+    public void listAbstractRecords() {
+        int index;
+        for (int i = 0; i < abstractRecords.size(); i++) {
+            index = i + 1;
+            System.out.println(index + "-" + abstractRecords.get(i).toString());
+        }
+    }
+
+    public void deleteEmployee(int i) {
+        Employee deleting = employees.get(i - 1);
+        ArrayList<Employee> newArr = new ArrayList<>();
+        for (Employee r : employees) {
+            if (!r.equals(deleting)) {
+                newArr.add(r);
+            }
+        }
+        this.employees = newArr;
+    }
+
+    // public void editRecord(int i, int choice)
+    // {
+    // Record deleting = records.get( i - 1);
+    // ArrayList<Record> newArr = new ArrayList<>();
+    // for(Record r : records)
+    // {
+    // if(!r.equals(deleting))
+    // {
+    // newArr.add(r);
+    // }
+    // }
+    // switch()
+    // deleting.
+
+    // this.records = newArr;
+
+    // }
+
+    public void replaceRecord(int recordIndex, Record newRecord) {
+        Record oldRecord = records.get(recordIndex - 1);
+
+        records.set(recordIndex - 1, newRecord);
+
+        for (Event event : events) {
+            event.replaceRecord(oldRecord, newRecord);
+        }
     }
 }

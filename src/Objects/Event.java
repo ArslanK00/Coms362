@@ -1,5 +1,6 @@
 package Objects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import Objects.Strategies.RevenueCalculationStrategy;
 import Objects.Strategies.RevenueOnlyStrategy;
 import Objects.Strategies.TotalRevenueStrategy;
 
-public class Event {
+public class Event implements Serializable {
     String name;
     String venue;
     String arenaName;
@@ -31,12 +32,27 @@ public class Event {
         return records.get(index - 1);
     }
 
+    public void replaceRecord(int recordIndex, Record newRecord) {
+        records.set(recordIndex - 1, newRecord);
+    }
+
+    public void replaceRecord(Record oldRecord, Record newRecord) {
+        int index = records.indexOf(oldRecord);
+        if (index != -1) {
+            records.set(index, newRecord);
+        }
+    }
+
     /**
      * @author Eleena Rath
      * @param record
      */
     public void deleteRecord(int index) {
         records.remove(index - 1);
+    }
+
+    public void deleteRecord(Record record) {
+        records.remove(record);
     }
 
     /**

@@ -1,9 +1,11 @@
 package Objects;
 
+import java.io.Serializable;
+
 /**
  * @author Eleena Rath
  */
-public class Employee {
+public class Employee implements Serializable{
     
     private String firstName;
     private String lastName;

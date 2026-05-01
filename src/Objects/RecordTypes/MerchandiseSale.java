@@ -1,20 +1,20 @@
 package Objects.RecordTypes;
 
-import java.io.Serializable;
 import java.time.YearMonth;
 
-public class MerchandiseSale extends AbstractRecord implements Serializable
+public class MerchandiseSale extends AbstractRecord
 {
     private String name;
     private float cost;
     private YearMonth date;
-    private RecordEnum RecType = RecordEnum.MerchandiseSale;
+    private RecordEnum RecType;
     public MerchandiseSale(String name, float cost, YearMonth date) 
     {
         super(name);
         this.name = name;
         this.cost = cost;
         this.date = date;
+        this.RecType = RecordEnum.MerchandiseSale;
     }
 
 
@@ -46,7 +46,13 @@ public class MerchandiseSale extends AbstractRecord implements Serializable
 
     @Override
     public void setName(String n) {
+        super.setName(n);
         this.name = n;
+    }
+
+    public RecordEnum getRecordEnum()
+    {
+        return RecType;
     }
 
 
@@ -54,7 +60,7 @@ public class MerchandiseSale extends AbstractRecord implements Serializable
     public String toString(){
         String summary = "Record Type: " + RecType + "\n"
         + "Name: " + name + "\n"
-        + "Cost: " + cost + "\n"
+        + "Revenue: " + cost + "\n"
         + "Date: " + date + "\n";
         
         if(description == null || description.length() == 0){

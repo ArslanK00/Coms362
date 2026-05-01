@@ -1,10 +1,20 @@
+
+import java.io.Console;
+import java.util.ArrayList;
+import java.util.List;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.time.YearMonth;
+import java.util.ArrayList;
 
 import Objects.CustomSystem;
 import Objects.Employee;
 import Objects.Event;
 import Objects.Factory.SalaryFactory;
-import Objects.RecordTypes.LiveEventTicket;
 import Objects.RecordTypes.MerchandiseController;
 import Objects.RecordTypes.PayPerViewTicket;
 import Objects.RecordTypes.Salary;
@@ -14,13 +24,20 @@ import Objects.Strategies.PayPerViewRevenueStrategy;
 import Objects.Strategies.RevenueCalculationStrategy;
 import Objects.Strategies.RevenueOnlyStrategy;
 import Objects.Strategies.TotalRevenueStrategy;
-//import Objects.RecordTypes.*;
+import TrendData.RequestType;
+import Objects.Commands.*;
+import Objects.Commands.EventCommands.*;
 
 public class wweRevenueCalculator {
 
     static CustomSystem wweSystem = new CustomSystem();
+    private static final String DATA_FILE = "Databases/Database.txt";
 
     public static void main(String[] args) {
+
+        // Load the data from the system
+        // Or create an empty CustomSystem object
+        loadData();
 
         System.out.println("Welcome to the Ticketing System!");
 
@@ -34,6 +51,8 @@ public class wweRevenueCalculator {
             System.out.println("6 View System Records");
             System.out.println("7 Calculate All Revenue");
             System.out.println("8 Edit merchandise");
+            System.out.println("9 Visualize Revenue");
+
             System.out.println("0 Exit");
             String choice = System.console().readLine();
 
@@ -62,14 +81,63 @@ public class wweRevenueCalculator {
                 case "8":
                     MerchandiseController merch = new MerchandiseController(true);
                     break;
+                case "9":
+                    System.out.println(
+                            "Please Choose what data you would like to look at:\n1: Data by year \n2: Data by Month\n3: Data by Record");
+                    String option = System.console().readLine();
+                    int optionInt = Integer.parseInt(option);
+                    DrawTrends(optionInt);
+                    break;
+
                 case "0":
                     System.out.println("Exiting the system. Goodbye!");
-                    System.exit(1);
+                    // Save the CustomSystem object to a file
+                    saveData();
+                    System.exit(0);
                 default:
                     System.out.println("Invalid option. Please try again.");
                     break;
             }
         }
+    }
+
+    /**
+     * @author Eleena Rath
+     *         Loads data from the DATA_FILE.txt if it exists. If the file doesn't
+     *         exist, then a new database object is created.
+     *         To save/load data, the following classes implement the Serializable
+     *         interface:
+     *         -Record interface
+     *         -CustomSystem
+     *         -Employee
+     *         -Event
+     */
+    private static void loadData() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(DATA_FILE))) {
+            wweSystem = (CustomSystem) ois.readObject();
+        } catch (FileNotFoundException e) {
+            System.out.println("No database was found");
+            wweSystem = new CustomSystem();
+        } catch (ClassNotFoundException f) {
+            System.out.println("No database object was found");
+            wweSystem = new CustomSystem();
+        } catch (IOException g) {
+            g.printStackTrace();
+            System.exit(-1);
+        }
+    }
+
+    /**
+     * @author Eleena Rath
+     *         Saves data to the DATA_FILE.txt
+     */
+    public static void saveData() {// ChangeBACKLATER
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(DATA_FILE))) {
+            oos.writeObject(wweSystem);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private static void addEventToSystem() {
@@ -100,10 +168,10 @@ public class wweRevenueCalculator {
      * @author Eleena Rath
      */
     private static void systemEvents() {
-        System.out.println("All events in system:");
-        System.out.println(wweSystem.listEvents());
 
         while (true) {
+            System.out.println("All events in system:");
+            System.out.println(wweSystem.listEvents());
             System.out.println("Please select an event by its number, or enter '0' to go back to the previous screen");
             String choice = System.console().readLine();
 
@@ -131,260 +199,36 @@ public class wweRevenueCalculator {
         Event event = wweSystem.getEvent(eventIndex);
         System.out.println(event.toString());
 
+        List<Command> eventCommands = new ArrayList<>();
+        eventCommands.add(new PrintEventRecords(event));
+        eventCommands.add(new UploadLiveEventTicket(wweSystem, event));
+        eventCommands.add(new UploadPayPerViewTicket(wweSystem, event));
+        eventCommands.add(new UploadEventSalary(wweSystem, event));
+        eventCommands.add(new RecordVenueRentalCost(wweSystem, event));
+        eventCommands.add(new DeleteRecordFromEvent(event));
+        eventCommands.add(new CalculateEventProfit(event));
+        eventCommands.add(new EventRecordRevenueOnly(event));
+        eventCommands.add(new SortEventRecordsByValue(event));
+        eventCommands.add(new SortEventRecordsByCategory(event));
+
         while (true) {
             System.out.println("What would you like to do with this event?");
-            System.out.println("1 View all records for this event");
-            System.out.println("2 Add a Live-Event ticket record");
-            System.out.println("3 Add a Pay-Per-View ticket record");
-            System.out.println("4 Add an event salary");
-            System.out.println("5 Delete a record");
-            System.out.println("6 Calculate this event's profit");
-            System.out.println("7 Sort records by value");
-            System.out.println("8 Sort records by category");
-            System.out.println("9 View revenue only");
-            System.out.println("10 View revenue by strategy");
-            System.out.println("0 Record Arena Rental Cost For an Event");
+            for (int i = 0; i < eventCommands.size(); i++) {
+                System.out.println(i + 1 + " " + eventCommands.get(i).toString());
+            }
             System.out.println("- Exit");
-
             String choice = System.console().readLine();
-            switch (choice) {
-                case "1":
-                    System.out.println(event.listRecords());
-                    break;
-                case "2":
-                    LiveEventTicket liveTicket = uploadLiveEventTicket(eventIndex);
-                    wweSystem.addRecordToEvent(eventIndex, liveTicket);
-                    break;
-                case "3":
-                    PayPerViewTicket ppvTicket = uploadPayPerViewTicket(eventIndex);
-                    wweSystem.addRecordToEvent(eventIndex, ppvTicket);
-                    break;
-                case "4":
-                    SalaryFactory salaryFactory = new SalaryFactory(wweSystem);
-                    salaryFactory.createRecord();
-                    Salary eventSalary = salaryFactory.returnSalary();
-                    wweSystem.addRecordToEvent(eventIndex, eventSalary);
-                    break;
-                case "5":
-                    deleteRecordFromEvent(eventIndex);
-                    break;
-                case "6":
-                    // Calculate the revenue for this event
-                    System.out.println(event.calculateRevenue());
-                    break;
-                case "7":
-                    event.sortByValue();
-                    System.out.println(event.listRecords());
-                    break;
-                case "8":
-                    event.sortByCategory();
-                    System.out.println(event.listRecords());
-                    break;
-                case "9":
-                    System.out.println("Revenue Only: " + event.calculateRevenueOnly());
-                    break;
-                case "10":
-                    displayRevenueByStrategy(event);
-                    break;
-                case "0":
-                    recordArenaRentalCost(eventIndex);
-                    break;
-                case "-":
-                    return;
-                default:
-                    System.out.println("Invalid option. Please try again.");
-                    break;
-            }
-        }
-    }
-
-    private static void displayRevenueByStrategy(Event event) {
-        while (true) {
-            System.out.println("Choose a revenue strategy:");
-            System.out.println("1 Total revenue");
-            System.out.println("2 Revenue only");
-            System.out.println("3 Live event ticket revenue");
-            System.out.println("4 Pay-per-view ticket revenue");
-            System.out.println("5 Merchandise revenue");
-            System.out.println("0 Back");
-
-            String choice = System.console().readLine();
-            RevenueCalculationStrategy strategy = null;
-            String label = "";
-
-            switch (choice) {
-                case "1":
-                    strategy = new TotalRevenueStrategy();
-                    label = "Total Revenue";
-                    break;
-                case "2":
-                    strategy = new RevenueOnlyStrategy();
-                    label = "Revenue Only";
-                    break;
-                case "3":
-                    strategy = new LiveEventRevenueStrategy();
-                    label = "Live Event Revenue";
-                    break;
-                case "4":
-                    strategy = new PayPerViewRevenueStrategy();
-                    label = "Pay-Per-View Revenue";
-                    break;
-                case "5":
-                    strategy = new MerchandiseRevenueStrategy();
-                    label = "Merchandise Revenue";
-                    break;
-                case "0":
-                    return;
-                default:
-                    System.out.println("Invalid option. Please try again.");
-                    continue;
-            }
-
-            System.out.println(label + ": " + event.calculateRevenue(strategy));
-        }
-    }
-
-    private static LiveEventTicket uploadLiveEventTicket(int eventIndex) {
-        Event event = wweSystem.getEvent(eventIndex);
-        System.out.println("Please Fill out the following information to upload a Live-Event ticket.");
-
-        System.out.println("Enter a name for the record:");
-        String name = System.console().readLine();
-
-        boolean priceValid = false;
-        float price = 0;
-        System.out.println("Enter the price:");
-        while (!priceValid) {
-            String priceInput = System.console().readLine();
-            if (priceInput.matches("\\d+(\\.\\d{1,2})?")) {
-                price = Float.parseFloat(priceInput);
-                priceValid = true;
-            } else {
-                System.out.println("Invalid price format. Please enter a valid price (ex: 19.99):");
-            }
-        }
-
-        int amount = 0;
-        boolean amountValid = false;
-        System.out.println("Enter the amount of tickets sold:");
-        while (!amountValid) {
-            try {
-                amount = Integer.parseInt(System.console().readLine());
-                if (amount >= 0) {
-                    amountValid = true;
-                } else {
-                    System.out.println("Amount must be 0 or greater:");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid amount. Enter a whole number:");
-            }
-        }
-
-        YearMonth date = null;
-        boolean dateValid = false;
-        System.out.println("Enter the date (YYYY-MM):");
-        while (!dateValid) {
-            String dateInput = System.console().readLine();
-            try {
-                date = YearMonth.parse(dateInput);
-                dateValid = true;
-            } catch (Exception e) {
-                System.out.println("Invalid date format. Please use YYYY-MM:");
-            }
-        }
-
-        LiveEventTicket ticket = new LiveEventTicket(name, price * amount, date, amount);
-
-        ticket.setCategory("Live Event");
-        ticket.setRevenue(true);
-
-        return ticket;
-    }
-
-    private static PayPerViewTicket uploadPayPerViewTicket(int eventIndex) {
-        Event event = wweSystem.getEvent(eventIndex);
-        System.out.println("Please Fill out the following information to upload a Pay-Per-View ticket.");
-
-        System.out.println("Enter a name for the record:");
-        String name = System.console().readLine();
-
-        boolean priceValid = false;
-        float price = 0;
-        System.out.println("Enter the price:");
-        while (!priceValid) {
-            String priceInput = System.console().readLine();
-            if (priceInput.matches("\\d+(\\.\\d{1,2})?")) {
-                price = Float.parseFloat(priceInput);
-                priceValid = true;
-            } else {
-                System.out.println("Invalid price format. Please enter a valid price (ex: 19.99):");
-            }
-        }
-
-        int amount = 0;
-        boolean amountValid = false;
-        System.out.println("Enter the amount of tickets sold:");
-        while (!amountValid) {
-            try {
-                amount = Integer.parseInt(System.console().readLine());
-                if (amount >= 0) {
-                    amountValid = true;
-                } else {
-                    System.out.println("Amount must be 0 or greater:");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid amount. Enter a whole number:");
-            }
-        }
-
-        YearMonth date = null;
-        boolean dateValid = false;
-        System.out.println("Enter the date (YYYY-MM):");
-        while (!dateValid) {
-            String dateInput = System.console().readLine();
-            try {
-                date = YearMonth.parse(dateInput);
-                dateValid = true;
-            } catch (Exception e) {
-                System.out.println("Invalid date format. Please use YYYY-MM:");
-            }
-        }
-
-        PayPerViewTicket ticket = new PayPerViewTicket(name, price * amount, date, amount);
-
-        ticket.setCategory("Pay-Per-View");
-        ticket.setRevenue(true);
-
-        return ticket;
-    }
-
-    /**
-     * @author Eleena Rath
-     * @param eventIndex
-     */
-    private static void deleteRecordFromEvent(int eventIndex) {
-        Event event = wweSystem.getEvent(eventIndex);
-
-        System.out.println(event.listRecords());
-        while (true) {
-            System.out.println("Please select an record by its number, or 'exit' to go back to the previous screen");
-            String choice = System.console().readLine();
-
-            try {
-                int recordIndex = Integer.parseInt(choice);
-                wweSystem.deleteRecordFromEvent(eventIndex, recordIndex);
-                System.out.println("Record was successfully deleted");
+            if (choice.equals("-")) {
                 return;
+            }
 
-            } catch (NumberFormatException e) {
-                if (choice.equalsIgnoreCase("exit")) {
-                    return;
-                } else {
-                    System.out.println("Invalid input");
-                }
-            } catch (IndexOutOfBoundsException f) {
+            try {
+                int intChoice = Integer.parseInt(choice); // possible NumberFormatException
+                eventCommands.get(intChoice - 1).execute(); // possible IndexOutOfBoundsException
+            } catch (Exception e) {
                 System.out.println("Invalid input");
             }
+
         }
     }
 
@@ -442,21 +286,49 @@ public class wweRevenueCalculator {
         }
     }
 
-    private static boolean isDateValid(String[] dateParts)// Checks for Valid Date input
-    {
-        if (dateParts.length != 2)
-            return false;
+    private static void calculateAllRevenueMenu() {
+        while (true) {
+            System.out.println("Choose a system-wide revenue strategy:");
+            System.out.println("1 Total revenue");
+            System.out.println("2 Revenue only");
+            System.out.println("3 Live event ticket revenue");
+            System.out.println("4 Pay-per-view ticket revenue");
+            System.out.println("5 Merchandise revenue");
+            System.out.println("0 Back");
 
-        String year = dateParts[0];
-        String month = dateParts[1];
+            String choice = System.console().readLine();
+            RevenueCalculationStrategy strategy = null;
+            String label = "";
 
-        if (!year.matches("\\d{4}") || !month.matches("\\d{2}"))
-            return false;
+            switch (choice) {
+                case "1":
+                    calculateAllRevenue();
+                    continue;
+                case "2":
+                    strategy = new RevenueOnlyStrategy();
+                    label = "System Revenue Only";
+                    break;
+                case "3":
+                    strategy = new LiveEventRevenueStrategy();
+                    label = "System Live Event Revenue";
+                    break;
+                case "4":
+                    strategy = new PayPerViewRevenueStrategy();
+                    label = "System Pay-Per-View Revenue";
+                    break;
+                case "5":
+                    strategy = new MerchandiseRevenueStrategy();
+                    label = "System Merchandise Revenue";
+                    break;
+                case "0":
+                    return;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+                    continue;
+            }
 
-        int m = Integer.parseInt(month);
-        if (m < 1 || m > 12)
-            return false;
-        return true;
+            System.out.println(label + ": " + wweSystem.calculateAllRevenue(strategy));
+        }
     }
 
     /**
@@ -587,10 +459,9 @@ public class wweRevenueCalculator {
                 if (choice.equals("0")) {
                     return;
                 }
-                // Potential compiler issues abound here.
-                recordController((Objects.RecordTypes.Record) wweSystem.getRecord(Integer.parseInt(choice)));
+                int recordIndex = Integer.parseInt(choice);
+                recordController(recordIndex, wweSystem.getRecord(recordIndex));
             } catch (Exception e) {
-                e.printStackTrace();
                 System.out.println("Invalid input");
             }
 
@@ -601,30 +472,132 @@ public class wweRevenueCalculator {
      * @author Eleena Rath
      * @param record
      */
-    public static void recordController(Objects.RecordTypes.Record record) {
+    private static Objects.RecordTypes.Record unwrapRecord(Objects.RecordTypes.Record record) {
+        while (record instanceof Objects.RecordTypes.RecordDecorator) {
+            record = ((Objects.RecordTypes.RecordDecorator) record).getWrappedRecord();
+        }
+        return record;
+    }
+
+    public static void recordController(int recordIndex, Objects.RecordTypes.Record record) {
         String choice;
         System.out.println(record.toString());
         while (true) {
             System.out.println("What would you like to do with this record?");
-            System.out.println("1 Edit (not yet implemented)"); // TODO
-            System.out.println("2 Delete (not yet implemented)"); // TODO
+            System.out.println("1 Edit record");
+            System.out.println("2 Delete record");
+            System.out.println("3 Audit record");
             System.out.println("0 Exit");
 
             choice = System.console().readLine();
             switch (choice) {
+                case "1":
+                    Objects.RecordTypes.Record baseRecord = unwrapRecord(record);
+
+                    if (baseRecord instanceof Objects.RecordTypes.AbstractRecord) {
+                        Objects.RecordTypes.AbstractRecord editableRecord = (Objects.RecordTypes.AbstractRecord) baseRecord;
+
+                        System.out.println("Enter new record name:");
+                        String newName = System.console().readLine();
+
+                        System.out.println("Enter new cost:");
+                        float newCost = Float.parseFloat(System.console().readLine());
+
+                        editableRecord.setName(newName);
+                        editableRecord.setCost(newCost);
+
+                        System.out.println("Record was successfully edited:");
+                        System.out.println(record.toString());
+                    } else {
+                        System.out.println("This record type cannot be edited.");
+                    }
+                    break;
+
+                case "2":
+                    wweSystem.deleteRecord(recordIndex);
+                    System.out.println("Record was successfully deleted");
+                    return;
+
+                case "3":
+                    System.out.println("Enter reviewer name:");
+                    String reviewerName = System.console().readLine();
+
+                    System.out.println("Enter audit note:");
+                    String auditNote = System.console().readLine();
+
+                    Objects.RecordTypes.Record auditedRecord = new Objects.RecordTypes.AuditedRecordDecorator(
+                            record,
+                            reviewerName,
+                            auditNote);
+
+                    wweSystem.replaceRecord(recordIndex, auditedRecord);
+                    record = auditedRecord;
+
+                    System.out.println("Audited record saved:");
+                    System.out.println(auditedRecord.toString());
+                    break;
+
                 case "0":
                     return;
+
+                default:
+                    System.out.println("Invalid option. Please try again.");
+                    break;
             }
         }
     }
 
-    /**
-     * @author Jamey Nguyen
-     *         Records arena rental cost for an event
-     */
-    private static void recordArenaRentalCost(int eventIndex) {
-        RecordEventVenueCost arenaRecorder = new RecordEventVenueCost(wweSystem);
-        arenaRecorder.recordArenaRentalCost(eventIndex);
+    public CustomSystem getSystem() {
+        return wweSystem;
+    }
+
+    public void setSystem(CustomSystem CS) {
+        this.wweSystem = CS;
+    }
+
+    public void deleteRecord(int i) {
+        wweSystem.deleteRecord(i);
+        saveData();
+    }
+
+    public void deleteEmployee(int i) {
+        wweSystem.deleteEmployee(i);
+        saveData();
+    }
+
+    public static void DrawTrends(int optionInt) {
+        String option = "";
+        while (optionInt != 1 && optionInt != 2 && optionInt != 3) {
+            System.out.println("please choose the appropriate number");
+            option = System.console().readLine();
+            optionInt = Integer.parseInt(option);
+        }
+
+        switch (optionInt) {
+            case 1:
+                DrawTrendData d = new DrawTrendData(RequestType.YEAR, "none");
+                break;
+            case 2:
+                System.out.println("Would You like to see a specific year or all month records held?(1/2)");
+                String choice = System.console().readLine();
+                int choiceInt = Integer.parseInt(choice);
+                while (choiceInt != 1 && choiceInt != 2) {
+                    System.out.println("please choose the appropriate number");
+                    option = System.console().readLine();
+                    optionInt = Integer.parseInt(option);
+                }
+                if (choiceInt == 1) {
+                    System.out.println("Type the Year you would like to look at");
+                    String Year = System.console().readLine();
+                    DrawTrendData d1 = new DrawTrendData(RequestType.MONTH, Year);
+                } else {
+                    DrawTrendData d1 = new DrawTrendData(RequestType.MONTH, "none");
+                }
+                break;
+            case 3:
+                DrawTrendData d2 = new DrawTrendData(RequestType.ALLRECORDS, "none");
+                break;
+        }
     }
 
 }
