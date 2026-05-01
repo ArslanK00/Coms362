@@ -2,19 +2,17 @@ package Objects.Strategies;
 
 import java.util.List;
 
-import Objects.RecordTypes.MerchandiseSale;
+import Objects.RecordTypes.MerchandiseController;
 import Objects.RecordTypes.Record;
 
+/*
+* @author: Jamey Nguyen
+*/
 public class MerchandiseRevenueStrategy implements RevenueCalculationStrategy {
 
     @Override
     public float calculateRevenue(List<Record> records) {
-        float total = 0;
-        for (Record record : records) {
-            if (record instanceof MerchandiseSale) {
-                total += record.getCost();
-            }
-        }
-        return total;
+        MerchandiseController merchandiseController = new MerchandiseController(false);
+        return merchandiseController.calculateTotalRevenue();
     }
 }

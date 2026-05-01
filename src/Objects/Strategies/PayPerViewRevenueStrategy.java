@@ -5,6 +5,9 @@ import java.util.List;
 import Objects.RecordTypes.PayPerViewTicket;
 import Objects.RecordTypes.Record;
 
+/*
+* @author: Jamey Nguyen
+*/
 public class PayPerViewRevenueStrategy implements RevenueCalculationStrategy {
 
     @Override

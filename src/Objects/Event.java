@@ -128,6 +128,9 @@ public class Event implements Serializable {
         return calculateRevenue(new RevenueOnlyStrategy());
     }
 
+    /**
+     * @author Jamey Nguyen
+     */
     public float calculateRevenue(RevenueCalculationStrategy strategy) {
         return strategy.calculateRevenue(records);
     }

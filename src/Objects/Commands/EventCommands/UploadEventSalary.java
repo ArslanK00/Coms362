@@ -23,6 +23,10 @@ public class UploadEventSalary implements Command{
         SalaryFactory salaryFactory = new SalaryFactory(database);
         salaryFactory.createRecord();
         Salary eventSalary = salaryFactory.returnSalary();
+        if (eventSalary == null) {
+            System.out.println("Salary creation cancelled.");
+            return;
+        }
         database.addRecordToEvent(event, eventSalary);
     }
 

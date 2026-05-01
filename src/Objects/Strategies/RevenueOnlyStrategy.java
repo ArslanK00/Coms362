@@ -5,6 +5,9 @@ import java.util.List;
 import Objects.RecordTypes.AbstractRecord;
 import Objects.RecordTypes.Record;
 
+/*
+* @author: Jamey Nguyen
+*/
 public class RevenueOnlyStrategy implements RevenueCalculationStrategy {
 
     @Override

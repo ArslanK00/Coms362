@@ -40,6 +40,7 @@ public class wweRevenueCalculator {
         loadData();
 
         System.out.println("Welcome to the Ticketing System!");
+        System.out.println(new java.io.File(".").getAbsolutePath());
 
         while (true) {
             System.out.println("Please select an option:");
@@ -160,6 +161,7 @@ public class wweRevenueCalculator {
         String eventVenue = System.console().readLine();
 
         Event newEvent = new Event(eventName, eventVenue);
+        newEvent.setArenaName(eventVenue);
         wweSystem.addEvent(newEvent);
         System.out.println("Event added to the system: " + eventName + " at " + eventVenue);
     }
@@ -210,6 +212,7 @@ public class wweRevenueCalculator {
         eventCommands.add(new EventRecordRevenueOnly(event));
         eventCommands.add(new SortEventRecordsByValue(event));
         eventCommands.add(new SortEventRecordsByCategory(event));
+        eventCommands.add(new ViewEventRevenueByStrategy(event));
 
         while (true) {
             System.out.println("What would you like to do with this event?");
@@ -239,51 +242,6 @@ public class wweRevenueCalculator {
     private static void calculateAllRevenue() {
         float totalRevenue = wweSystem.calculateAllRevenue();
         System.out.println("Total revenue across all events: " + totalRevenue);
-    }
-
-    private static void calculateAllRevenueMenu() {
-        while (true) {
-            System.out.println("Choose a system-wide revenue strategy:");
-            System.out.println("1 Total revenue");
-            System.out.println("2 Revenue only");
-            System.out.println("3 Live event ticket revenue");
-            System.out.println("4 Pay-per-view ticket revenue");
-            System.out.println("5 Merchandise revenue");
-            System.out.println("0 Back");
-
-            String choice = System.console().readLine();
-            RevenueCalculationStrategy strategy = null;
-            String label = "";
-
-            switch (choice) {
-                case "1":
-                    calculateAllRevenue();
-                    continue;
-                case "2":
-                    strategy = new RevenueOnlyStrategy();
-                    label = "System Revenue Only";
-                    break;
-                case "3":
-                    strategy = new LiveEventRevenueStrategy();
-                    label = "System Live Event Revenue";
-                    break;
-                case "4":
-                    strategy = new PayPerViewRevenueStrategy();
-                    label = "System Pay-Per-View Revenue";
-                    break;
-                case "5":
-                    strategy = new MerchandiseRevenueStrategy();
-                    label = "System Merchandise Revenue";
-                    break;
-                case "0":
-                    return;
-                default:
-                    System.out.println("Invalid option. Please try again.");
-                    continue;
-            }
-
-            System.out.println(label + ": " + wweSystem.calculateAllRevenue(strategy));
-        }
     }
 
     private static void calculateAllRevenueMenu() {
@@ -433,7 +391,12 @@ public class wweRevenueCalculator {
                     // create a salary
                     SalaryFactory salaryFactory = new SalaryFactory(wweSystem);
                     salaryFactory.createRecord();
-                    wweSystem.addRecord(salaryFactory.returnSalary());
+                    Salary salary = salaryFactory.returnSalary();
+                    if (salary == null) {
+                        System.out.println("Annual salary creation cancelled");
+                        break;
+                    }
+                    wweSystem.addRecord(salary);
                     System.out.println("Annual salary successfully created");
                     break;
                 case "0":

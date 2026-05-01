@@ -465,6 +465,19 @@ public class MerchandiseController //need to move out of Record Types
         return (float) totalRevenue;
     }
 
+    public float calculateTotalRevenue()
+    {
+        String[][] merchData = getMerch(false);
+        float totalRevenue = 0;
+
+        for (int i = 0; i < merchData.length; i++) {
+            totalRevenue += Float.parseFloat(merchData[i][4].trim()) * Integer.parseInt(merchData[i][3].trim());
+        }
+
+        System.out.println("Total merchandise revenue is: " + totalRevenue);
+        return totalRevenue;
+    }
+
     public void editUnitDetailsbyID(int id)//Edit any item by ID
     {
         String[][] merchData = getMerch(false);

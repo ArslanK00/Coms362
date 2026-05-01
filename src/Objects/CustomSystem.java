@@ -36,11 +36,17 @@ public class CustomSystem implements Serializable {
     }
 
     public void addRecordToEvent(int index, Record record) {
+        if (record == null) {
+            return;
+        }
         events.get(index - 1).addRecord(record);
         records.add(record);
     }
 
     public void addRecordToEvent(Event event, Record record) {
+        if (record == null) {
+            return;
+        }
         event.addRecord(record);
         records.add(record);
     }
@@ -106,6 +112,9 @@ public class CustomSystem implements Serializable {
         return calculateAllRevenue(new TotalRevenueStrategy());
     }
 
+    /**
+     * @author Jamey Nguyen
+     */
     public float calculateAllRevenue(RevenueCalculationStrategy strategy) {
         return strategy.calculateRevenue(getAllRecords());
     }
@@ -114,11 +123,15 @@ public class CustomSystem implements Serializable {
         ArrayList<Record> allRecords = new ArrayList<Record>();
 
         for (Event event : events) {
-            allRecords.addAll(event.getRecords());
+            for (Record record : event.getRecords()) {
+                if (record != null) {
+                    allRecords.add(record);
+                }
+            }
         }
 
         for (Record record : records) {
-            if (!allRecords.contains(record)) {
+            if (record != null && !allRecords.contains(record)) {
                 allRecords.add(record);
             }
         }
@@ -213,6 +226,9 @@ public class CustomSystem implements Serializable {
      * @param record
      */
     public void addRecord(Record record) {
+        if (record == null) {
+            return;
+        }
         records.add(record);
     }
 
