@@ -8,6 +8,12 @@ import Objects.RecordTypes.LiveEventTicket;
 import Objects.RecordTypes.MerchandiseController;
 import Objects.RecordTypes.PayPerViewTicket;
 import Objects.RecordTypes.Salary;
+import Objects.Strategies.LiveEventRevenueStrategy;
+import Objects.Strategies.MerchandiseRevenueStrategy;
+import Objects.Strategies.PayPerViewRevenueStrategy;
+import Objects.Strategies.RevenueCalculationStrategy;
+import Objects.Strategies.RevenueOnlyStrategy;
+import Objects.Strategies.TotalRevenueStrategy;
 //import Objects.RecordTypes.*;
 
 public class wweRevenueCalculator {
@@ -51,8 +57,7 @@ public class wweRevenueCalculator {
                     systemRecords();
                     break;
                 case "7":
-                    // CalculateAll
-                    calculateAllRevenue();
+                    calculateAllRevenueMenu();
                     break;
                 case "8":
                     MerchandiseController merch = new MerchandiseController(true);
@@ -137,6 +142,7 @@ public class wweRevenueCalculator {
             System.out.println("7 Sort records by value");
             System.out.println("8 Sort records by category");
             System.out.println("9 View revenue only");
+            System.out.println("10 View revenue by strategy");
             System.out.println("0 Record Arena Rental Cost For an Event");
             System.out.println("- Exit");
 
@@ -177,6 +183,9 @@ public class wweRevenueCalculator {
                 case "9":
                     System.out.println("Revenue Only: " + event.calculateRevenueOnly());
                     break;
+                case "10":
+                    displayRevenueByStrategy(event);
+                    break;
                 case "0":
                     recordArenaRentalCost(eventIndex);
                     break;
@@ -186,6 +195,52 @@ public class wweRevenueCalculator {
                     System.out.println("Invalid option. Please try again.");
                     break;
             }
+        }
+    }
+
+    private static void displayRevenueByStrategy(Event event) {
+        while (true) {
+            System.out.println("Choose a revenue strategy:");
+            System.out.println("1 Total revenue");
+            System.out.println("2 Revenue only");
+            System.out.println("3 Live event ticket revenue");
+            System.out.println("4 Pay-per-view ticket revenue");
+            System.out.println("5 Merchandise revenue");
+            System.out.println("0 Back");
+
+            String choice = System.console().readLine();
+            RevenueCalculationStrategy strategy = null;
+            String label = "";
+
+            switch (choice) {
+                case "1":
+                    strategy = new TotalRevenueStrategy();
+                    label = "Total Revenue";
+                    break;
+                case "2":
+                    strategy = new RevenueOnlyStrategy();
+                    label = "Revenue Only";
+                    break;
+                case "3":
+                    strategy = new LiveEventRevenueStrategy();
+                    label = "Live Event Revenue";
+                    break;
+                case "4":
+                    strategy = new PayPerViewRevenueStrategy();
+                    label = "Pay-Per-View Revenue";
+                    break;
+                case "5":
+                    strategy = new MerchandiseRevenueStrategy();
+                    label = "Merchandise Revenue";
+                    break;
+                case "0":
+                    return;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+                    continue;
+            }
+
+            System.out.println(label + ": " + event.calculateRevenue(strategy));
         }
     }
 
@@ -342,6 +397,51 @@ public class wweRevenueCalculator {
         System.out.println("Total revenue across all events: " + totalRevenue);
     }
 
+    private static void calculateAllRevenueMenu() {
+        while (true) {
+            System.out.println("Choose a system-wide revenue strategy:");
+            System.out.println("1 Total revenue");
+            System.out.println("2 Revenue only");
+            System.out.println("3 Live event ticket revenue");
+            System.out.println("4 Pay-per-view ticket revenue");
+            System.out.println("5 Merchandise revenue");
+            System.out.println("0 Back");
+
+            String choice = System.console().readLine();
+            RevenueCalculationStrategy strategy = null;
+            String label = "";
+
+            switch (choice) {
+                case "1":
+                    calculateAllRevenue();
+                    continue;
+                case "2":
+                    strategy = new RevenueOnlyStrategy();
+                    label = "System Revenue Only";
+                    break;
+                case "3":
+                    strategy = new LiveEventRevenueStrategy();
+                    label = "System Live Event Revenue";
+                    break;
+                case "4":
+                    strategy = new PayPerViewRevenueStrategy();
+                    label = "System Pay-Per-View Revenue";
+                    break;
+                case "5":
+                    strategy = new MerchandiseRevenueStrategy();
+                    label = "System Merchandise Revenue";
+                    break;
+                case "0":
+                    return;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+                    continue;
+            }
+
+            System.out.println(label + ": " + wweSystem.calculateAllRevenue(strategy));
+        }
+    }
+
     private static boolean isDateValid(String[] dateParts)// Checks for Valid Date input
     {
         if (dateParts.length != 2)
@@ -474,9 +574,9 @@ public class wweRevenueCalculator {
      * @author Eleena Rath
      */
     private static void systemRecords() {
-        //System.out.println("All Records in System:");
-        //wweSystem.listRecords();
-        //System.out.println("Select a record by its number, or enter '0' to exit");
+        // System.out.println("All Records in System:");
+        // wweSystem.listRecords();
+        // System.out.println("Select a record by its number, or enter '0' to exit");
         while (true) {
             System.out.println("All Records in System:");
             wweSystem.listRecords();

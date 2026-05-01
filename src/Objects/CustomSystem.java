@@ -1,8 +1,11 @@
 package Objects;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import Objects.RecordTypes.Record;
+import Objects.Strategies.RevenueCalculationStrategy;
+import Objects.Strategies.TotalRevenueStrategy;
 
 public class CustomSystem {
     ArrayList<Event> events;
@@ -79,6 +82,30 @@ public class CustomSystem {
      * @return total revenue of all events
      */
     public float calculateAllRevenue() {
+        return calculateAllRevenue(new TotalRevenueStrategy());
+    }
+
+    public float calculateAllRevenue(RevenueCalculationStrategy strategy) {
+        return strategy.calculateRevenue(getAllRecords());
+    }
+
+    public List<Record> getAllRecords() {
+        ArrayList<Record> allRecords = new ArrayList<Record>();
+
+        for (Event event : events) {
+            allRecords.addAll(event.getRecords());
+        }
+
+        for (Record record : records) {
+            if (!allRecords.contains(record)) {
+                allRecords.add(record);
+            }
+        }
+
+        return allRecords;
+    }
+
+    public float calculateAllRevenueLegacy() {
         float total = 0;
         for (Event event : events) {
             total += event.calculateRevenue();
