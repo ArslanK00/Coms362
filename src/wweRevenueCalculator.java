@@ -18,10 +18,15 @@ import Objects.Factory.SalaryFactory;
 import Objects.RecordTypes.MerchandiseController;
 import Objects.RecordTypes.PayPerViewTicket;
 import Objects.RecordTypes.Salary;
+import Objects.Strategies.LiveEventRevenueStrategy;
+import Objects.Strategies.MerchandiseRevenueStrategy;
+import Objects.Strategies.PayPerViewRevenueStrategy;
+import Objects.Strategies.RevenueCalculationStrategy;
+import Objects.Strategies.RevenueOnlyStrategy;
+import Objects.Strategies.TotalRevenueStrategy;
 import TrendData.RequestType;
 import Objects.Commands.*;
 import Objects.Commands.EventCommands.*;
-
 
 public class wweRevenueCalculator {
 
@@ -30,11 +35,12 @@ public class wweRevenueCalculator {
 
     public static void main(String[] args) {
 
-        //Load the data from the system
-        //Or create an empty CustomSystem object
+        // Load the data from the system
+        // Or create an empty CustomSystem object
         loadData();
 
         System.out.println("Welcome to the Ticketing System!");
+        System.out.println(new java.io.File(".").getAbsolutePath());
 
         while (true) {
             System.out.println("Please select an option:");
@@ -71,22 +77,22 @@ public class wweRevenueCalculator {
                     systemRecords();
                     break;
                 case "7":
-                    // CalculateAll
-                    calculateAllRevenue();
+                    calculateAllRevenueMenu();
                     break;
                 case "8":
                     MerchandiseController merch = new MerchandiseController(true);
                     break;
                 case "9":
-                    System.out.println("Please Choose what data you would like to look at:\n1: Data by year \n2: Data by Month\n3: Data by Record");
+                    System.out.println(
+                            "Please Choose what data you would like to look at:\n1: Data by year \n2: Data by Month\n3: Data by Record");
                     String option = System.console().readLine();
                     int optionInt = Integer.parseInt(option);
                     DrawTrends(optionInt);
                     break;
-                    
+
                 case "0":
                     System.out.println("Exiting the system. Goodbye!");
-                    //Save the CustomSystem object to a file
+                    // Save the CustomSystem object to a file
                     saveData();
                     System.exit(0);
                 default:
@@ -98,23 +104,25 @@ public class wweRevenueCalculator {
 
     /**
      * @author Eleena Rath
-     * Loads data from the DATA_FILE.txt if it exists. If the file doesn't exist, then a new database object is created.
-     * To save/load data, the following classes implement the Serializable interface:
-     * -Record interface
-     * -CustomSystem
-     * -Employee
-     * -Event
+     *         Loads data from the DATA_FILE.txt if it exists. If the file doesn't
+     *         exist, then a new database object is created.
+     *         To save/load data, the following classes implement the Serializable
+     *         interface:
+     *         -Record interface
+     *         -CustomSystem
+     *         -Employee
+     *         -Event
      */
-    private static void loadData(){
-        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(DATA_FILE))){
+    private static void loadData() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(DATA_FILE))) {
             wweSystem = (CustomSystem) ois.readObject();
-        } catch(FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             System.out.println("No database was found");
             wweSystem = new CustomSystem();
-        } catch(ClassNotFoundException f){
+        } catch (ClassNotFoundException f) {
             System.out.println("No database object was found");
             wweSystem = new CustomSystem();
-        } catch(IOException g){
+        } catch (IOException g) {
             g.printStackTrace();
             System.exit(-1);
         }
@@ -122,14 +130,14 @@ public class wweRevenueCalculator {
 
     /**
      * @author Eleena Rath
-     * Saves data to the DATA_FILE.txt
+     *         Saves data to the DATA_FILE.txt
      */
-    public static void saveData(){//ChangeBACKLATER
-       try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(DATA_FILE))){
+    public static void saveData() {// ChangeBACKLATER
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(DATA_FILE))) {
             oos.writeObject(wweSystem);
-       }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
-       }
+        }
 
     }
 
@@ -153,6 +161,7 @@ public class wweRevenueCalculator {
         String eventVenue = System.console().readLine();
 
         Event newEvent = new Event(eventName, eventVenue);
+        newEvent.setArenaName(eventVenue);
         wweSystem.addEvent(newEvent);
         System.out.println("Event added to the system: " + eventName + " at " + eventVenue);
     }
@@ -203,26 +212,26 @@ public class wweRevenueCalculator {
         eventCommands.add(new EventRecordRevenueOnly(event));
         eventCommands.add(new SortEventRecordsByValue(event));
         eventCommands.add(new SortEventRecordsByCategory(event));
-
+        eventCommands.add(new ViewEventRevenueByStrategy(event));
 
         while (true) {
             System.out.println("What would you like to do with this event?");
-            for(int i = 0; i < eventCommands.size(); i++){
-                System.out.println(i+1 + " " + eventCommands.get(i).toString());
+            for (int i = 0; i < eventCommands.size(); i++) {
+                System.out.println(i + 1 + " " + eventCommands.get(i).toString());
             }
             System.out.println("- Exit");
             String choice = System.console().readLine();
-            if(choice.equals("-")){
+            if (choice.equals("-")) {
                 return;
             }
-            
-            try{
-                int intChoice = Integer.parseInt(choice);   //possible NumberFormatException
-                eventCommands.get(intChoice-1).execute();   //possible IndexOutOfBoundsException
-            } catch(Exception e){
+
+            try {
+                int intChoice = Integer.parseInt(choice); // possible NumberFormatException
+                eventCommands.get(intChoice - 1).execute(); // possible IndexOutOfBoundsException
+            } catch (Exception e) {
                 System.out.println("Invalid input");
             }
-            
+
         }
     }
 
@@ -235,6 +244,50 @@ public class wweRevenueCalculator {
         System.out.println("Total revenue across all events: " + totalRevenue);
     }
 
+    private static void calculateAllRevenueMenu() {
+        while (true) {
+            System.out.println("Choose a system-wide revenue strategy:");
+            System.out.println("1 Total revenue");
+            System.out.println("2 Revenue only");
+            System.out.println("3 Live event ticket revenue");
+            System.out.println("4 Pay-per-view ticket revenue");
+            System.out.println("5 Merchandise revenue");
+            System.out.println("0 Back");
+
+            String choice = System.console().readLine();
+            RevenueCalculationStrategy strategy = null;
+            String label = "";
+
+            switch (choice) {
+                case "1":
+                    calculateAllRevenue();
+                    continue;
+                case "2":
+                    strategy = new RevenueOnlyStrategy();
+                    label = "System Revenue Only";
+                    break;
+                case "3":
+                    strategy = new LiveEventRevenueStrategy();
+                    label = "System Live Event Revenue";
+                    break;
+                case "4":
+                    strategy = new PayPerViewRevenueStrategy();
+                    label = "System Pay-Per-View Revenue";
+                    break;
+                case "5":
+                    strategy = new MerchandiseRevenueStrategy();
+                    label = "System Merchandise Revenue";
+                    break;
+                case "0":
+                    return;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+                    continue;
+            }
+
+            System.out.println(label + ": " + wweSystem.calculateAllRevenue(strategy));
+        }
+    }
 
     /**
      * @author Eleena Rath
@@ -338,7 +391,12 @@ public class wweRevenueCalculator {
                     // create a salary
                     SalaryFactory salaryFactory = new SalaryFactory(wweSystem);
                     salaryFactory.createRecord();
-                    wweSystem.addRecord(salaryFactory.returnSalary());
+                    Salary salary = salaryFactory.returnSalary();
+                    if (salary == null) {
+                        System.out.println("Annual salary creation cancelled");
+                        break;
+                    }
+                    wweSystem.addRecord(salary);
                     System.out.println("Annual salary successfully created");
                     break;
                 case "0":
@@ -351,6 +409,9 @@ public class wweRevenueCalculator {
      * @author Eleena Rath
      */
     private static void systemRecords() {
+        // System.out.println("All Records in System:");
+        // wweSystem.listRecords();
+        // System.out.println("Select a record by its number, or enter '0' to exit");
         while (true) {
             System.out.println("All Records in System:");
             wweSystem.listRecords();
@@ -397,8 +458,7 @@ public class wweRevenueCalculator {
                     Objects.RecordTypes.Record baseRecord = unwrapRecord(record);
 
                     if (baseRecord instanceof Objects.RecordTypes.AbstractRecord) {
-                        Objects.RecordTypes.AbstractRecord editableRecord =
-                            (Objects.RecordTypes.AbstractRecord) baseRecord;
+                        Objects.RecordTypes.AbstractRecord editableRecord = (Objects.RecordTypes.AbstractRecord) baseRecord;
 
                         System.out.println("Enter new record name:");
                         String newName = System.console().readLine();
@@ -428,12 +488,10 @@ public class wweRevenueCalculator {
                     System.out.println("Enter audit note:");
                     String auditNote = System.console().readLine();
 
-                    Objects.RecordTypes.Record auditedRecord =
-                        new Objects.RecordTypes.AuditedRecordDecorator(
+                    Objects.RecordTypes.Record auditedRecord = new Objects.RecordTypes.AuditedRecordDecorator(
                             record,
                             reviewerName,
-                            auditNote
-                        );
+                            auditNote);
 
                     wweSystem.replaceRecord(recordIndex, auditedRecord);
                     record = auditedRecord;
@@ -452,67 +510,54 @@ public class wweRevenueCalculator {
         }
     }
 
-
-    public CustomSystem getSystem()
-    {
+    public CustomSystem getSystem() {
         return wweSystem;
     }
 
-    public void setSystem(CustomSystem CS)
-    {
+    public void setSystem(CustomSystem CS) {
         this.wweSystem = CS;
     }
 
-    public void deleteRecord(int i)
-    {
+    public void deleteRecord(int i) {
         wweSystem.deleteRecord(i);
         saveData();
     }
 
-
-    public void deleteEmployee(int i)
-    {
+    public void deleteEmployee(int i) {
         wweSystem.deleteEmployee(i);
         saveData();
     }
 
-    public static void DrawTrends(int optionInt)
-    {
+    public static void DrawTrends(int optionInt) {
         String option = "";
-        while(optionInt != 1 && optionInt != 2 && optionInt != 3)
-        {
+        while (optionInt != 1 && optionInt != 2 && optionInt != 3) {
             System.out.println("please choose the appropriate number");
             option = System.console().readLine();
             optionInt = Integer.parseInt(option);
         }
 
-        switch(optionInt)
-        {
-            case 1: 
+        switch (optionInt) {
+            case 1:
                 DrawTrendData d = new DrawTrendData(RequestType.YEAR, "none");
                 break;
-            case 2: 
+            case 2:
                 System.out.println("Would You like to see a specific year or all month records held?(1/2)");
                 String choice = System.console().readLine();
                 int choiceInt = Integer.parseInt(choice);
-                while(choiceInt != 1 && choiceInt != 2)
-                {
+                while (choiceInt != 1 && choiceInt != 2) {
                     System.out.println("please choose the appropriate number");
                     option = System.console().readLine();
                     optionInt = Integer.parseInt(option);
                 }
-                if(choiceInt == 1)
-                {
+                if (choiceInt == 1) {
                     System.out.println("Type the Year you would like to look at");
                     String Year = System.console().readLine();
                     DrawTrendData d1 = new DrawTrendData(RequestType.MONTH, Year);
-                }
-                else
-                {
+                } else {
                     DrawTrendData d1 = new DrawTrendData(RequestType.MONTH, "none");
                 }
                 break;
-            case 3: 
+            case 3:
                 DrawTrendData d2 = new DrawTrendData(RequestType.ALLRECORDS, "none");
                 break;
         }

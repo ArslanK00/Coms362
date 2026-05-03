@@ -38,14 +38,14 @@ public class AllRecordsTrendData extends TrendDataHandler
                 AbstractRecord obj = arr.get(i);
                 switch (obj.getRecordEnum()) 
                 {
-                    case RecordEnum.LiveEventTicket:
+                    case LiveEventTicket:
                         LiveEventTicket LEobj = (LiveEventTicket)arr.get(i);
                         LiveEventTicketSum += arr.get(i).getCost() * LEobj.getAmount();
                         break;
-                    case RecordEnum.MerchandiseSale:
+                    case MerchandiseSale:
                         MerchSum += arr.get(i).getCost();
                         break;
-                    case RecordEnum.PayPerViewTicket:
+                    case PayPerViewTicket:
                         PayPerViewTicket objP =  (PayPerViewTicket)arr.get(i);
                         PayPerViewSum += obj.getCost() * objP.getAmount();
                         break;

@@ -154,14 +154,14 @@ public class AllMonthsTrendData extends TrendDataHandler
     {
         switch (obj.getRecordEnum()) 
         {
-            case RecordEnum.LiveEventTicket:
+            case LiveEventTicket:
                 LiveEventTicket LEobj = (LiveEventTicket)obj;
                 return obj.getCost() * LEobj.getAmount();
                 
-            case RecordEnum.MerchandiseSale:
+            case MerchandiseSale:
                 return obj.getCost();
                 
-            case RecordEnum.PayPerViewTicket:
+            case PayPerViewTicket:
                 PayPerViewTicket objP =  (PayPerViewTicket)obj;
                 return obj.getCost() * objP.getAmount();
                 

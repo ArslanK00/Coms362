@@ -2,9 +2,13 @@ package Objects;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import Objects.RecordTypes.AbstractRecord;
 import Objects.RecordTypes.Record;
+import Objects.Strategies.RevenueCalculationStrategy;
+import Objects.Strategies.RevenueOnlyStrategy;
+import Objects.Strategies.TotalRevenueStrategy;
 
 public class Event implements Serializable {
     String name;
@@ -98,11 +102,7 @@ public class Event implements Serializable {
      * @return total revenue from all records in this event
      */
     public float calculateRevenue() {
-        float total = 0;
-        for (Record record : records) {
-            total += record.getCost();
-        }
-        return total;
+        return calculateRevenue(new TotalRevenueStrategy());
     }
 
     // Added by Matayas Durr: supports sorting records by value
@@ -125,14 +125,18 @@ public class Event implements Serializable {
 
     // Added by Matayas Durr: calculates revenue-only total
     public float calculateRevenueOnly() {
-        float total = 0;
-        for (Record record : records) {
-            AbstractRecord currentRecord = (AbstractRecord) record;
-            if (currentRecord.isRevenue()) {
-                total += record.getCost();
-            }
-        }
-        return total;
+        return calculateRevenue(new RevenueOnlyStrategy());
+    }
+
+    /**
+     * @author Jamey Nguyen
+     */
+    public float calculateRevenue(RevenueCalculationStrategy strategy) {
+        return strategy.calculateRevenue(records);
+    }
+
+    public List<Record> getRecords() {
+        return new ArrayList<Record>(records);
     }
 
     @Override
