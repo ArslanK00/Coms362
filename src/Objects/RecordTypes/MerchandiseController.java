@@ -159,12 +159,17 @@ public class MerchandiseController //need to move out of Record Types
         {
             while(myReader.hasNextLine())
             {
+                
                 String[] data = myReader.nextLine().split(",");
-                if(Integer.parseInt(data[1].trim()) == categoryID)
+                if(!data.equals(""))
                 {
-                    merchData.add(data);
-                    System.out.println("Category: " + data[1] + "Name: " + data[2] + "Units Sold: " +  data[3] + " Date: " + data[6]);
+                    if(Integer.parseInt(data[1].trim()) == categoryID)
+                    {
+                        merchData.add(data);
+                        System.out.println("Category: " + data[1] + "Name: " + data[2] + "Units Sold: " +  data[3] + " Date: " + data[6]);
+                    }
                 }
+
             }
             return;
         }
@@ -389,7 +394,10 @@ public class MerchandiseController //need to move out of Record Types
         File myFile = new File(FilePathCategories);
         try(Scanner myReader = new Scanner(myFile)){
             while(myReader.hasNextLine()){
+                
                 String data = myReader.nextLine();
+                if(!data.equals(""))
+                {
                 String[] parts = data.split(":");
                 int id = Integer.parseInt(parts[0].trim());
                 String categoryName = parts[1].trim();
@@ -397,6 +405,8 @@ public class MerchandiseController //need to move out of Record Types
                 if (printCategories) {
                     System.out.println(id+ ":" + categoryName );
                 }
+                }
+  
             }
         }
         catch(FileNotFoundException e){

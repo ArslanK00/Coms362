@@ -18,6 +18,8 @@ public class CustomSystem implements Serializable {
     ArrayList<Record> records;
     ArrayList<Employee> employees; // Modification: by Eleena R.
     ArrayList<AbstractRecord> abstractRecords;
+    private static final long serialVersionUID = 2870507640217949222L;
+
 
     public CustomSystem() {
         events = new ArrayList<Event>();
@@ -293,4 +295,7 @@ public class CustomSystem implements Serializable {
             event.replaceRecord(oldRecord, newRecord);
         }
     }
+
+
 }
+

@@ -7,4 +7,3 @@
 7:Glasses
 8:Gloves
 9:posters
-

@@ -83,8 +83,8 @@ public class AllRecordsTrendData extends TrendDataHandler
 
         int labelWidth = 23;
 
-        String[] ticks = {"|","|","|","|","|","|","|","|","|","|","|","|","|","|","|" };
-        String[] labels = {"5k","10k","15k","20k","25k","30k","35k","40k", "45k", "50k", "55k", "60k", "65k", "70k", "75k"};
+        String[] ticks = {"|","|","|","|","|","|","|","|","|","|","|","|","|","|","|" , "|","|","|","|","|"};
+        String[] labels = {"5k","10k","15k","20k","25k","30k","35k","40k", "45k", "50k", "55k", "60k", "65k", "70k", "75k", "80k", "85k", "90k", "95k", "100k"};
 
         // top axis line
         System.out.printf("%-" + labelWidth + "s", "");
