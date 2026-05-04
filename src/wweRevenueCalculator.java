@@ -208,8 +208,8 @@ public class wweRevenueCalculator {
         eventCommands.add(new UploadEventSalary(wweSystem, event));
         eventCommands.add(new RecordVenueRentalCost(wweSystem, event));
         eventCommands.add(new DeleteRecordFromEvent(event));
-        eventCommands.add(new CalculateEventProfit(event));
-        eventCommands.add(new EventRecordRevenueOnly(event));
+        // eventCommands.add(new CalculateEventProfit(event));
+        // eventCommands.add(new EventRecordRevenueOnly(event));
         eventCommands.add(new SortEventRecordsByValue(event));
         eventCommands.add(new SortEventRecordsByCategory(event));
         eventCommands.add(new ViewEventRevenueByStrategy(event));
@@ -260,8 +260,9 @@ public class wweRevenueCalculator {
 
             switch (choice) {
                 case "1":
-                    calculateAllRevenue();
-                    continue;
+                    strategy = new TotalRevenueStrategy();
+                    label = "System Total Revenue";
+                    break;
                 case "2":
                     strategy = new RevenueOnlyStrategy();
                     label = "System Revenue Only";
