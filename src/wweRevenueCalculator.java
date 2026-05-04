@@ -247,7 +247,7 @@ public class wweRevenueCalculator {
     private static void calculateAllRevenueMenu() {
         while (true) {
             System.out.println("Choose a system-wide revenue strategy:");
-            System.out.println("1 Total revenue");
+            System.out.println("1 Total Ticket revenue");
             System.out.println("2 Revenue only");
             System.out.println("3 Live event ticket revenue");
             System.out.println("4 Pay-per-view ticket revenue");
